@@ -58,6 +58,11 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($deanFullName); ?></ul>
                     <ul>ID:<?php echo htmlspecialchars($deanId); ?></ul>
                 </div>
+                <div>
+                <form action="../logout.php" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
                 <h4 style="text-align: center;">00 out of 00</h4>
                 <br>
                 <div class="selectIns">

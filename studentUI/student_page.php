@@ -30,6 +30,7 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $studentFullName = $row['student_fname'] . ' ' . $row['student_mname'] . ' ' . $row['student_lname'];
+        $_SESSION['user_fullname'] = $studentFullName; // Store the full name in session
     } else {
         $studentFullName = 'Unknown Student';
     }
@@ -48,6 +49,13 @@ $conn->close();
     <title>IDIS</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
+    <style>
+        .logout-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="containerOfAll">
@@ -58,37 +66,42 @@ $conn->close();
                 </div>
                 <div>
                     <ul>Name: <?php echo htmlspecialchars($studentFullName); ?></ul>
-                    <ul>ID:<?php echo htmlspecialchars($studentId); ?></ul>
+                    <ul>ID: <?php echo htmlspecialchars($studentId); ?></ul>
+                </div>
+                <div>
+                    <button onclick="location.href='../logout.php';" class="logout-button">Logout</button>
+                    <p id="logoutMessage" class="logout-message"></p>
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
                         <div><h4>Subjects:</h4></div>
                         <div class="btnSubjects">
-                            <button >REED 101</button>
+                            <button>REED 101</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >GEC 1</button>
+                            <button>GEC 1</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >GEC ELECT 1</button>
+                            <button>GEC ELECT 1</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >FIL 102</button>
+                            <button>FIL 102</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >NSTP-LTS 2</button>
+                            <button>NSTP-LTS 2</button>
                         </div>
                     </div>
                 </div>
             </nav>
             <div class="implementContainer">
-                <header><h5>Instructional Delivery Implementation System (IDIS)</h5><p>Saint Micheal College of Caraga (SMCC)</p>
+                <header>
+                    <h5>Instructional Delivery Implementation System (IDIS)</h5>
+                    <p>Saint Micheal College of Caraga (SMCC)</p>
                     <div></div>
                     <div>
                         <nav class="navtab">
-                                <button class="tablinks" onclick="openTab(event, 'ILOs')">ILOs</button>
-                                
-                                <button class="tablinks" onclick="openTab(event, 'Topics')">Topics</button>
+                            <button class="tablinks" onclick="openTab(event, 'ILOs')">ILOs</button>
+                            <button class="tablinks" onclick="openTab(event, 'Topics')">Topics</button>
                         </nav>
                     </div>
                 </header>
@@ -119,7 +132,7 @@ $conn->close();
                         </div>
                           
                         <div id="Topics" class="tabcontent">
-                            <h6><br>Rate if the topics are being disccussed clearly from 1 to 5.</h6>
+                            <h6><br>Rate if the topics are being discussed clearly from 1 to 5.</h6>
                             <div id="container">
                                 <table class="remarksTable">
                                     <tr>
@@ -134,7 +147,7 @@ $conn->close();
                                             <input type="radio" name="1range" id="3"><label for="3">3</label>
                                             <input type="radio" name="1range" id="4"><label for="4">4</label>
                                             <input type="radio" name="1range" id="5"><label for="5">5</label>
-                                        </td5>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>... </td>
@@ -169,5 +182,15 @@ $conn->close();
             </div>
         </div>
     </div>
+    <script>
+        function showLogoutMessage(message) {
+            var logoutMessage = document.getElementById('logoutMessage');
+            logoutMessage.textContent = message;
+            logoutMessage.style.display = 'block';
+            setTimeout(function() {
+                logoutMessage.style.display = 'none';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>

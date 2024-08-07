@@ -60,6 +60,11 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($instructorFullName); ?></ul>
                     <ul>ID:<?php echo htmlspecialchars($instructorId); ?></ul>
                 </div>
+                <div>
+                <form action="../logout.php" method="post">
+                        <button type="submit">Logout</button>
+                    </form>
+                </div>
                 <div class="subsContainer">
                     <div class="subjects">
                         <div><h4>Subjects:</h4></div>
