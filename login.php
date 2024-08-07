@@ -17,76 +17,57 @@ if ($conn->connect_error) {
 $error_message = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if form inputs are set
-    if (isset($_POST['id']) && isset($_POST['password']) && isset($_POST['user_type'])) {
-        $id = $_POST['id'];
-        $password = $_POST['password'];
-        $userType = $_POST['user_type'];
+    $id = $_POST['id'];
+    $password = $_POST['password'];
+    $userType = $_POST['user_type'];
 
-        // Determine the table and ID column based on user type
-        switch ($userType) {
-            case 'student':
-                $table = 'student';
-                $idColumn = 'student_ID';
-                $redirectUrl = 'studentUI/student_page.php';
-                break;
-            case 'dean':
-                $table = 'dean';
-                $idColumn = 'dean_ID';
-                $redirectUrl = 'deanUI/index.php'; 
-                break;
-            case 'instructor':
-                $table = 'instructor';
-                $idColumn = 'instructor_ID';
-                $redirectUrl = 'instructorUI/index.php'; 
-                break;
-            case 'vp':
-                $table = 'vp';
-                $idColumn = 'vp_ID';
-                $redirectUrl = 'vpUI/index.php'; 
-                break;
-            default:
-                $error_message = "Invalid user type.";
-        }
+    // Determine the table and ID column based on user type
+    switch ($userType) {
+        case 'student':
+            $table = 'student';
+            $idColumn = 'student_ID';
+            $redirectUrl = 'studentUI/student_page.php';
+            break;
+        case 'dean':
+            $table = 'dean';
+            $idColumn = 'dean_ID';
+            $redirectUrl = 'deanUI/index.php'; 
+            break;
+        case 'instructor':
+            $table = 'instructor';
+            $idColumn = 'instructor_ID';
+            $redirectUrl = 'instructorUI/index.php'; 
+            break;
+        case 'vp':
+            $table = 'vp';
+            $idColumn = 'vp_ID';
+            $redirectUrl = 'vpUI/index.php'; 
+            break;
+        default:
+            $error_message = "Invalid user type.";
+    }
 
-        if (empty($error_message)) {
-            // Prepare SQL query
-            $sql = "SELECT * FROM $table WHERE $idColumn = ? AND password = ?";
-            if ($stmt = $conn->prepare($sql)) {
-                $stmt->bind_param("is", $id, $password);
-                $stmt->execute();
-                $result = $stmt->get_result();
+    if (empty($error_message)) {
+        $sql = "SELECT * FROM $table WHERE $idColumn = ? AND password = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("is", $id, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-                if ($result->num_rows > 0) {
-                    // Store the user ID and type in the session
-                    $_SESSION['user_ID'] = $id;
-                    $_SESSION['user_type'] = $userType;
-                    header("Location: $redirectUrl");
-                    exit();
-                } else {
-                    $error_message = "Invalid ID or password.";
-                    // Display error message and stay on the current template
-                    include($userType . "_login.php");
-                    exit();
-                }
-
-                $stmt->close();
-            } else {
-                $error_message = "Failed to prepare SQL statement.";
-                include($userType . "_login.php");
-                exit();
-            }
+        if ($result->num_rows > 0) {
+            // Store the user ID and type in the session
+            $_SESSION['user_ID'] = $id;
+            $_SESSION['user_type'] = $userType;
+            header("Location: $redirectUrl");
+            exit();
         } else {
+            $error_message = "Invalid ID or password.";
             // Display error message and stay on the current template
             include($userType . "_login.php");
             exit();
         }
-    } else {
-        $error_message = "Required fields are missing.";
-        // Display error message and stay on the current template
-        include('login.php'); // Adjust if necessary
-        exit();
     }
+        $stmt->close();
 }
 
 $conn->close();
