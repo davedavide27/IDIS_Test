@@ -46,6 +46,13 @@ $conn->close();
     <title>IDIS</title>
     <link rel="stylesheet" href="style.css">
     <script src="main.js"></script>
+    <style>
+        .logout-message {
+            display: none;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
     <div class="containerOfAll">
@@ -160,7 +167,16 @@ $conn->close();
                                 </table>
                             </div>
                         </div>
-                          
+                        <script>
+        function showLogoutMessage(message) {
+            var logoutMessage = document.getElementById('logoutMessage');
+            logoutMessage.textContent = message;
+            logoutMessage.style.display = 'block';
+            setTimeout(function() {
+                logoutMessage.style.display = 'none';
+            }, 3000);
+        }
+    </script>
                     </div>
                 </main>               
             </div>

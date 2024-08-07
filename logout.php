@@ -34,6 +34,10 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
             $table = 'instructor';
             $nameColumn = 'instructor_fname';
             break;
+        case 'vp':
+            $table = 'vp';
+            $nameColumn = 'vp_fname';
+            break;
         default:
             echo "Invalid user type.";
             exit();
