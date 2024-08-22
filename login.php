@@ -84,7 +84,7 @@ $conn->close();
 </head>
 <body>
     <header>
-        <h1>Login here ma prends:</h1>
+        <h1>Login as:</h1>
     </header>
     <main>
         <div class="card">
