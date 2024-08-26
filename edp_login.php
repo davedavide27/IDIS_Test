@@ -7,19 +7,35 @@
     <link rel="stylesheet" href="style2.css">
 </head>
 <body>
-    <header>
-        <h1>Login as:</h1>
-    </header>
-    <main>
-        <div class="card">
-            <div class="title"><p>EDP</p></div>
-            <div class="content">
-                <input type="number" placeholder="ID">
-                <br>
-                <input type="password" placeholder="Password">
-            </div>
-            <button class="login">LOGIN</button>
+    <div class="main">
+        <header>
+            <h2>INSTRUCTIONAL DELIVERY IMPLEMENTATION SYSTEM</h2>
+        </header>
+        
+        <div class="login-wrapper">
+            <div class="logo"></div>
+            <h2>LOGIN AS EDP</h2>
+            <form action="login.php" method="post">
+                <div class="input-field">
+                    <input type="number" name="id" id="edp-id" required placeholder=" ">
+                    <label for="edp-id">EDP ID</label>
+                </div>
+
+                <div class="input-field">
+                    <input type="password" name="password" id="password" required placeholder=" ">
+                    <label for="password">Password</label>
+                </div>
+
+                <input type="hidden" name="user_type" value="edp">
+                <button type="submit" class="login-btn">LOGIN</button>
+                <h4 class="return-home"><a href="login.php" style="color: #fff;">Click here to return home</a></h4>
+            </form>
         </div>
-    </main>
+        
+        <footer>
+            <h5>All rights reserved 2024<br>
+            © IDIS SYSTEM</h5>
+        </footer>
+    </div>
 </body>
 </html>
