@@ -15,6 +15,9 @@ if ($conn->connect_error) {
 }
 
 $deanFullName = '';
+$subjects = [];
+$instructors = [];
+$reports = []; // Array to store reports data
 
 // Check if the Dean is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'dean') {
@@ -33,11 +36,44 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'dean') {
     } else {
         $deanFullName = 'Unknown Dean';
     }
-
     $stmt->close();
+
+    // Fetch the list of subjects
+    $sql = "SELECT subject_code, subject_name FROM subject";
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $subjects[] = $row;
+    }
+
+    // Fetch the list of instructors
+    $sql = "SELECT instructor_ID, instructor_fname, instructor_mname, instructor_lname FROM instructor";
+    $result = $conn->query($sql);
+    while ($row = $result->fetch_assoc()) {
+        $instructors[] = $row;
+    }
+
+    // Fetch reports related to subjects and competencies
+    $sql = "SELECT * FROM reports WHERE department = ?";
+    $stmt = $conn->prepare($sql);
+    $department = "COLLEGE OF ARTS AND SCIENCES"; // Example department
+    $stmt->bind_param("s", $department);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $reports[] = $row;
+        }
+    }
+    $stmt->close();
+} else {
+    // Redirect to login if session is not set
+    header("Location: login.php");
+    exit();
 }
 $conn->close();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -63,56 +99,55 @@ $conn->close();
                 </div>
                 <div>
                     <ul>Name: <?php echo htmlspecialchars($deanFullName); ?></ul>
-                    <ul>ID:<?php echo htmlspecialchars($deanId); ?></ul>
+                    <ul>ID: <?php echo htmlspecialchars($deanId); ?></ul>
                 </div>
                 <div>
-                <form action="../logout.php" method="post">
+                    <form action="../logout.php" method="post">
                         <button type="submit">Logout</button>
                     </form>
                 </div>
-                <h4 style="text-align: center;">00 out of 00</h4>
-                <br>
+                <h4 style="text-align: center;">Select Role</h4>
                 <div class="selectIns">
-                    <select name="" id="showSelect" placeholder="da">
-                        <option value="">Program Chair</option>
-                        <option value="">Subject Coordinator</option>
-                    </select>
+                    <form action="select_role.php" method="post">
+                        <select name="role" id="showSelect" onchange="this.form.submit()">
+                            <option value="">Select Role</option>
+                            <option value="Program Chair">Program Chair</option>
+                            <option value="Subject Coordinator">Subject Coordinator</option>
+                        </select>
+                    </form>
                 </div>
                 <br><br>
-                <h4 style="text-align: center;">00 out of 00</h4>
+                <h4 style="text-align: center;">Select Instructor</h4>
                 <div class="selectIns">
-                    <select name="" id="showSelect" placeholder="da">
-                        <option value="">Instructor1</option>
-                        <option value="">Instructor2</option>
-                        <option value="">Instructor3</option>
-                        <option value="">Instructor4</option>
-                    </select>
+                    <form action="select_instructor.php" method="post">
+                        <select name="instructor" id="showSelect" onchange="this.form.submit()">
+                            <option value="">Select Instructor</option>
+                            <?php foreach ($instructors as $instructor): ?>
+                                <option value="<?php echo $instructor['instructor_ID']; ?>">
+                                    <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </form>
                 </div>
                 <br><br>
-                <h4 style="text-align: center;">00 out of 00</h4>
+                <h4 style="text-align: center;">Subjects</h4>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Subjects:</h4></div>
-                        <div class="btnSubjects">
-                            <button >ADGEC 1</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button >FIL 102</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button >GEC 1</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button >GEC 2</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button >GEC ELECT 1</button>
-                        </div>
+                        <?php foreach ($subjects as $subject): ?>
+                            <div class="btnSubjects">
+                                <form action="view_subject.php" method="post">
+                                    <button name="subject" value="<?php echo htmlspecialchars($subject['subject_code']); ?>">
+                                        <?php echo htmlspecialchars($subject['subject_name']); ?>
+                                    </button>
+                                </form>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </nav>
             <div class="implementContainer">
-                <header><h5>Instructional Delivery Implementation System (IDIS)</h5><p>Saint Micheal College of Caraga (SMCC)</p>
+                <header><h5>Instructional Delivery Implementation System (IDIS)</h5><p>Saint Michael College of Caraga (SMCC)</p>
                     <div></div>
                     <div>
                         <nav class="navtab">
@@ -146,37 +181,27 @@ $conn->close();
                                         <th>Students' ratings</th>
                                         <th>Interpretation</th>
                                     </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td><p>Impemented</p></td>
-                                        <td><p>70%</p></td>
-                                        <td><p>Impemented</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td><p>Not impemented</p></td>
-                                        <td><p>15%</p></td>
-                                        <td><p>Not impemented</p></td>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td><p>Impemented</p</td>
-                                        <td><p>70%</p></td>
-                                        <td><p>Impemented</p></td>
-                                    </tr>
+                                    <?php foreach ($reports as $report): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($report['competency']) ?></td>
+                                            <td><?= htmlspecialchars($report['remarks']) ?></td>
+                                            <td><?= htmlspecialchars($report['percentage_implemented']) ?>%</td>
+                                            <td><?= htmlspecialchars($report['remarks']) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
                                 </table>
                             </div>
                         </div>
                         <script>
-        function showLogoutMessage(message) {
-            var logoutMessage = document.getElementById('logoutMessage');
-            logoutMessage.textContent = message;
-            logoutMessage.style.display = 'block';
-            setTimeout(function() {
-                logoutMessage.style.display = 'none';
-            }, 3000);
-        }
-    </script>
+                            function showLogoutMessage(message) {
+                                var logoutMessage = document.getElementById('logoutMessage');
+                                logoutMessage.textContent = message;
+                                logoutMessage.style.display = 'block';
+                                setTimeout(function() {
+                                    logoutMessage.style.display = 'none';
+                                }, 3000);
+                            }
+                        </script>
                     </div>
                 </main>               
             </div>

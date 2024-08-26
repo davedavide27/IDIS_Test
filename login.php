@@ -43,6 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $idColumn = 'vp_ID';
             $redirectUrl = 'vpUI/index.php'; 
             break;
+        case 'edp':
+            $table = 'edp';
+            $idColumn = 'edp_ID';
+            $redirectUrl = 'edpUI/index.php'; 
+            break;
         default:
             $error_message = "Invalid user type.";
     }
@@ -67,11 +72,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit();
         }
     }
-        $stmt->close();
+    $stmt->close();
 }
 
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -98,7 +104,7 @@ $conn->close();
             <a href="instructor_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>PROGAM CHAIR</p></div>
+            <div class="title"><p>PROGRAM CHAIR</p></div>
             <div class="content"><img src="" alt=""></div>
             <a href="chair_login.php"><button class="login">LOGIN</button></a>
         </div>

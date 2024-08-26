@@ -1,0 +1,115 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.containerOfAll {
+    width: 100%;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    background-color: #324A5F;
+    color: white;
+    padding: 20px 0;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+
+.contentContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 40px;
+}
+
+.functionalityContainer {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    width: 40%;
+    text-align: center;
+}
+
+.functionalityContainer h3 {
+    margin-bottom: 20px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0;
+    background-color: #67b9fc;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #529ed5;
+}
+.logout-message {
+    display: none;
+    color: green;
+    font-weight: bold;
+}
+.containerOfAll {
+    display: flex;
+    height: 100vh;
+}
+.subjectsContainer {
+    width: 25%;
+    background-color: #f0f0f0;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+.implementContainer {
+    width: 75%;
+    padding: 20px;
+}
+.btnSubjects button, .navtab button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #67b9fc;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.btnSubjects button:hover, .navtab button:hover {
+    background-color: #529ed5;
+}
+.selectIns select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.remarksTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+.remarksTable th, .remarksTable td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+.remarksTable th {
+    background-color: #67b9fc;
+    color: white;
+}

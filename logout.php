@@ -38,6 +38,10 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
             $table = 'vp';
             $nameColumn = 'vp_fname';
             break;
+        case 'edp': // Added EDP case
+            $table = 'edp';
+            $nameColumn = 'edp_fname';
+            break;
         default:
             echo "Invalid user type.";
             exit();
@@ -67,8 +71,8 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
           </script>";
 } else {
     header("Location: login.php");
+    exit();
 }
 
 $conn->close();
-exit();
 ?>
