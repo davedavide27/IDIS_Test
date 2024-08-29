@@ -91,8 +91,9 @@ function fetchCompetencies(subjectCode) {
               // Hide the "No competencies found" row
               noCompetenciesRow.style.display = 'none';
           } else {
-              // Show the "No competencies found" row if no competencies are returned
-              noCompetenciesRow.style.display = '';
+            const noCompetenciesRow = document.createElement('tr');
+            noCompetenciesRow.innerHTML = `<td colspan="2">No competencies found for this subject.</td>`;
+            tableBody.appendChild(noCompetenciesRow);
           }
       }
   };

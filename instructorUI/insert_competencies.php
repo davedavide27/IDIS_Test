@@ -45,7 +45,7 @@ $checked_by = "";
 $noted_by = "";
 
 // Fetch existing competencies for the subject
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subject_code'])) {
+if (isset($_POST['subject_code'])) {
     $subject_code = $_POST['subject_code'];
     $subject_name = $_POST['subject_name'];
 
@@ -86,47 +86,102 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['subject_code'])) {
     $stmt->close();
 }
 
-// Check if the form is submitted for saving edits
+// Check if the form is submitted for saving edits or adding new competency
 if (isset($_POST['save_edits'])) {
-    // Check and assign POST variables with fallback to NULL
-    $units = $_POST['units'] ?? null;
-    $hours = $_POST['hours'] ?? null;
-    $department = $_POST['department'] ?? null;
-    $school_year_start = $_POST['school_year_start'] ?? null;
-    $school_year_end = $_POST['school_year_end'] ?? null;
-    $grading_period = $_POST['grading_period'] ?? null;
-    $grading_quarter_start = $_POST['grading_quarter_start'] ?? null;
-    $grading_quarter_end = $_POST['grading_quarter_end'] ?? null;
-    $total_competencies_deped_tesda_ched = $_POST['total_competencies_deped_tesda_ched'] ?? null;
-    $total_competencies_smcc = $_POST['total_competencies_smcc'] ?? null;
-    $total_institutional_competencies = $_POST['total_institutional_competencies'] ?? null;
-    $total_competencies_b_and_c = $_POST['total_competencies_b_and_c'] ?? null;
-    $total_competencies_implemented = $_POST['total_competencies_implemented'] ?? null;
-    $total_competencies_not_implemented = $_POST['total_competencies_not_implemented'] ?? null;
-    $percentage_competencies_implemented = $_POST['percentage_competencies_implemented'] ?? null;
-    $prepared_by = $_POST['prepared_by'] ?? null;
-    $checked_by = $_POST['checked_by'] ?? null;
-    $noted_by = $_POST['noted_by'] ?? null;
+    // Update all form fields first
+    $stmtUpdateAllFields = $conn->prepare("UPDATE competencies SET units = ?, hours = ?, department = ?, school_year_start = ?, school_year_end = ?, grading_period = ?, grading_quarter_start = ?, grading_quarter_end = ?, total_competencies_deped_tesda_ched = ?, total_competencies_smcc = ?, total_institutional_competencies = ?, total_competencies_b_and_c = ?, total_competencies_implemented = ?, total_competencies_not_implemented = ?, percentage_competencies_implemented = ?, prepared_by = ?, checked_by = ?, noted_by = ? WHERE subject_code = ?");
+    $stmtUpdateAllFields->bind_param(
+        "iissssssiiiiiiissss",
+        $_POST['units'],
+        $_POST['hours'],
+        $_POST['department'],
+        $_POST['school_year_start'],
+        $_POST['school_year_end'],
+        $_POST['grading_period'],
+        $_POST['grading_quarter_start'],
+        $_POST['grading_quarter_end'],
+        $_POST['total_competencies_deped_tesda_ched'],
+        $_POST['total_competencies_smcc'],
+        $_POST['total_institutional_competencies'],
+        $_POST['total_competencies_b_and_c'],
+        $_POST['total_competencies_implemented'],
+        $_POST['total_competencies_not_implemented'],
+        $_POST['percentage_competencies_implemented'],
+        $_POST['prepared_by'],
+        $_POST['checked_by'],
+        $_POST['noted_by'],
+        $_POST['subject_code']
+    );
+    $stmtUpdateAllFields->execute();
+    $stmtUpdateAllFields->close();
 
-    // Prepare the statement for updating existing records
-    $stmt = $conn->prepare("UPDATE competencies SET competency_description = ?, remarks = ? WHERE competency_id = ?");
+    // Prepare the statement for updating existing competencies
+    $stmtUpdate = $conn->prepare("UPDATE competencies SET competency_description = ?, remarks = ? WHERE competency_id = ?");
+    // Prepare the statement for inserting new competencies
+    $stmtInsert = $conn->prepare("INSERT INTO competencies (subject_code, subject_name, competency_description, remarks, units, hours, department, school_year_start, school_year_end, grading_period, grading_quarter_start, grading_quarter_end, total_competencies_deped_tesda_ched, total_competencies_smcc, total_institutional_competencies, total_competencies_b_and_c, total_competencies_implemented, total_competencies_not_implemented, percentage_competencies_implemented, prepared_by, checked_by, noted_by, instructor_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    // Loop through the competencies arrays
-    if (!empty($_POST['competency_id'])) {
-        foreach ($_POST['competency_id'] as $index => $competency_id) {
-            $competency_description = $_POST['competencies'][$index];
+    $competency_ids_from_db = [];
+
+    // Ensure there are competencies to process
+    if (!empty($_POST['competencies'])) {
+        // Loop through the competencies arrays
+        foreach ($_POST['competencies'] as $index => $competency_description) {
             $remarks = $_POST['remarks'][$index];
+            $competency_id = $_POST['competency_id'][$index];
 
-            $stmt->bind_param("ssi", $competency_description, $remarks, $competency_id);
-            $stmt->execute();
+            if (!empty($competency_id)) {
+                // Update existing competency
+                $stmtUpdate->bind_param("ssi", $competency_description, $remarks, $competency_id);
+                $stmtUpdate->execute();
+                $competency_ids_from_db[] = $competency_id;
+            } else {
+                // Insert new competency
+                $stmtInsert->bind_param("sssssiissssssiiiiiiisss", 
+                    $_POST['subject_code'], 
+                    $_POST['subject_name'],
+                    $competency_description, 
+                    $remarks, 
+                    $_POST['units'], 
+                    $_POST['hours'], 
+                    $_POST['department'], 
+                    $_POST['school_year_start'], 
+                    $_POST['school_year_end'], 
+                    $_POST['grading_period'], 
+                    $_POST['grading_quarter_start'], 
+                    $_POST['grading_quarter_end'], 
+                    $_POST['total_competencies_deped_tesda_ched'], 
+                    $_POST['total_competencies_smcc'], 
+                    $_POST['total_institutional_competencies'], 
+                    $_POST['total_competencies_b_and_c'], 
+                    $_POST['total_competencies_implemented'], 
+                    $_POST['total_competencies_not_implemented'], 
+                    $_POST['percentage_competencies_implemented'], 
+                    $_POST['prepared_by'], 
+                    $_POST['checked_by'], 
+                    $_POST['noted_by'], 
+                    $instructor_ID
+                );
+                $stmtInsert->execute();
+                $competency_ids_from_db[] = $stmtInsert->insert_id; // Capture new inserted id
+            }
         }
 
-        echo "Competencies updated successfully!";
-    } else {
-        echo "No competencies provided.";
+        // Delete competencies that are not in the POST request (removed by the user)
+        if (!empty($competency_ids_from_db)) {
+            $competency_ids_from_db = implode(",", $competency_ids_from_db);
+            $stmtDelete = $conn->prepare("DELETE FROM competencies WHERE subject_code = ? AND competency_id NOT IN ($competency_ids_from_db)");
+            $stmtDelete->bind_param("s", $_POST['subject_code']);
+            $stmtDelete->execute();
+            $stmtDelete->close();
+        }
     }
 
-    $stmt->close();
+    $stmtUpdate->close();
+    $stmtInsert->close();
+
+    // Refresh the page to reflect the changes
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit();
 }
 
 $conn->close();
@@ -138,6 +193,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../competencies.css">
+    <script src="../main.js"></script>
     <title>Edit Competencies</title>
     <style>
         @media print {
@@ -158,7 +214,7 @@ $conn->close();
 </head>
 <body>
     <h3>Competency Implementation</h3>
-    <form action="insert_competencies.php" method="post">
+    <form action="" method="post">
         <input type="hidden" name="save_edits" value="1">
         <input type="hidden" name="subject_code" value="<?php echo htmlspecialchars($subject_code); ?>">
         <input type="hidden" name="subject_name" value="<?php echo htmlspecialchars($subject_name); ?>">
@@ -276,6 +332,7 @@ $conn->close();
     </form>
 
     <script>
+        
         function addCompetency() {
             const table = document.getElementById('competencyTable');
             const row = table.insertRow(-1);
@@ -283,8 +340,9 @@ $conn->close();
             const cell2 = row.insertCell(1);
             const cell3 = row.insertCell(2);
 
-            cell1.innerHTML = '<input type="text" name="competencies[]" style="width: 100%;" required>';
-            cell2.innerHTML = '<select name="remarks[]" required><option value="IMPLEMENTED">IMPLEMENTED</option><option value="NOT IMPLEMENTED">NOT IMPLEMENTED</option></select>';
+            // Add hidden input for competency_id to handle new entries
+            cell1.innerHTML = '<input type="hidden" name="competency_id[]" value=""><input type="text" name="competencies[]" style="width: 100%;" required>';
+            cell2.innerHTML = '<select name="remarks[]" required><option value="IMPLEMENTED">IMPLEMENTED</option><option value="NOT IMPLEMENTED">NOT IMPLEMENTED</option>';
             cell3.innerHTML = '<button type="button" class="remove-competency-btn" onclick="removeCompetency(this)">Remove</button>';
         }
 
@@ -292,6 +350,8 @@ $conn->close();
             const row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
         }
+
+        
     </script>
 </body>
 </html>
