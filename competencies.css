@@ -1,0 +1,81 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+}
+h3 {
+    text-align: center;
+    text-transform: uppercase;
+}
+.competency-table, .competency-table th, .competency-table td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+    text-align: left;
+}
+.competency-table th {
+    background-color: #f2f2f2;
+}
+.competency-table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.info-table, .info-table td {
+    border: none;
+    padding: 4px;
+}
+.info-table {
+    width: 100%;
+    margin-bottom: 20px;
+}
+.info-table td:first-child {
+    width: 25%;
+}
+.signatures {
+    margin-top: 40px;
+}
+.signatures p {
+    margin-bottom: 60px;
+    display: inline-block;
+    width: 30%;
+    text-align: center;
+}
+.signatures p:after {
+    content: '';
+    display: block;
+    margin-top: 5px;
+    border-top: 1px solid black;
+}
+.signature-label {
+    font-weight: bold;
+}
+.print-button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+.print-button:hover {
+    background-color: #45a049;
+}
+.add-competency-btn, .remove-competency-btn {
+    margin: 10px 0;
+    padding: 5px 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.add-competency-btn:hover, .remove-competency-btn:hover {
+    background-color: #0056b3;
+}
+.remove-competency-btn {
+    background-color: #dc3545;
+}
+.remove-competency-btn:hover {
+    background-color: #c82333;
+}
