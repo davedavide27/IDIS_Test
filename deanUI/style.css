@@ -66,7 +66,12 @@ main{
     text-align: center;
     margin-bottom: 5pt;
     width: 100pt;
+    border-radius: 10px;
+    border-style: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    margin-top: 10px;
 }
+
 
 /*DISPLAYS*/
 .navSubject ul{
@@ -91,6 +96,7 @@ main{
     border-radius: 10pt;
     width: 70%;
     margin-left: 15%;
+    padding: 10px 20px;
 }
 .selectSub button{
     display: none;
@@ -258,7 +264,7 @@ a{
 .logout_btn{
     display: block;
     margin: auto;
-    margin-top: 260px;
+    margin-top: 240px;
     padding: 7px 20px;
     border-radius: 5px;
     border-style: none;
@@ -274,4 +280,9 @@ a{
     box-shadow: 0 0 20px rgba (0,0,0,0.5);
     -webkit-transform: scale(1.1);
     transform: scale(1.1);
+}
+
+ul{
+    font-weight: 900;
+    text-align: left;
 }
