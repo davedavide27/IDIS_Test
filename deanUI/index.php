@@ -102,9 +102,7 @@ $conn->close();
                     <ul>ID: <?php echo htmlspecialchars($deanId); ?></ul>
                 </div>
                 <div>
-                    <form action="../logout.php" method="post">
-                        <button type="submit">Logout</button>
-                    </form>
+
                 </div>
                 <h4 style="text-align: center;">Select Role</h4>
                 <div class="selectIns">
@@ -129,7 +127,7 @@ $conn->close();
                             <?php endforeach; ?>
                         </select>
                     </form>
-                </div>
+                
                 <br><br>
                 <h4 style="text-align: center;">Subjects</h4>
                 <div class="subsContainer">
@@ -144,6 +142,11 @@ $conn->close();
                             </div>
                         <?php endforeach; ?>
                     </div>
+                
+                    <form action="../logout.php" method="post">
+                        <button class="logout_btn" type="submit">Logout</button>
+                    </form>
+                </div>
                 </div>
             </nav>
             <div class="implementContainer">
@@ -161,7 +164,7 @@ $conn->close();
                     <div class="filesContainer">
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
-                            <div id="container">
+                            <div id="container_plans">
                                 <div class="planCard">
                                     <a href=""><p>Syllabus</p></a>
                                 </div>
@@ -173,7 +176,7 @@ $conn->close();
                           
                         <div id="Topics" class="tabcontent">
                             <h6><br>The table below concludes all inputs.</h6>
-                            <div id="container">
+                            <div id="container_ompe">
                                 <table class="remarksTable">
                                     <tr>
                                         <th>Competencies</th>
@@ -207,5 +210,7 @@ $conn->close();
             </div>
         </div>
     </div>
+
+    
 </body>
 </html>
