@@ -124,5 +124,10 @@ $conn->close();
             <a href="edp_login.php"><button class="login">LOGIN</button></a>
         </div>
     </main>
+
+    <footer>
+            <h5>All rights reserved 2024<br>
+            © IDIS SYSTEM</h5>
+        </footer>
 </body>
 </html>
