@@ -1,0 +1,36 @@
+*/{
+    font-family: Calibri;
+}
+ol, li, ul{
+    font-weight: bold;
+}
+li{
+    list-style-type: upper-roman;
+}
+.li1{
+    list-style: none;
+    font-weight: normal;
+}
+.li2{
+    font-weight: normal;
+    list-style: inherit !important;
+}
+.li3{
+    list-style-type: none;
+    font-weight: normal;
+}
+.li4{
+    list-style: lower-alpha;
+    font-weight: normal;
+}
+p, div{
+    font-weight: normal;
+}
+h3, p{
+    text-align: center;
+    margin: 0%;
+}
+h4{
+    margin: 0%;
+}
+
