@@ -1,14 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 *{
-    margin: 0%;
-    color: whitesmoke;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+    color: rgb(255, 255, 255);
 }
 a{
     text-decoration-line: none;
 }
 body {
+
+    
+    flex-direction: column;
+    align-items: center;
     background-image: url("smcc.jpg");
     background-repeat: no-repeat;
-    background-size: 100%;
+    background-size: cover;
+    background-position: center;
+    
     }
 
 header{
@@ -17,19 +28,19 @@ header{
 }
 
 body{
-    background-color: #324A5F;
+    background-color: #0C1821;
     text-align: center;
 }
 main{
     size: 100%;
     display: flex;
-    margin-top: 70pt;
+    margin-top: 100pt;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
 }
 .card{
-    margin: .5%;
+    margin: 5px;
     width: 150pt;
     background-color: rgba(224, 138, 25, 0.733);
     border-radius: 10pt;
@@ -75,4 +86,20 @@ main{
 }
 .login:hover{
     background-color: #324A5F;
+}
+
+footer {
+    width: 100%;
+    padding: 20px 0;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+main{
+    font-weight: 700;
 }
