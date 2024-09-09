@@ -100,7 +100,7 @@ $conn->close();
     <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
     <button class="no-print" onclick="window.history.back()">Back</button>
     <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
-    <link rel="stylesheet" href="competencies.css">
+    <link rel="stylesheet" href="view_competencies.css">
     <table class="header-info">
         <tr>
             <th>I. Subject code:</th>
