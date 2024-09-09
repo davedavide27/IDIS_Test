@@ -63,7 +63,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS</title>
     <link rel="stylesheet" href="style.css">
-    <script src="../main.js"></script>
+    <script src="instructor.js"></script>
     <style>
         .logout-message {
             display: none;
@@ -125,7 +125,7 @@ $conn->close();
                             <div id="containerPlan">
                                 <!-- Syllabus Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="#"><p>Syllabus</p></a>
+                                    <a href="syllabus.html"><p>Syllabus</p></a>
                                 </div>
                                 
                                 <!-- Competencies Plan Card -->
@@ -171,13 +171,13 @@ $conn->close();
                                     </div>
                                 </div>
                                 <div class="commentCard">
-                                    <div>
+                            <div>
                                         <h6>ADGEC 1</h6>
                                     </div>
                                     <div>
                                         <p class="content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ducimus dolores id debitis cum accusamus inventore praesentium sit voluptatum, distinctio dignissimos odio laboriosam, omnis assumenda eos iusto officia aut itaque. Molestias!</p>
                                     </div>
-                                    <div>
+                                            <div>
                                         <p class="footerTopic">Topic No. 2</p>
                                     </div>
                                 </div>

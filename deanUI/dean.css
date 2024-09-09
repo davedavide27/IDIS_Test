@@ -286,3 +286,13 @@ ul{
     font-weight: 900;
     text-align: left;
 }
+.logout-message {
+    display: none;
+    color: green;
+    font-weight: bold;
+}
+/* Highlight the selected subject button */
+.selected-subject {
+    background-color: #FF0000;
+    border-color: #badbcc;
+}

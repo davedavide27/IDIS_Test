@@ -88,8 +88,7 @@ function fetchCompetencies(subjectCode) {
                   `;
                   tableBody.appendChild(row);
               });
-              // Hide the "No competencies found" row
-              noCompetenciesRow.style.display = 'none';
+
           } else {
             const noCompetenciesRow = document.createElement('tr');
             noCompetenciesRow.innerHTML = `<td colspan="2">No competencies found for this subject.</td>`;

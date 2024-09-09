@@ -140,7 +140,7 @@ $conn->close();
     <div class="containerOfAll">
         <?php if (isset($_GET['subject_code']) && !empty($subject_code)): ?>
             <div class="competencyContainer">
-                <h2>Competencies for <?php echo htmlspecialchars($subject_name); ?> (<?php echo htmlspecialchars($subject_code); ?>)</h2>
+                <h2>Competencies for: <?php echo htmlspecialchars($subject_name); ?> (<?php echo htmlspecialchars($subject_code); ?>)</h2>
                 <table class="competency-table">
                     <tr>
                         <th>Competency Description</th>
@@ -161,55 +161,6 @@ $conn->close();
                 </table>
                 <button class="no-print" onclick="window.print()">Print this page</button>
                 <button class="no-print" onclick="window.history.back()">Back</button>
-            </div>
-        <?php else: ?>
-            <div class="subjectsContainer">
-                <nav class="navSubject">
-                    <div class="logo">
-                        <img src="logo.png" alt="sample logo">
-                    </div>
-                    <div>
-                        <ul>Name: <?php echo htmlspecialchars($vpFullName); ?></ul>
-                        <ul>ID: <?php echo htmlspecialchars($vpId); ?></ul>
-                    </div>
-
-                    <h4 style="text-align: center;">Competencies: 00 out of 00</h4>
-                    <div class="selectIns">
-                        <form method="get" action="">
-                            <select name="instructor_ID" id="showSelect" onchange="this.form.submit()">
-                                <option value="">Select Instructor</option>
-                                <?php foreach ($instructors as $instructor): ?>
-                                    <option value="<?php echo $instructor['instructor_ID']; ?>" <?php echo isset($selectedInstructorID) && $selectedInstructorID == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </form>
-                    </div>
-
-                    <h4 style="text-align: center;">Subjects: <?php echo count($subjects); ?> out of <?php echo count($subjects); ?></h4>
-                    <div class="subsContainer">
-                        <div class="subjects">
-                            <div><h4>Subjects:</h4></div>
-                            <?php if (!empty($subjects)): ?>
-                                <?php foreach ($subjects as $subject): ?>
-                                    <div class="btnSubjects">
-                                        <a href="?instructor_ID=<?php echo $selectedInstructorID; ?>&subject_code=<?php echo htmlspecialchars($subject['subject_code']); ?>" class="btn">
-                                            <?php echo htmlspecialchars($subject['subject_name']); ?>
-                                        </a>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p>No subjects found.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div>
-                        <button onclick="location.href='../logout.php';" class="logout-button">Logout</button>
-                        <p id="logoutMessage" class="logout-message"></p>
-                    </div>
-                </nav>
-            </div>
         <?php endif; ?>
     </div>
 </body>

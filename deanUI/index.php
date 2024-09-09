@@ -17,7 +17,9 @@ if ($conn->connect_error) {
 $deanFullName = '';
 $subjects = [];
 $instructors = [];
-$reports = []; // Array to store reports data
+$competencies = [];
+$selectedInstructorId = null;
+$selectedSubjectCode = null;
 
 // Check if the Dean is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'dean') {
@@ -38,13 +40,6 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'dean') {
     }
     $stmt->close();
 
-    // Fetch the list of subjects
-    $sql = "SELECT subject_code, subject_name FROM subject";
-    $result = $conn->query($sql);
-    while ($row = $result->fetch_assoc()) {
-        $subjects[] = $row;
-    }
-
     // Fetch the list of instructors
     $sql = "SELECT instructor_ID, instructor_fname, instructor_mname, instructor_lname FROM instructor";
     $result = $conn->query($sql);
@@ -52,25 +47,23 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'dean') {
         $instructors[] = $row;
     }
 
-    // Fetch reports related to subjects and competencies
-    $sql = "SELECT * FROM reports WHERE department = ?";
-    $stmt = $conn->prepare($sql);
-    $department = "COLLEGE OF ARTS AND SCIENCES"; // Example department
-    $stmt->bind_param("s", $department);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Check if an instructor is selected and fetch their subjects
+    if (isset($_GET['instructor_ID'])) {
+        $selectedInstructorId = $_GET['instructor_ID'];
 
-    if ($result->num_rows > 0) {
+        $sql = "SELECT subject_code, subject_name FROM subject WHERE instructor_ID = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $selectedInstructorId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
         while ($row = $result->fetch_assoc()) {
-            $reports[] = $row;
+            $subjects[] = $row;
         }
+        $stmt->close();
     }
-    $stmt->close();
-} else {
-    // Redirect to login if session is not set
-    header("Location: login.php");
-    exit();
 }
+
 $conn->close();
 ?>
 
@@ -80,15 +73,8 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
-    <style>
-        .logout-message {
-            display: none;
-            color: green;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="stylesheet" href="dean.css">
+    <script src="dean.js"></script>
 </head>
 <body>
     <div class="containerOfAll">
@@ -101,62 +87,51 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($deanFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($deanId); ?></ul>
                 </div>
-                <div>
-
-                </div>
-                <h4 style="text-align: center;">Select Role</h4>
-                <div class="selectIns">
-                    <form action="select_role.php" method="post">
-                        <select name="role" id="showSelect" onchange="this.form.submit()">
-                            <option value="">Select Role</option>
-                            <option value="Program Chair">Program Chair</option>
-                            <option value="Subject Coordinator">Subject Coordinator</option>
-                        </select>
-                    </form>
-                </div>
                 <br><br>
                 <h4 style="text-align: center;">Select Instructor</h4>
                 <div class="selectIns">
-                    <form action="select_instructor.php" method="post">
-                        <select name="instructor" id="showSelect" onchange="this.form.submit()">
-                            <option value="">Select Instructor</option>
+                    <form method="get" action="">
+                        <select name="instructor_ID" id="showSelect" onchange="this.form.submit()">
+                            <option value="">Select Instructor:</option>
                             <?php foreach ($instructors as $instructor): ?>
-                                <option value="<?php echo $instructor['instructor_ID']; ?>">
+                                <option value="<?php echo $instructor['instructor_ID']; ?>" <?php echo $selectedInstructorId == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </form>
-                
+                </div>
+
                 <br><br>
-                <h4 style="text-align: center;">Subjects</h4>
-                <div class="subsContainer">
-                    <div class="subjects">
-                        <?php foreach ($subjects as $subject): ?>
-                            <div class="btnSubjects">
-                                <form action="view_subject.php" method="post">
-                                    <button name="subject" value="<?php echo htmlspecialchars($subject['subject_code']); ?>">
+                <?php if (!empty($subjects)): ?>
+                    <h4 style="text-align: center;">Assigned Subjects</h4>
+                    <div class="subsContainer">
+                        <div class="subjects">
+                            <?php foreach ($subjects as $subject): ?>
+                                <div class="btnSubjects">
+                                    <button type="button" data-subject-code="<?php echo htmlspecialchars($subject['subject_code']); ?>" onclick="selectSubject('<?php echo htmlspecialchars($subject['subject_code']); ?>', '<?php echo htmlspecialchars($subject['subject_name']); ?>', this)">
                                         <?php echo htmlspecialchars($subject['subject_name']); ?>
                                     </button>
-                                </form>
-                            </div>
-                        <?php endforeach; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                
-                    <form action="../logout.php" method="post">
-                        <button class="logout_btn" type="submit">Logout</button>
-                    </form>
-                </div>
-                </div>
+                <?php else: ?>
+                    <h4 style="text-align: center;">No subjects assigned to this instructor.</h4>
+                <?php endif; ?>
+                <form action="../logout.php" method="post">
+                    <button class="logout_btn" type="submit">Logout</button>
+                </form>
             </nav>
             <div class="implementContainer">
-                <header><h5>Instructional Delivery Implementation System (IDIS)</h5><p>Saint Michael College of Caraga (SMCC)</p>
+                <header>
+                    <h5>Instructional Delivery Implementation System (IDIS)</h5>
+                    <p>Saint Michael College of Caraga (SMCC)</p>
                     <div></div>
                     <div>
                         <nav class="navtab">
-                                <button class="tablinks" onclick="openTab(event, 'ILOs')">Print plans</button>
-                                
-                                <button class="tablinks" onclick="openTab(event, 'Topics')">Competencies</button>
+                            <button class="tablinks" onclick="openTab(event, 'ILOs')">Print plans</button>
+                            <button class="tablinks" onclick="openTab(event, 'Topics')">Competencies</button>
                         </nav>
                     </div>
                 </header>
@@ -165,15 +140,18 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
                             <div id="container_plans">
-                                <div class="planCard">
-                                    <a href=""><p>Syllabus</p></a>
+                                <div class="planCard" id="syllabusCard" style="display: none;">
+                                    <a href="">
+                                        <p>Syllabus</p>
+                                    </a>
                                 </div>
-                                <div class="planCard">
-                                    <a href=""><p>Competencies</p></a>
+                                <div class="planCard" id="competenciesCard" style="display: none;">
+                                    <a href="competencies.php" id="competenciesLink">
+                                        <p>Competencies</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                          
                         <div id="Topics" class="tabcontent">
                             <h6><br>The table below concludes all inputs.</h6>
                             <div id="container_ompe">
@@ -184,33 +162,52 @@ $conn->close();
                                         <th>Students' ratings</th>
                                         <th>Interpretation</th>
                                     </tr>
-                                    <?php foreach ($reports as $report): ?>
+                                    <?php foreach ($competencies as $competency): ?>
                                         <tr>
-                                            <td><?= htmlspecialchars($report['competency']) ?></td>
-                                            <td><?= htmlspecialchars($report['remarks']) ?></td>
-                                            <td><?= htmlspecialchars($report['percentage_implemented']) ?>%</td>
-                                            <td><?= htmlspecialchars($report['remarks']) ?></td>
+                                            <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
+                                            <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </table>
                             </div>
                         </div>
-                        <script>
-                            function showLogoutMessage(message) {
-                                var logoutMessage = document.getElementById('logoutMessage');
-                                logoutMessage.textContent = message;
-                                logoutMessage.style.display = 'block';
-                                setTimeout(function() {
-                                    logoutMessage.style.display = 'none';
-                                }, 3000);
-                            }
-                        </script>
                     </div>
-                </main>               
+                </main>
             </div>
         </div>
     </div>
 
-    
+    <script>
+        // Function to highlight selected subject and show plan cards
+        function selectSubject(subjectCode, subjectName, buttonElement) {
+            // Highlight the selected subject button
+            document.querySelectorAll('.btnSubjects button').forEach(function(button) {
+                button.classList.remove('selected-subject');
+            });
+            buttonElement.classList.add('selected-subject');
+
+            // Show the Syllabus and Competencies plan cards
+            document.getElementById('syllabusCard').style.display = 'block';
+            document.getElementById('competenciesCard').style.display = 'block';
+
+            // Set the subject code and name dynamically in the Competencies link
+            document.getElementById('competenciesLink').href = `competencies.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+        }
+
+        // Function to open a tab
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+    </script>
 </body>
 </html>

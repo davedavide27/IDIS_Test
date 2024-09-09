@@ -321,9 +321,9 @@ $conn->close();
         </ul>
 
         <div class="signatures">
-            <p class="signature-label">Prepared by: <input type="text" name="prepared_by" value="<?php echo htmlspecialchars($prepared_by); ?>" style="width: 100%;" required></p>
-            <p class="signature-label">Checked by: <input type="text" name="checked_by" value="<?php echo htmlspecialchars($checked_by); ?>" style="width: 100%;" required></p>
-            <p class="signature-label">Noted by: <input type="text" name="noted_by" value="<?php echo htmlspecialchars($noted_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Prepared by: <input type="text" style ="text-align:center" name="prepared_by" value="<?php echo htmlspecialchars($prepared_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Checked by: <input type="text" style ="text-align:center" name="checked_by" value="<?php echo htmlspecialchars($checked_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Noted by: <input type="text" style ="text-align:center" name="noted_by" value="<?php echo htmlspecialchars($noted_by); ?>" style="width: 100%;" required></p>
         </div>
 
         <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
