@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function filterCompetencies(subjectCode) {
   const request = new XMLHttpRequest();
-  request.open('GET', `vpUI.php?action=fetch_competencies&subject_code=${subjectCode}`, true);
+  request.open('GET', `instructorUI.php?action=fetch_competencies&subject_code=${subjectCode}`, true);
   request.onload = function() {
       if (this.status === 200) {
           const response = JSON.parse(this.responseText);
