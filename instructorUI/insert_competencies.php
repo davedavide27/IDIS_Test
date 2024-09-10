@@ -162,7 +162,7 @@ if (isset($_POST['save_edits'])) {
                     $instructor_ID
                 );
                 $stmtInsert->execute();
-                $competency_ids_from_db[] = $stmtInsert->insert_id; // Capture new inserted id
+                $competency_ids_from_db[] = $stmtInsert->insert_id;
             }
         }
 
@@ -179,13 +179,14 @@ if (isset($_POST['save_edits'])) {
     $stmtUpdate->close();
     $stmtInsert->close();
 
-    // Refresh the page to reflect the changes
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit();
+    // Set the session success message
+    $_SESSION['success_message'] = "Competencies updated successfully!";
 }
 
+// Close the connection
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -213,6 +214,16 @@ $conn->close();
     </style>
 </head>
 <body>
+    
+    <!-- JavaScript to display success message and redirect to index.php -->
+    <?php if (isset($_SESSION['success_message'])): ?>
+        <script>
+            alert('<?php echo $_SESSION['success_message']; ?>');
+            window.location.href = "index.php"; // Redirect to index.php after alert
+        </script>
+        <?php unset($_SESSION['success_message']); // Clear the message after displaying ?>
+    <?php endif; ?>
+
     <h3>Competency Implementation</h3>
     <form action="" method="post">
         <input type="hidden" name="save_edits" value="1">
@@ -328,7 +339,8 @@ $conn->close();
 
         <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
         <button class="print-button no-print" type="button" onclick="window.print()">Print this page</button>
-        <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button> <!-- Back Button -->
+        <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
+
     </form>
 
     <script>

@@ -128,7 +128,7 @@ function openTab(evt, tabName) {
   
   function filterCompetencies(subjectCode) {
     const request = new XMLHttpRequest();
-    request.open('GET', `vpUI.php?action=fetch_competencies&subject_code=${subjectCode}`, true);
+    request.open('GET', `fetch_competencies.php?action=fetch_competencies&subject_code=${subjectCode}`, true);
     request.onload = function() {
         if (this.status === 200) {
             const response = JSON.parse(this.responseText);
