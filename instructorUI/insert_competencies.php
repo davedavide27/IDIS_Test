@@ -27,7 +27,13 @@ $subject_code = "";
 $subject_name = "";
 $units = "";
 $hours = "";
-$department = "COLLEGE OF ARTS AND SCIENCES"; // Default department
+$departments = [
+    "COLLEGE OF ARTS AND SCIENCES",
+    "COLLEGE OF ENGINEERING",
+    "COLLEGE OF BUSINESS",
+    "COLLEGE OF EDUCATION",
+    "COLLEGE OF COMPUTER STUDIES"
+];
 $school_year_start = "";
 $school_year_end = "";
 $grading_period = "";
@@ -136,29 +142,30 @@ if (isset($_POST['save_edits'])) {
                 $competency_ids_from_db[] = $competency_id;
             } else {
                 // Insert new competency
-                $stmtInsert->bind_param("sssssiissssssiiiiiiisss", 
-                    $_POST['subject_code'], 
+                $stmtInsert->bind_param(
+                    "sssssiissssssiiiiiiisss",
+                    $_POST['subject_code'],
                     $_POST['subject_name'],
-                    $competency_description, 
-                    $remarks, 
-                    $_POST['units'], 
-                    $_POST['hours'], 
-                    $_POST['department'], 
-                    $_POST['school_year_start'], 
-                    $_POST['school_year_end'], 
-                    $_POST['grading_period'], 
-                    $_POST['grading_quarter_start'], 
-                    $_POST['grading_quarter_end'], 
-                    $_POST['total_competencies_deped_tesda_ched'], 
-                    $_POST['total_competencies_smcc'], 
-                    $_POST['total_institutional_competencies'], 
-                    $_POST['total_competencies_b_and_c'], 
-                    $_POST['total_competencies_implemented'], 
-                    $_POST['total_competencies_not_implemented'], 
-                    $_POST['percentage_competencies_implemented'], 
-                    $_POST['prepared_by'], 
-                    $_POST['checked_by'], 
-                    $_POST['noted_by'], 
+                    $competency_description,
+                    $remarks,
+                    $_POST['units'],
+                    $_POST['hours'],
+                    $_POST['department'],
+                    $_POST['school_year_start'],
+                    $_POST['school_year_end'],
+                    $_POST['grading_period'],
+                    $_POST['grading_quarter_start'],
+                    $_POST['grading_quarter_end'],
+                    $_POST['total_competencies_deped_tesda_ched'],
+                    $_POST['total_competencies_smcc'],
+                    $_POST['total_institutional_competencies'],
+                    $_POST['total_competencies_b_and_c'],
+                    $_POST['total_competencies_implemented'],
+                    $_POST['total_competencies_not_implemented'],
+                    $_POST['percentage_competencies_implemented'],
+                    $_POST['prepared_by'],
+                    $_POST['checked_by'],
+                    $_POST['noted_by'],
                     $instructor_ID
                 );
                 $stmtInsert->execute();
@@ -190,6 +197,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -198,10 +206,14 @@ $conn->close();
     <title>Edit Competencies</title>
     <style>
         @media print {
-            .no-print, .no-print * {
+
+            .no-print,
+            .no-print * {
                 display: none !important;
             }
-            input, select {
+
+            input,
+            select {
                 border: none;
                 background: transparent;
                 -webkit-appearance: none;
@@ -213,15 +225,17 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
-    
+
     <!-- JavaScript to display success message and redirect to index.php -->
     <?php if (isset($_SESSION['success_message'])): ?>
         <script>
             alert('<?php echo $_SESSION['success_message']; ?>');
             window.location.href = "index.php"; // Redirect to index.php after alert
         </script>
-        <?php unset($_SESSION['success_message']); // Clear the message after displaying ?>
+        <?php unset($_SESSION['success_message']); // Clear the message after displaying 
+        ?>
     <?php endif; ?>
 
     <h3>Competency Implementation</h3>
@@ -249,9 +263,13 @@ $conn->close();
             </tr>
             <tr>
                 <td>V. Department</td>
-                <td>: 
+                <td>:
                     <select name="department" required>
-                        <option value="COLLEGE OF ARTS AND SCIENCES" <?php echo $department === 'COLLEGE OF ARTS AND SCIENCES' ? 'selected' : ''; ?>>COLLEGE OF ARTS AND SCIENCES</option>
+                        <?php foreach ($departments as $dept): ?>
+                            <option value="<?php echo $dept; ?>" <?php echo $departments === $dept ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($dept); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </td>
             </tr>
@@ -261,7 +279,7 @@ $conn->close();
             </tr>
             <tr>
                 <td>VII. Grading period/quarter</td>
-                <td>: 
+                <td>:
                     <select name="grading_period" required>
                         <option value="1st SEMESTER" <?php echo $grading_period === '1st SEMESTER' ? 'selected' : ''; ?>>1st SEMESTER</option>
                         <option value="2nd SEMESTER" <?php echo $grading_period === '2nd SEMESTER' ? 'selected' : ''; ?>>2nd SEMESTER</option>
@@ -332,9 +350,9 @@ $conn->close();
         </ul>
 
         <div class="signatures">
-            <p class="signature-label">Prepared by: <input type="text" style ="text-align:center" name="prepared_by" value="<?php echo htmlspecialchars($prepared_by); ?>" style="width: 100%;" required></p>
-            <p class="signature-label">Checked by: <input type="text" style ="text-align:center" name="checked_by" value="<?php echo htmlspecialchars($checked_by); ?>" style="width: 100%;" required></p>
-            <p class="signature-label">Noted by: <input type="text" style ="text-align:center" name="noted_by" value="<?php echo htmlspecialchars($noted_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Prepared by: <input type="text" style="text-align:center" name="prepared_by" value="<?php echo htmlspecialchars($prepared_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Checked by: <input type="text" style="text-align:center" name="checked_by" value="<?php echo htmlspecialchars($checked_by); ?>" style="width: 100%;" required></p>
+            <p class="signature-label">Noted by: <input type="text" style="text-align:center" name="noted_by" value="<?php echo htmlspecialchars($noted_by); ?>" style="width: 100%;" required></p>
         </div>
 
         <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
@@ -344,7 +362,6 @@ $conn->close();
     </form>
 
     <script>
-        
         function addCompetency() {
             const table = document.getElementById('competencyTable');
             const row = table.insertRow(-1);
@@ -362,8 +379,7 @@ $conn->close();
             const row = button.parentNode.parentNode;
             row.parentNode.removeChild(row);
         }
-
-        
     </script>
 </body>
+
 </html>

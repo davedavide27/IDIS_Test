@@ -17,6 +17,8 @@ if ($conn->connect_error) {
 $vpFullName = '';
 $instructors = [];
 $subjects = [];
+$competenciesCount = 0; // Default value for competencies count
+$totalCompetencies = 0; // Default value for total competencies count
 
 // Check if the vp is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'vp') {
@@ -135,13 +137,10 @@ $conn->close();
                         </select>
                     </form>
                 </div>
-
+                <br>
                 <h4 style="text-align: center;">Subjects: <?php echo count($subjects); ?> out of <?php echo count($subjects); ?></h4>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div>
-                            <h4>Subjects:</h4>
-                        </div>
                         <?php if (!empty($subjects)): ?>
                             <?php foreach ($subjects as $subject): ?>
                                 <div class="btnSubjects">
@@ -150,8 +149,6 @@ $conn->close();
                                     </button>
                                 </div>
                             <?php endforeach; ?>
-                        <?php else: ?>
-                            <p>No subjects found.</p>
                         <?php endif; ?>
                     </div>
                 </div>

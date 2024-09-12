@@ -68,13 +68,18 @@ body {
 }
 .header-info {
     margin-top: 20px;
+    
 }
 .header-info th {
     text-align: left;
     width: 250px;
 }
+.header-info tr {
+        width: 150px; /* Ensures numbers are in a fixed width column */
+}
 .header-info td {
     width: auto;
+    
 }
 .sign-section {
     margin-top: 40px;
