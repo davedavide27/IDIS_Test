@@ -34,3 +34,42 @@ h4{
     margin: 0%;
 }
 
+/*@media print{@page {size: landscape}}*/
+
+@media screen {
+    div.divFooter{
+      display: none;
+    }
+    .br{
+        display: none;
+    }
+}
+@media print {
+    div.divFooter {
+      position: fixed;
+      bottom: 0;
+    }
+}
+@media screen {
+    div.divHeader{
+      display: none;
+      text-align: center;
+    }
+}
+div.divHeader{
+    position: relative;
+    display: block;
+}
+
+@media print {
+    div.divHeader {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 50%;
+        translate: -50%;
+  }
+}
+img{
+    height: 60pt;
+}
