@@ -142,6 +142,8 @@ $conn->close();
             <div class="competencyContainer">
                 <h2>Competencies for: <?php echo htmlspecialchars($subject_name); ?> (<?php echo htmlspecialchars($subject_code); ?>)</h2>
                 <table class="competency-table">
+                <button class="no-print" onclick="window.print()">Print this page</button>
+                <button class="no-print" onclick="window.history.back()">Back</button>
                     <tr>
                         <th>Competency Description</th>
                         <th>Remarks</th>
@@ -159,8 +161,6 @@ $conn->close();
                         </tr>
                     <?php endif; ?>
                 </table>
-                <button class="no-print" onclick="window.print()">Print this page</button>
-                <button class="no-print" onclick="window.history.back()">Back</button>
         <?php endif; ?>
     </div>
 </body>

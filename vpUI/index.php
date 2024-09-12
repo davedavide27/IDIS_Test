@@ -66,6 +66,14 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'vp') {
         }
 
         $stmt->close();
+        // Fetch the total number of competencies for the selected instructor's subjects
+        $sql = "SELECT COUNT(*) as total FROM competencies WHERE subject_code IN (SELECT subject_code FROM subject WHERE instructor_ID = ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $selectedInstructorID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $competenciesCount = $result->fetch_assoc()['total'];
+        $stmt->close();
     }
 }
 
@@ -74,24 +82,29 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
+    <link rel="stylesheet" href="vp.css">
+    <script src="vp.js"></script>
     <style>
         .logout-message {
             display: none;
             color: green;
             font-weight: bold;
         }
+
         .selected-subject {
             background-color: #FF0000;
             border-color: #badbcc;
         }
+
+        /* Add more styling if needed */
     </style>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
@@ -104,10 +117,15 @@ $conn->close();
                     <ul>ID: <?php echo htmlspecialchars($vpId); ?></ul>
                 </div>
 
-                <h4 style="text-align: center;">Competencies: 00 out of 00</h4>
+                <!-- Static display of competencies count -->
+                <h4 style="text-align: center;">
+                    Competencies: 
+                    <span id="competenciesCount"><?php echo $competenciesCount; ?> out of <?php echo $competenciesCount; ?></span>
+                </h4>
+
                 <div class="selectIns">
                     <form method="get" action="">
-                        <select name="instructor_ID" id="showSelect" onchange="this.form.submit()">
+                        <select name="instructor_ID" id="showSelect" onchange="fetchCompetencies(this.value); this.form.submit();">
                             <option value="">Select Instructor</option>
                             <?php foreach ($instructors as $instructor): ?>
                                 <option value="<?php echo $instructor['instructor_ID']; ?>" <?php echo isset($selectedInstructorID) && $selectedInstructorID == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
@@ -121,7 +139,9 @@ $conn->close();
                 <h4 style="text-align: center;">Subjects: <?php echo count($subjects); ?> out of <?php echo count($subjects); ?></h4>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Subjects:</h4></div>
+                        <div>
+                            <h4>Subjects:</h4>
+                        </div>
                         <?php if (!empty($subjects)): ?>
                             <?php foreach ($subjects as $subject): ?>
                                 <div class="btnSubjects">
@@ -157,70 +177,91 @@ $conn->close();
                             <h6><br>View for Signatures</h6>
                             <div id="container">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#"><p>Syllabus</p></a>
+                                    <a href="#">
+                                        <p>Syllabus</p>
+                                    </a>
                                 </div>
                                 <div class="planCard" id="competenciesCard" style="display: none;">
-                                    <a href="view_competencies.php?subject_code=" id="competenciesLink"><p>Competencies</p></a>
+                                    <a href="view_competencies.php?subject_code=" id="competenciesLink">
+                                        <p>Competencies</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </main>               
+                </main>
             </div>
         </div>
     </div>
 
     <script>
-// Function to switch between tabs
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-// Function to select a subject and display syllabus and competencies
-function selectSubject(subjectCode, subjectName, buttonElement) {
-    // Highlight the selected subject button
-    document.querySelectorAll('.btnSubjects button').forEach(function(button) {
-        button.classList.remove('selected-subject');
-    });
-    buttonElement.classList.add('selected-subject');
-
-    // Store selected subject in sessionStorage
-    sessionStorage.setItem('selectedSubjectCode', subjectCode);
-    sessionStorage.setItem('selectedSubjectName', subjectName);
-
-    // Display the plan cards for Syllabus and Competencies
-    document.getElementById('syllabusCard').style.display = 'block';
-    document.getElementById('competenciesCard').style.display = 'block';
-
-    // Update the competencies link with the selected subject
-    document.getElementById('competenciesLink').href = 'view_competencies.php?subject_code=' + subjectCode;
-}
-
-// Initialize the page and auto-select the previously selected subject
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if a subject was selected before
-    var selectedSubjectCode = sessionStorage.getItem('selectedSubjectCode');
-    var selectedSubjectName = sessionStorage.getItem('selectedSubjectName');
-
-    if (selectedSubjectCode && selectedSubjectName) {
-        // Auto-select the subject if previously selected
-        var subjectButton = document.querySelector(`.btnSubjects button[onclick*="${selectedSubjectCode}"]`);
-        if (subjectButton) {
-            selectSubject(selectedSubjectCode, selectedSubjectName, subjectButton);
+        // Function to switch between tabs
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-    }
-});
 
+        // Function to select a subject and display syllabus and competencies
+        function selectSubject(subjectCode, subjectName, buttonElement) {
+            // Highlight the selected subject button
+            document.querySelectorAll('.btnSubjects button').forEach(function(button) {
+                button.classList.remove('selected-subject');
+            });
+            buttonElement.classList.add('selected-subject');
+
+            // Fetch competencies for the selected subject
+            fetchCompetencies(subjectCode);
+
+            // Store selected subject in sessionStorage
+            sessionStorage.setItem('selectedSubjectCode', subjectCode);
+            sessionStorage.setItem('selectedSubjectName', subjectName);
+
+            // Display the plan cards for Syllabus and Competencies
+            document.getElementById('syllabusCard').style.display = 'block';
+            document.getElementById('competenciesCard').style.display = 'block';
+
+            // Update the competencies link with the selected subject
+            document.getElementById('competenciesLink').href = 'view_competencies.php?subject_code=' + subjectCode;
+        }
+
+        // Function to fetch the competencies from PHP
+        function fetchCompetencies(subjectCode) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'display_total_comp.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('competenciesCount').innerText = response.subject_competencies + " out of " + response.total_competencies;
+                }
+            };
+            xhr.send('subject_code=' + subjectCode);
+        }
+
+        // Initialize the page and auto-select the previously selected subject
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if a subject was selected before
+            var selectedSubjectCode = sessionStorage.getItem('selectedSubjectCode');
+            var selectedSubjectName = sessionStorage.getItem('selectedSubjectName');
+
+            if (selectedSubjectCode && selectedSubjectName) {
+                // Auto-select the subject if previously selected
+                var subjectButton = document.querySelector(`.btnSubjects button[onclick*="${selectedSubjectCode}"]`);
+                if (subjectButton) {
+                    selectSubject(selectedSubjectCode, selectedSubjectName, subjectButton);
+                }
+            }
+        });
     </script>
 </body>
+
 </html>
