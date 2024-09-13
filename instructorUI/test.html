@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto-resizable Textareas in Resizable Container</title>
+    <!--<style> 
+        textarea {
+            overflow: hidden;
+            resize: none;
+            border: none;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+    </style>-->
+    
+    <style>
+        table.report-container{
+            page-break-after: always;
+        }
+        thead.report-header{
+            display: table-header-group;
+        }
+        tfoot.report-footer{
+            display: table-footer-group;
+        }
+    </style>
+</head>
+<body>
+    <!--<li>sdsdsd
+        <div id="container"></div>
+        <table class="table3">
+            <tr>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+                <td><textarea class="autoResizeTextarea"></textarea></td>
+            </tr>
+        </table>
+    </div>
+    </li>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('.autoResizeTextarea');
+        
+            const resizeTextarea = (textarea) => {
+                // Reset height to auto to shrink the textarea if needed
+                textarea.style.height = 'auto';
+                // Set the height to scrollHeight to expand the textarea
+                textarea.style.height = `${textarea.scrollHeight}px`;
+            };
+            textareas.forEach(textarea => {
+                // Attach event listener to each textarea
+                textarea.addEventListener('input', () => resizeTextarea(textarea));
+                // Initial resize for pre-existing content
+                resizeTextarea(textarea);
+            });
+        });
+        </script>-->
+
+        <table class="report-container">
+            <thead class="report-header">
+                <tr>
+                    <td class="report-header-cell">
+                        <div class="header-info">
+                            <div class="br">head</div>
+                        </div>
+                    </td>
+                </tr>
+            </thead>
+            <tfoot class="report-footer">
+                <tr>
+                    <td class="report-footer-cell">
+                        <div class="footer-info">
+                            <div class="main">foot</div>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
+            <tbody class="report-content">
+                <tr>
+                    <td class="report-content-cell">
+                        <div class="main">
+                            body
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</body>
+</html>

@@ -4,286 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Syllabus</title>
+
+    <script>//auto resize textarea
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('.autoResizeTextarea');
+        
+            const resizeTextarea = (textarea) => {
+                // Reset height to auto to shrink the textarea if needed
+                textarea.style.height = 'auto';
+                // Set the height to scrollHeight to expand the textarea
+                textarea.style.height = `${textarea.scrollHeight}px`;
+            };
+            textareas.forEach(textarea => {
+                // Attach event listener to each textarea
+                textarea.addEventListener('input', () => resizeTextarea(textarea));
+                // Initial resize for pre-existing content
+                resizeTextarea(textarea);
+            });
+        });
+        </script>
+
     <link rel="stylesheet" href="style1.css">
 </head>
 <body>
-    <div class="divHeader"><img src="smcclogo.png" alt=""> Saint Michael College of Caraga  <img src="ISO&PAB.png" alt=""></div>
+    <div class="divHeader">
+        <div class="headContents"><img src="smcclogo.png" alt=""></div>
+        <div class="headContents" style="text-align: center;font-size: 21px;">
+            <div style="font-size: x-large;color: rgba(28, 6, 80, 0.877);font-family: Calambria;">Saint Michael College of Caraga</div>
+            <div style="font-size: medium;">
+                <div style="font-family: Bookman Old Style;">Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
+                <div style="font-family: Calambria;">&emsp;Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892 &emsp;</div>
+                <div style="font-family: Bookman Old Style;"><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
+            </div>
+        </div>
+        <div class="headContents"><img src="ISO&PAB.png" alt=""></div>
+    </div>
     
     <table class="report-container">
         <thead class="report-header">
             <tr>
-                <th class="report-header-cell">
+                <td class="report-header-cell">
                     <div class="header-info">
-                        <div class="br"><br><br><br><br><br><hr></div>
+                        <div class="br"><br><br><br><br><hr></div>
                     </div>
-                </th>
+                </td>
             </tr>
         </thead>
         <tfoot class="report-footer">
             <tr>
-                <th class="report-footer-cell">
+                <td class="report-footer-cell">
                     <div class="footer-info">
-                        <div><br><br><br><br></div>
+                        <div class="main">page no. <br><br><br><br><br></div>
                     </div>
-                </th>
+                </td>
             </tr>
         </tfoot>
         <tbody class="report-content">
             <tr>
                 <td class="report-content-cell">
                     <div class="main">
-                        <div>
-                            <table>
-                                <li><b>School's Vision, Mission, Goal, Objectives, Michaelinian Identity</b>
-                                    <br><br>
-                                    <ul>Vision<br>
-                                        <li class="li1">&emsp; &emsp; &emsp;Saint Micheal College of Caraga envisions to a university by 2035 and upholds spritual formation and excellence in teaching, service, and, research.</li>
-                                    </ul><br>
-                                    <ul >Mission
-                                        <li class="li1">As such, SMCC commits itself:
-                                            <ul>
-                                                <li class="li2">SMCC shall provide spiritual formation and learning culture that will ensure the students with an excellent and rewarding learning experiences that transform lives, abound spirituality, develop skills, and prepare future leaders;
-                                                </li>
-                                                <li class="li2">SMCC shall engage in dynamic, innovative, and interdisciplinary research to advance and achieve institutional initiatives; and
-                                                </li>
-                                                <li class="li2">SMCC shall commit to serve the diverse and local communities by fostering innovations through service-learning that enhances reciprocal community partnerships for   spiritual and social development.
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul><br>
-                                    <ul>Goal
-                                        <li class="li1">&emsp; &emsp; &emsp;Uphold Culture of Excellence in the Areas of Spiritual Formation, Instruction, Research, and Extension, thus produce Graduates that are Globally Competent, Spiritually Embodied, and Socially Responsible.</li>
-                                    </ul><br>
-                                    <ul>General Objectives
+                        <table>
+                            <li><b>School's Vision, Mission, Goal, Objectives, Michaelinian Identity</b>
+                                <br><br>
+                                <ul>Vision<br>
+                                    <li class="li1">&emsp; &emsp; &emsp;Saint Micheal College of Caraga envisions to a university by 2035 and upholds spritual formation and excellence in teaching, service, and, research.</li>
+                                </ul><br>
+                                <ul >Mission
+                                    <li class="li1">As such, SMCC commits itself:
                                         <ul>
-                                            <li class="li2">To integrate positive and evangelical values in all areas and design Christian formation programs that are effective and responsive to the psycho spiritual needs of the   learners, parents, and personnel.</li>
-                                            <li class="li2">To enhance consistently the curriculum and cultivate teachers’ effectiveness to promote quality instruction.</li>
-                                            <li class="li2">To continue upgrading facilities and services for the satisfaction of the clientele.</li>
-                                            <li class="li2">To intensify the curriculum-based and institutional research that is dynamic, innovative, and interdisciplinary</li>
-                                            <li class="li2">To implement programs that inspire, motivate, and educate learners to assume an active role and become socially responsible stewards of God’s creation.                    <li class="li2">To provide the best student services that cater to the spiritual, emotional, mental, physical, and socio-cultural needs of the pupils and students.</li>
-                                            <li class="li2">To establish harmonious linkages with Alumni, PTA, Parish, LGU, and other stakeholders geared toward school development plans.</li>
-                                            <li class="li2">To work for Accreditation by any recognized accrediting agency.</li>
-                                        </ul>                                                                          </li>
-                                    </ul><br>	        		    	        
-                                    <ul>Michealinian Identity
-                                        <li class="li1">&emsp; &emsp; &emsp;Secured by Saint Michael the Archangel’s Sword of Bravery and Victory, nourished by the faithful acceptance and practice of the Christian teachings and guidance of the Catholic church, animated by Mary’s maternal devotion and intercession, guided by the gospel values, and empowered by Christ’s life and examples – the Michaelinians of today and tomorrow are persons who are:</li>
-                                        <br>
-                                        <ul>
-                                            <li class="li3"><b>S – ocially Responsible</b> for the respect, care, love and development of God’s creations as such at all times demonstrate and live out their social responsibilities;</li>
-                                            <li class="li3"><b>M – issionaries of Christian Values</b> in possessing a faith that is dynamic to imbibe and to proclaim and promote the Christian values, hence, sharing in the mission of Christ and of the Catholic church to make all people members of one sheepfold of God;</li>
-                                            <li class="li3"><b>C – ommitted Individuals and/or Leaders</b> as equated to the faithful commitment of Jesus to His Father, thus, upholding unconditional commitment to value-filled life and actions of love and mercy;</li>
-                                            <li class="li3"><b>C – ompetent in their Chosen Fields of Endeavor</b> by being aware, curious, and interested in learning about the world and how it works in order to possess the ability to innovate and ensure success.</li>
+                                            <li class="li2">SMCC shall provide spiritual formation and learning culture that will ensure the students with an excellent and rewarding learning experiences that transform lives, abound spirituality, develop skills, and prepare future leaders;
+                                            </li>
+                                            <li class="li2">SMCC shall engage in dynamic, innovative, and interdisciplinary research to advance and achieve institutional initiatives; and
+                                            </li>
+                                            <li class="li2">SMCC shall commit to serve the diverse and local communities by fostering innovations through service-learning that enhances reciprocal community partnerships for   spiritual and social development.
+                                            </li>
                                         </ul>
-                                        <br>
-                                        <li class="li1">&emsp; &emsp; &emsp;Therefore, Michaelinians have the identities of Social Responsibility, Missionaries of Christian Values, Committed Individuals and/or Leaders, and Competent in their fields of endeavor which are paramount to transform people to be person-oriented, persons of values, persons of faith and love for God, and persons of love and mercy for others.</li>
-                                    </ul>
-                                    <br>
-                                </li>
-                                <br>
-                                <li>Graduate Intended Learning Outcomes (GILO)
+                                    </li>
+                                </ul><br>
+                                <ul>Goal
+                                    <li class="li1">&emsp; &emsp; &emsp;Uphold Culture of Excellence in the Areas of Spiritual Formation, Instruction, Research, and Extension, thus produce Graduates that are Globally Competent, Spiritually Embodied, and Socially Responsible.</li>
+                                </ul><br>
+                                <ul>General Objectives
                                     <ul>
-                                        <li class="li4">Demonstrate social responsibilities.</li>
-                                        <li class="li4">Become missionaries of Christian values.</li>
-                                        <li class="li4">Uphold unconditional commitment to life and to action.</li>
-                                        <li class="li4">Exude competence in one’s chosen fields of endeavor</li>
+                                        <li class="li2">To integrate positive and evangelical values in all areas and design Christian formation programs that are effective and responsive to the psycho spiritual needs of the   learners, parents, and personnel.</li>
+                                        <li class="li2">To enhance consistently the curriculum and cultivate teachers’ effectiveness to promote quality instruction.</li>
+                                        <li class="li2">To continue upgrading facilities and services for the satisfaction of the clientele.</li>
+                                        <li class="li2">To intensify the curriculum-based and institutional research that is dynamic, innovative, and interdisciplinary</li>
+                                        <li class="li2">To implement programs that inspire, motivate, and educate learners to assume an active role and become socially responsible stewards of God’s creation.                    <li class="li2">To provide the best student services that cater to the spiritual, emotional, mental, physical, and socio-cultural needs of the pupils and students.</li>
+                                        <li class="li2">To establish harmonious linkages with Alumni, PTA, Parish, LGU, and other stakeholders geared toward school development plans.</li>
+                                        <li class="li2">To work for Accreditation by any recognized accrediting agency.</li>
+                                    </ul>                                                                          </li>
+                                </ul><br>	        		    	        
+                                <ul>Michealinian Identity
+                                    <li class="li1">&emsp; &emsp; &emsp;Secured by Saint Michael the Archangel’s Sword of Bravery and Victory, nourished by the faithful acceptance and practice of the Christian teachings and guidance of the Catholic church, animated by Mary’s maternal devotion and intercession, guided by the gospel values, and empowered by Christ’s life and examples – the Michaelinians of today and tomorrow are persons who are:</li>
+                                    <br>
+                                    <ul>
+                                        <li class="li3"><b>S – ocially Responsible</b> for the respect, care, love and development of God’s creations as such at all times demonstrate and live out their social responsibilities;</li>
+                                        <li class="li3"><b>M – issionaries of Christian Values</b> in possessing a faith that is dynamic to imbibe and to proclaim and promote the Christian values, hence, sharing in the mission of Christ and of the Catholic church to make all people members of one sheepfold of God;</li>
+                                        <li class="li3"><b>C – ommitted Individuals and/or Leaders</b> as equated to the faithful commitment of Jesus to His Father, thus, upholding unconditional commitment to value-filled life and actions of love and mercy;</li>
+                                        <li class="li3"><b>C – ompetent in their Chosen Fields of Endeavor</b> by being aware, curious, and interested in learning about the world and how it works in order to possess the ability to innovate and ensure success.</li>
                                     </ul>
-                                </li>
-                                <br>
-                                <li>Program Intended Learning Outcomes (PILO)
-                                    <h3>PROGRAM MAPPING</h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
                                     <br>
-                                    <table>
+                                    <li class="li1">&emsp; &emsp; &emsp;Therefore, Michaelinians have the identities of Social Responsibility, Missionaries of Christian Values, Committed Individuals and/or Leaders, and Competent in their fields of endeavor which are paramount to transform people to be person-oriented, persons of values, persons of faith and love for God, and persons of love and mercy for others.</li>
+                                </ul>
+                                <br>
+                            </li>
+                            <br>
+                            <li>Graduate Intended Learning Outcomes (GILO)
+                                <ul>
+                                    <li class="li4">Demonstrate social responsibilities.</li>
+                                    <li class="li4">Become missionaries of Christian values.</li>
+                                    <li class="li4">Uphold unconditional commitment to life and to action.</li>
+                                    <li class="li4">Exude competence in one’s chosen fields of endeavor</li>
+                                </ul>
+                            </li>
+                            <br>
+                            <li>Program Intended Learning Outcomes (PILO)
+                                <h3>PROGRAM MAPPING</h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+                                <br>
+                                <table>
+                                    <tr>
+                                        <th>Program Intended Learning Outcomes (PILOs) <br>
+                                            <p>After completion of the program, the student must be able to:</p>
+                                        </th>
+                                        <th> Graduate Intended <br> Learning Outcomes (GILOs)
+                                            <table>
+                                                <tr>
+                                                    <td>a</td>
+                                                    <td>b</td>
+                                                    <td>c</td>
+                                                    <td>d</td>
+                                                </tr>
+                                            </table>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text"></td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr><td></td><td><button>+</button></td></tr>
+                                </table>
+                            </li>
+                            <br>
+                            <li>Course Code: <input type="text" name="" id=""></li>
+                            <br>
+                            <li>Course Name: <input type="text" name="" id=""></li>
+                            <br>
+                            <li>Course Unit: <input type="text" name="" id=""></li>
+                            <br>
+                            <li>Course Description: <input type="text" name="" id=""></li>
+                            <br>
+                            <li>Prerequisites/Corequisites: <input type="text" name="" id=""></li>
+                            <br>
+                            <li>Contact Hours: </li>
+                            <br>
+                            <li>Course Intended Learning Outcomes (CILO)
+                                <h3>COURSE MAPPING <br> <input type="text" name="" id="" ></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+                                <br>
+                                <table>
+                                    <tr>
+                                        <th>Program Intended Learning Outcomes (PILOs) <br>
+                                            <p>After completion of the program, the student must be able to:</p>
+                                        </th>
+                                        <th> Graduate Intended <br> Learning Outcomes (GILOs)
+                                            <table>
+                                                <tr>
+                                                    <td>a</td>
+                                                    <td>b</td>
+                                                    <td>c</td>
+                                                    <td>d</td>
+                                                    <td>e</td>
+                                                    <td>f</td>
+                                                    <td>g</td>
+                                                    <td>h</td>
+                                                    <td>i</td>
+                                                </tr>
+                                            </table>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="container">
+                                                <textarea class="autoResizeTextarea">Memorize and comprehend the VMGO and history of the school</textarea>
+                                            </div>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="container">
+                                                <textarea class="autoResizeTextarea">Live out the Michaelinian Identity</textarea>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <table>
+                                                <tr>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                    <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                    <tr><td></td><td><button>+</button></td></tr>
+                                </table>
+                    
+                            </li>
+                            <br>
+                            <li>Context
+                                <table class="table3" id="HideBorder">
+                                    <tr class="trHeads" style="text-align: center;background-color: lightgray;">
+                                        <th>Hours</th>
+                                        <th>Intended Learning Outcomes (ILO) / Competency(ies)</th>
+                                        <th>Topics</th>
+                                        <th>Institutional Values</th>
+                                        <th>Teaching and Learning Activities</th>
+                                        <th>Resources/ References</th>
+                                        <th>Assessment Tasks</th>
+                                        <th>Course Map</th>
+                                    </tr>
+                                    <tr><th class="XIth" style="border-right: none;">PRELIM</th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th style="border-left: none;"></th>
+                                    </tr>
+                                <div id="container"></div>
+                                    <tr>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td id="HideBorder"><button>+</button></td>
+                                    </tr>
+                                </div>
+                                    <tr><th class="XIth" style="border-right: none;">MIDTERM</th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th style="border-left: none;"></th>
+                                    </tr>
+                                <div id="container"></div>
+                                    <tr>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td id="HideBorder"><button>+</button></td>
+                                    </tr>
+                                </div>
+                                    <tr><th class="XIth" style="border-right: none;">SEMIFINAL</th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th style="border-left: none;"></th>
+                                    </tr>
+                                <div id="container"></div>
                                         <tr>
-                                            <th>Program Intended Learning Outcomes (PILOs) <br>
-                                                <p>After completion of the program, the student must be able to:</p>
-                                            </th>
-                                            <th> Graduate Intended <br> Learning Outcomes (GILOs)
-                                                <table>
-                                                    <tr>
-                                                        <td>a</td>
-                                                        <td>b</td>
-                                                        <td>c</td>
-                                                        <td>d</td>
-                                                    </tr>
-                                                </table>
-                                            </th>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td><textarea class="autoResizeTextarea"></textarea></td>
+                                            <td id="HideBorder"><button>+</button></td>
                                         </tr>
-                                        <tr>
-                                            <td><input type="text"></td>
-                                            <td>
-                                                <table>
-                                                    <tr>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr><td></td><td><button>+</button></td></tr>
-                                    </table>
-                                </li>
-                                <br>
-                                <li>Course Code: <input type="text" name="" id=""></li>
-                                <br>
-                                <li>Course Name: <input type="text" name="" id=""></li>
-                                <br>
-                                <li>Course Unit: <input type="text" name="" id=""></li>
-                                <br>
-                                <li>Course Description: <input type="text" name="" id=""></li>
-                                <br>
-                                <li>Prerequisites/Corequisites: <input type="text" name="" id=""></li>
-                                <br>
-                                <li>Contact Hours: </li>
-                                <br>
-                                <li>Course Intended Learning Outcomes (CILO)
-                                    <h3>COURSE MAPPING <br> <input type="text" name="" id="" ></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
-                                    <br>
-                                    <table>
-                                        <tr>
-                                            <th>Program Intended Learning Outcomes (PILOs) <br>
-                                                <p>After completion of the program, the student must be able to:</p>
-                                            </th>
-                                            <th> Graduate Intended <br> Learning Outcomes (GILOs)
-                                                <table>
-                                                    <tr>
-                                                        <td>a</td>
-                                                        <td>b</td>
-                                                        <td>c</td>
-                                                        <td>d</td>
-                                                        <td>e</td>
-                                                        <td>f</td>
-                                                        <td>g</td>
-                                                        <td>h</td>
-                                                        <td>i</td>
-                                                    </tr>
-                                                </table>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" value="Memorize and comprehend the VMGO and history of the school "></td>
-                                            <td>
-                                                <table>
-                                                    <tr>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><input type="text" value="Live out the Michaelinian Identity "></td>
-                                            <td>
-                                                <table>
-                                                    <tr>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                        <td><select name="" id=""><option value=""> </option><option value="">I</option><option value="">D</option><option value="">P</option></select></td>
-                                                    </tr>
-                                                </table>
-                                            </td>
-                                        </tr>
-                                        <tr><td></td><td><button>+</button></td></tr>
-                                    </table>
-                        
-                                </li>
-                                <br>
-                                <li>Context
-                                    <table>
-                                        <table>
-                                            <tr style="text-align: center;">
-                                                <th>Hours</th>
-                                                <th>Intended Learning Outcomes (ILO) / Competency(ies)</th>
-                                                <th>Topics</th>
-                                                <th>Institutional Values</th>
-                                                <th>Teaching and LearningActivities</th>
-                                                <th>Resources/References</th>
-                                                <th>Assessment Tasks</th>
-                                                <th>Course Map</th>
-                                            </tr>
-                                        </table>
-                                        <table>
-                                            <tr><th>PRELIM</th></tr>
-                                            <tr>
-                                                <td><input type="number" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><button>+</button></td>
-                                            </tr>
-                                        </table>
-                                        <table>
-                                            <tr><th>MIDTERM</th></tr>
-                                            <tr>
-                                                <td><input type="number" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><button>+</button></td>
-                                            </tr>
-                                        </table><table>
-                                            <tr><th>SEMIFINAL</th></tr>
-                                            <tr>
-                                                <td><input type="number" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><button>+</button></td>
-                                            </tr>
-                                        </table><table>
-                                            <tr><th>FINAL</th></tr>
-                                            <tr>
-                                                <td><input type="number" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><input type="text" name="" id=""></td>
-                                                <td><button>+</button></td>
-                                            </tr>
-                                        </table>
-                                    </table><table>
-                                        <tr><th>Performance Tasks: <input type="text"></th></tr>
-                                    </table>
-                                    </table>
-                                </li>
-                                <br>
-                                <li>Grading System</li>
+                                </div>
+                                    <tr><th class="XIth" style="border-right: none;">FINAL</th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th id="HideBorder"></th><th id="HideBorder"></th><th id="HideBorder"></th>
+                                        <th style="border-left: none;"></th>
+                                    </tr>
+                                <div id="container"></div>
+                                    <tr>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td><textarea class="autoResizeTextarea"></textarea></td>
+                                        <td id="HideBorder"><button>+</button></td>
+                                    </tr>
+                                </div>
+                                <div id="container">
+                                    <tr><th style="border: none;font-size: small;">Performance Tasks:</th></tr>
+                                    <tr>
+                                        <td style="border: none;"><textarea class="autoResizeTextarea" style="width: 800%;"></textarea></td>
+                                    </tr>
+                                </div>
                             </table>
-                        </div>
+                            </li>
+                            <li></li>
+                        </table>
+                    </div>
                 </td>
             </tr>
         </tbody>
     </table>
     
-    <div class="divFooter">DUCOMENT FOOTER</div>
+    <div class="divFooter"><img src="footer.png" alt="" style="height: fit-content;"></div>
 </body>
 </html>
