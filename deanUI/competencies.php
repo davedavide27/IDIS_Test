@@ -128,7 +128,7 @@ $conn->close();
         </tr>
         <tr>
             <th>VII. Grading period/quarter:</th>
-            <td><?php echo htmlspecialchars($gradingPeriod . ' From ' . $gradingQuarterStart . ' To ' . $gradingQuarterEnd); ?></td>
+            <td><?php echo htmlspecialchars($gradingPeriod . ' <strong>FROM</strong> ' . $gradingQuarterStart . ' <strong>TO</strong> ' . $gradingQuarterEnd); ?></td>
         </tr>
     </table>
     <table class="competency-table">

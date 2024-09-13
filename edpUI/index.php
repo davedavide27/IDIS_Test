@@ -40,22 +40,83 @@ $conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS - EDP</title>
     <link rel="stylesheet" href="style.css">
-    <script src="main.js"></script>
+    <script src="edp.js"></script>
+    <style>
+        /* Updated for consistent UI styling */
+        .containerOfAll {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .subjectsContainer,
+        .implementContainer {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .navSubject {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .navSubject ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .selectIns {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .selectIns button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .selectIns button:hover {
+            background-color: #0056b3;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
             <nav class="navSubject">
                 <div class="logo">
-                    <img src="../logo.jpg" alt="sample logo">
+                    <img src="../logo.png" alt="sample logo" style="width: 100px;">
                 </div>
                 <div>
-                    <ul>Name: <?php echo htmlspecialchars($edpFullName); ?></ul>
+                    <ul>EDP User: <?php echo htmlspecialchars($edpFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($edpId); ?></ul>
                 </div>
                 <div>
@@ -73,16 +134,20 @@ $conn->close();
             <main>
                 <h4 style="text-align: center;">User Assigning</h4>
                 <div class="selectIns">
-                    <button onclick="window.location.href='select_teacher.php'">Select Teacher</button>
+                    <button onclick="window.location.href='create_subject.php'">Create New Subject</button>
+                    <!-- Select teacher option redirects to select_teacher.php -->
+                    <button onclick="window.location.href='assign_subjects.php'">Select Instructor</button>
+                    <!-- Select student option redirects to select_student.php -->
                     <button onclick="window.location.href='select_student.php'">Select Student</button>
-                    <button onclick="window.location.href='assign_subject.php'">Assign Subjects</button>
                 </div>
                 <h4 style="text-align: center;">System Modification</h4>
                 <div class="selectIns">
+                    <!-- Edit syllabus format redirects to edit_syllabi.php -->
                     <button onclick="window.location.href='edit_syllabi.php'">Edit Syllabi Format</button>
                 </div>
-            </main>               
+            </main>
         </div>
     </div>
 </body>
+
 </html>

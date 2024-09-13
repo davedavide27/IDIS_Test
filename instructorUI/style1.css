@@ -1,5 +1,9 @@
-*/{
+body{
     font-family: Calibri;
+    font-size: 21px;
+    margin-top: 0;
+    margin-left: 25pt;
+    margin-right: 25pt;
 }
 ol, li, ul{
     font-weight: bold;
@@ -52,15 +56,17 @@ h4{
 }
 @media screen {
     div.divHeader{
-      display: none;
       text-align: center;
+      display: flex;
+    }
+    hr{
+        display: block;
     }
 }
 div.divHeader{
     position: relative;
     display: block;
 }
-
 @media print {
     div.divHeader {
         display: block;
@@ -68,8 +74,59 @@ div.divHeader{
         top: 0;
         left: 50%;
         translate: -50%;
+        display: flex;
   }
 }
 img{
     height: 60pt;
+}
+
+.XIth{
+    border: none;
+    color: red;
+    font-size: small;
+}
+#HideBorder{
+    border: none;
+}
+
+textarea {
+    overflow: hidden;
+    resize: none;
+    border: none;
+}
+.table3 {
+    border-collapse: collapse;
+}
+.table3, .table3 th, .table3 td {
+    border: 1px solid black;
+}
+
+.hoursInput{
+    width: 5pt;
+}
+@media print{
+    .trHeads{
+        background-color: lightgray;    
+    }
+}
+@media print{
+    table.report-container{
+        page-break-after: always;
+    }
+    thead.report-header{
+        display: table-header-group;
+    }
+    tfoot.report-footer{
+        display: table-footer-group;
+    }
+}
+table.report-container{
+    page-break-after: always;
+}
+thead.report-header{
+    display: table-header-group;
+}
+tfoot.report-footer{
+    display: table-footer-group;
 }

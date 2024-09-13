@@ -27,13 +27,7 @@ $subject_code = "";
 $subject_name = "";
 $units = "";
 $hours = "";
-$departments = [
-    "COLLEGE OF ARTS AND SCIENCES",
-    "COLLEGE OF ENGINEERING",
-    "COLLEGE OF BUSINESS",
-    "COLLEGE OF EDUCATION",
-    "COLLEGE OF COMPUTER STUDIES"
-];
+$departments = "COLLEGE OF ARTS AND SCIENCES";
 $school_year_start = "";
 $school_year_end = "";
 $grading_period = "";
@@ -265,11 +259,7 @@ $conn->close();
                 <td>V. Department</td>
                 <td>:
                     <select name="department" required>
-                        <?php foreach ($departments as $dept): ?>
-                            <option value="<?php echo $dept; ?>" <?php echo $departments === $dept ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($dept); ?>
-                            </option>
-                        <?php endforeach; ?>
+                        <option value="<?php echo htmlspecialchars($departments); ?>"><?php echo htmlspecialchars($departments); ?></option>
                     </select>
                 </td>
             </tr>

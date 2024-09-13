@@ -13,3 +13,9 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
   }
 // clickalbe tabs
+function toggleCheckAll(source) {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach(checkbox => {
+      checkbox.checked = source.checked;
+  });
+}
