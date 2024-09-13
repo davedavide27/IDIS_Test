@@ -15,6 +15,7 @@ if ($conn->connect_error) {
 }
 
 $studentFullName = '';
+$assignedSubjects = []; // Array to store assigned subjects
 
 // Check if the student is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
@@ -33,6 +34,21 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
         $_SESSION['user_fullname'] = $studentFullName; // Store the full name in session
     } else {
         $studentFullName = 'Unknown Student';
+    }
+    $stmt->close();
+
+    // Fetch assigned subjects for the logged-in student from the student_subject table
+    $sql = "SELECT subject.subject_name, subject.subject_code 
+            FROM student_subject 
+            JOIN subject ON student_subject.subject_code = subject.subject_code 
+            WHERE student_subject.student_ID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $studentId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $assignedSubjects[] = $row; // Store assigned subjects
     }
 
     $stmt->close();
@@ -55,6 +71,11 @@ $conn->close();
             color: green;
             font-weight: bold;
         }
+        /* Highlighted subject button */
+        .selected-subject {
+            background-color: #FF0000; /* Red background to indicate selection */
+            color: white; /* Change text color */
+        }
     </style>
 </head>
 <body>
@@ -74,29 +95,26 @@ $conn->close();
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Subjects:</h4></div>
-                        <div class="btnSubjects">
-                            <button>REED 101</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button>GEC 1</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button>GEC ELECT 1</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button>FIL 102</button>
-                        </div>
-                        <div class="btnSubjects">
-                            <button>NSTP-LTS 2</button>
-                        </div>
+                        <div><h4>Assigned Subjects:</h4></div>
+                        
+                        <!-- Loop through assigned subjects and display them -->
+                        <?php if (!empty($assignedSubjects)): ?>
+                            <?php foreach ($assignedSubjects as $subject): ?>
+                                <div class="btnSubjects">
+                                    <button onclick="selectSubject(this)"><?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)</button>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>No subjects assigned yet.</p>
+                        <?php endif; ?>
+                        
                     </div>
                 </div>
             </nav>
             <div class="implementContainer">
                 <header>
                     <h5>Instructional Delivery Implementation System (IDIS)</h5>
-                    <p>Saint Micheal College of Caraga (SMCC)</p>
+                    <p>Saint Michael College of Caraga (SMCC)</p>
                     <div></div>
                     <div>
                         <nav class="navtab">
@@ -183,6 +201,7 @@ $conn->close();
         </div>
     </div>
     <script>
+        // Function to show logout message
         function showLogoutMessage(message) {
             var logoutMessage = document.getElementById('logoutMessage');
             logoutMessage.textContent = message;
@@ -190,6 +209,18 @@ $conn->close();
             setTimeout(function() {
                 logoutMessage.style.display = 'none';
             }, 3000);
+        }
+
+        // Function to handle subject selection and highlighting the selected button
+        function selectSubject(buttonElement) {
+            // Remove the 'selected-subject' class from all buttons
+            const subjectButtons = document.querySelectorAll('.btnSubjects button');
+            subjectButtons.forEach(function(btn) {
+                btn.classList.remove('selected-subject');
+            });
+
+            // Add the 'selected-subject' class to the clicked button
+            buttonElement.classList.add('selected-subject');
         }
     </script>
 </body>

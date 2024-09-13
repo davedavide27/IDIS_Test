@@ -174,7 +174,7 @@ $conn->close();
                             <h6><br>View for Signatures</h6>
                             <div id="container">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#">
+                                    <a href="../instructorUI/syllabus.html">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>

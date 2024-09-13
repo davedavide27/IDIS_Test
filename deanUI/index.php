@@ -141,7 +141,7 @@ $conn->close();
                             <h6><br>Implement</h6>
                             <div id="container_plans">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="">
+                                    <a href="../syllabus.html">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>

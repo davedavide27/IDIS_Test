@@ -125,7 +125,7 @@ $conn->close();
                             <div id="containerPlan">
                                 <!-- Syllabus Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="syllabus.html"><p>Syllabus</p></a>
+                                    <a href="../syllabus.html"><p>Syllabus</p></a>
                                 </div>
                                 
                                 <!-- Competencies Plan Card -->
