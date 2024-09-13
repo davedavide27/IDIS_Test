@@ -15,6 +15,14 @@
         <div class="login-wrapper">
             <div class="logo"></div>
             <h2>LOGIN AS EDP</h2>
+            <?php if (!empty($error_message)): ?>
+                <div class="alert" id="alert"><?php echo htmlspecialchars($error_message); ?></div>
+                <script>
+                    setTimeout(function() {
+                        document.getElementById('alert').style.display = 'none';
+                    }, 5000);
+                </script>
+            <?php endif; ?>
             <form action="login.php" method="post">
                 <div class="input-field">
                     <input type="number" name="id" id="edp-id" required placeholder=" ">

@@ -1,5 +1,50 @@
+<?php
+session_start();
+
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "ids_database";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$chairFullName = '';
+$chairId = '';
+
+// Check if the program chair is logged in
+if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'program_chair') {
+    $chairId = $_SESSION['user_ID'];
+
+    // Fetch program chair's full name based on the chair_ID
+    $sql = "SELECT chair_fname, chair_mname, chair_lname FROM program_chair WHERE chair_ID = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $chairId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $chairFullName = $row['chair_fname'] . ' ' . $row['chair_mname'] . ' ' . $row['chair_lname'];
+        $_SESSION['user_fullname'] = $chairFullName; // Store the full name in session
+    } else {
+        $chairFullName = 'Unknown Program Chair';
+    }
+
+    $stmt->close();
+}
+
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,44 +52,52 @@
     <link rel="stylesheet" href="style.css">
     <script src="chair.js"></script>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
             <nav class="navSubject">
                 <div class="logo">
-                    <img src="logo.png" alt="sample logo">
+                    <img src="../person.jpg" alt="sample logo">
                 </div>
                 <div>
-                    <ul>Name: Instructor's full name</ul>
-                    <ul>ID:000000000</ul>
+                <form action="../logout.php" method="post">
+                    <button class="logout_btn" type="submit">Logout</button>
+                </form>
+                    <ul>Name: <?php echo htmlspecialchars($chairFullName); ?></ul>
+                    <ul>ID: <?php echo htmlspecialchars($chairId); ?></ul>
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Pending Subjects:</h4></div>
-                        <div class="btnSubjects">
-                            <button >ADGEC 1</button>
+                        <div>
+                            <h4>Pending Subjects:</h4>
                         </div>
                         <div class="btnSubjects">
-                            <button >FIL 102</button>
+                            <button>ADGEC 1</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >GEC 1</button>
+                            <button>FIL 102</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >GEC 2</button>
+                            <button>GEC 1</button>
                         </div>
                         <div class="btnSubjects">
-                            <button >GEC ELECT 1</button>
+                            <button>GEC 2</button>
+                        </div>
+                        <div class="btnSubjects">
+                            <button>GEC ELECT 1</button>
                         </div>
                     </div>
                 </div>
             </nav>
             <div class="implementContainer">
-                <header><h5>Instructional Delivery Implementation System (IDIS)</h5><p>Saint Micheal College of Caraga (SMCC)</p>
+                <header>
+                    <h5>Instructional Delivery Implementation System (IDIS)</h5>
+                    <p>Saint Michael College of Caraga (SMCC)</p>
                     <div></div>
                     <div>
                         <nav class="navtab">
-                                <button class="tablinks" onclick="openTab(event, 'ILOs')">Plans</button>
+                            <button class="tablinks" onclick="openTab(event, 'ILOs')">Plans</button>
                         </nav>
                     </div>
                 </header>
@@ -54,14 +107,18 @@
                             <h6><br>Implement</h6>
                             <div id="containerPlan">
                                 <div class="planCard">
-                                    <a href="index1.html" target="_blank"><p>Syllabus</p></a>
+                                    <a href="index1.html" target="_blank">
+                                        <p>Syllabus</p>
+                                    </a>
                                 </div>
                                 <div class="planCard">
-                                    <a href="index2.html" target="_blank"><p>Competencies</p></a>
+                                    <a href="index2.html" target="_blank">
+                                        <p>Competencies</p>
+                                    </a>
                                 </div>
                             </div>
                         </div>
-                          
+
                         <div id="Topics" class="tabcontent">
                             <h6><br>Remark check if the competency is implemented.</h6>
                             <div id="container">
@@ -73,19 +130,19 @@
                                     <tr>
                                         <td>... </td>
                                         <td class="inputCheck">
-                                            <input type="checkbox" >
-                                        </td5>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td class="inputCheck">
-                                            <input type="checkbox" >
+                                            <input type="checkbox">
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>... </td>
                                         <td class="inputCheck">
-                                            <input type="checkbox" >
+                                            <input type="checkbox">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>... </td>
+                                        <td class="inputCheck">
+                                            <input type="checkbox">
                                         </td>
                                     </tr>
                                     <tr class="submitRate">
@@ -95,7 +152,7 @@
                                 </table>
                             </div>
                         </div>
-                          
+
                         <div id="Comments" class="tabcontent">
                             <h6><br>Pop up Comments / Suggestions</h6>
                             <div id="containerComment">
@@ -124,9 +181,10 @@
                             </div>
                         </div>
                     </div>
-                </main>               
+                </main>
             </div>
         </div>
     </div>
 </body>
+
 </html>

@@ -48,6 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $idColumn = 'edp_ID';
             $redirectUrl = 'edpUI/index.php'; 
             break;
+        case 'program_chair':  // Adding program chair to the switch case
+            $table = 'program_chair';
+            $idColumn = 'chair_ID';
+            $redirectUrl = 'chairUI/index.php';
+            break;
         default:
             $error_message = "Invalid user type.";
     }
@@ -79,7 +84,6 @@ $conn->close();
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -106,7 +110,7 @@ $conn->close();
         <div class="card">
             <div class="title"><p>PROGRAM CHAIR</p></div>
             <div class="content"><img src="" alt=""></div>
-            <a href="chair_login.php"><button class="login">LOGIN</button></a>
+            <a href="program_chair_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
             <div class="title"><p>DEAN</p></div>
@@ -116,7 +120,7 @@ $conn->close();
         <div class="card">
             <div class="title"><p>VICE-PRESIDENT</p></div>
             <div class="content"><img src="" alt=""></div>
-            <a href="vice_pres_login.php"><button class="login">LOGIN</button></a>
+            <a href="vp_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
             <div class="title"><p>EDP</p></div>

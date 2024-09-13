@@ -14,28 +14,27 @@
         
         <div class="login-wrapper">
             <div class="logo"></div>
-            <h2>LOGIN AS VICE-PRESIDENT</h2>
+            <h2>LOGIN AS PROGRAM CHAIR</h2>
+            
             <?php if (!empty($error_message)): ?>
                 <div class="alert" id="alert"><?php echo htmlspecialchars($error_message); ?></div>
                 <script>
                     setTimeout(function() {
-                        var alertElement = document.getElementById('alert');
-                        if (alertElement) {
-                            alertElement.style.display = 'none';
-                        }
+                        document.getElementById('alert').style.display = 'none';
                     }, 5000);
                 </script>
             <?php endif; ?>
+
             <form action="login.php" method="post">
                 <div class="input-field">
-                    <input type="number" name="id" id="vp-id" required placeholder=" ">
-                    <label for="vp-id">VP ID</label>
+                    <input type="number" name="id" id="chair-id" required placeholder=" ">
+                    <label for="chair-id">Chair ID</label>
                 </div>
 
                 <div class="input-field">
                     <input type="password" name="password" id="password" required placeholder=" ">
                     <label for="password">Password</label>
-                    <input type="hidden" name="user_type" value="vp">
+                    <input type="hidden" name="user_type" value="program_chair">
                 </div>
 
                 <button type="submit" class="login-btn">LOGIN</button>

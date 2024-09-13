@@ -20,35 +20,43 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
     $userId = $_SESSION['user_ID'];
     $userType = $_SESSION['user_type'];
 
-    // Determine the table and name column based on user type
-    switch ($userType) {
-        case 'student':
-            $table = 'student';
-            $nameColumn = 'student_fname';
-            break;
-        case 'dean':
-            $table = 'dean';
-            $nameColumn = 'dean_fname';
-            break;
-        case 'instructor':
-            $table = 'instructor';
-            $nameColumn = 'instructor_fname';
-            break;
-        case 'vp':
-            $table = 'vp';
-            $nameColumn = 'vp_fname';
-            break;
-        case 'edp': // Added EDP case
-            $table = 'edp';
-            $nameColumn = 'edp_fname';
-            break;
-        default:
-            echo "Invalid user type.";
-            exit();
+    // Define tables and columns in associative arrays
+    $tables = [
+        'student' => 'student',
+        'dean' => 'dean',
+        'instructor' => 'instructor',
+        'vp' => 'vp',
+        'edp' => 'edp',
+        'program_chair' => 'program_chair'
+    ];
+
+    $nameColumns = [
+        'student' => 'student_fname',
+        'dean' => 'dean_fname',
+        'instructor' => 'instructor_fname',
+        'vp' => 'vp_fname',
+        'edp' => 'edp_fname',
+        'program_chair' => 'chair_fname'
+    ];
+
+    // Map the correct ID columns for each user type
+    $idColumns = [
+        'student' => 'student_ID',
+        'dean' => 'dean_ID',
+        'instructor' => 'instructor_ID',
+        'vp' => 'vp_ID',
+        'edp' => 'edp_ID',
+        'program_chair' => 'chair_ID' // Corrected column name for program chair
+    ];
+
+    // Validate user type
+    if (!array_key_exists($userType, $tables)) {
+        echo "Invalid user type.";
+        exit();
     }
 
     // Fetch user's first name based on the user ID
-    $sql = "SELECT $nameColumn FROM $table WHERE ${userType}_ID = ?";
+    $sql = "SELECT {$nameColumns[$userType]} FROM {$tables[$userType]} WHERE {$idColumns[$userType]} = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -56,7 +64,7 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $userFullName = $row[$nameColumn];
+        $userFullName = $row[$nameColumns[$userType]];
     } else {
         $userFullName = 'Unknown User';
     }
