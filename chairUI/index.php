@@ -107,12 +107,12 @@ $conn->close();
                             <h6><br>Implement</h6>
                             <div id="containerPlan">
                                 <div class="planCard">
-                                    <a href="index1.html" target="_blank">
+                                    <a href="#">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>
                                 <div class="planCard">
-                                    <a href="index2.html" target="_blank">
+                                    <a href="#">
                                         <p>Competencies</p>
                                     </a>
                                 </div>

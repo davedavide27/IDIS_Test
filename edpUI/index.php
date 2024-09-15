@@ -132,18 +132,24 @@ $conn->close();
                 <p>Saint Michael College of Caraga (SMCC)</p>
             </header>
             <main>
-                <h4 style="text-align: center;">User Assigning</h4>
+                <h4 style="text-align: center;">Manual User Assigning</h4>
                 <div class="selectIns">
                     <button onclick="window.location.href='create_subject.php'">Create New Subject</button>
                     <!-- Select teacher option redirects to select_teacher.php -->
-                    <button onclick="window.location.href='assign_subjects.php'">Select Instructor</button>
+                    <button onclick="window.location.href='assign_subjects.php'">Assign Instructor</button>
                     <!-- Select student option redirects to select_student.php -->
-                    <button onclick="window.location.href='select_student.php'">Select Student</button>
+                    <button onclick="window.location.href='select_student.php'">Assign Student</button>
                 </div>
-                <h4 style="text-align: center;">System Modification</h4>
+                <h4 style="text-align: center;">File Upload Assigning</h4>
                 <div class="selectIns">
-                    <!-- Edit syllabus format redirects to edit_syllabi.php -->
+                    <button onclick="window.location.href='#'">Upload File For Instructor</button>
+                    <button onclick="window.location.href='#'">Upload File For Student</button>
+                </div>
+                <!-- <h4 style="text-align: center;">System Modification</h4> -->
+                <div class="selectIns">
+                    <!-- Edit syllabus format redirects to edit_syllabi.php
                     <button onclick="window.location.href='edit_syllabi.php'">Edit Syllabi Format</button>
+                    -->
                 </div>
             </main>
         </div>

@@ -134,11 +134,11 @@ $conn->close();
                                         <th>Comments</th>
                                     </tr>
                                     <tr>
-                                        <td>... </td>
+                                        <td> To create simple hello world program (PRELIM) </td>
                                         <td><input type="text"><button>Submit</button></td>
                                     </tr>
                                     <tr>
-                                        <td>... </td>
+                                        <td> To create simple hello world program (PRELIM) </td>
                                         <td><input type="text"><button>Submit</button></td>
                                     </tr>
                                     <tr>
