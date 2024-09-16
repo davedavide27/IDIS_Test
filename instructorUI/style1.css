@@ -94,7 +94,10 @@ textarea {
     overflow: hidden;
     resize: none;
     border: none;
+    font-family: calibri;
 }
+
+
 .table3 {
     border-collapse: collapse;
 }
@@ -129,4 +132,15 @@ thead.report-header{
 }
 tfoot.report-footer{
     display: table-footer-group;
+}
+
+.XIItable, .XIItable tr, .XIItable td, .XIItable th {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+.XIItable td{
+    font-size: small;
+}
+.XIItable input{
+    border: none;
 }

@@ -4,8 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Syllabus</title>
+    <style>
+        @media print {
+            button,
+            .no-print,
+            .no-print * {
+                display: none !important;
+            }
 
-    <script>//auto resize textarea
+            input,
+            select {
+                border: none;
+                background: transparent;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                outline: none;
+                font-weight: bold;
+            }
+        }
+    </style>
+    <script>
+        //auto resize textarea
         document.addEventListener('DOMContentLoaded', () => {
             const textareas = document.querySelectorAll('.autoResizeTextarea');
         
@@ -45,7 +65,7 @@
             <tr>
                 <td class="report-header-cell">
                     <div class="header-info">
-                        <div class="br"><br><br><br><br><hr></div>
+                        <div class="br"><br><br><br><br><br><hr></div>
                     </div>
                 </td>
             </tr>
@@ -168,7 +188,7 @@
                             <li>Contact Hours: </li>
                             <br>
                             <li>Course Intended Learning Outcomes (CILO)
-                                <h3>COURSE MAPPING <br> <input type="text" name="" id="" ></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+                                <h3>COURSE MAPPING <br> <input type="text" name="" id="" style="text-align: center;"></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
                                 <br>
                                 <table>
                                     <tr>
@@ -329,9 +349,47 @@
                                         <td style="border: none;"><textarea class="autoResizeTextarea" style="width: 800%;"></textarea></td>
                                     </tr>
                                 </div>
-                            </table>
+                                </table>
                             </li>
-                            <li></li>
+                            <li>Grading System
+                                <table class="XIItable" id="HideBorder">
+                                    <tr>
+                                        <th>Criteria</th>
+                                        <th>Percentage</th>
+                                        <th id="HideBorder"></th>
+                                    <tr>
+                                        <td>Written Task</td>
+                                        <td><input type="number">%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text"></td>
+                                        <td><input type="number">%</td>
+                                        <td id="HideBorder">%<button>+</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Performance Tasks</td>
+                                        <td><input type="number">%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text"></td>
+                                        <td><input type="number">%</td>
+                                        <td id="HideBorder">%<button>+</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Quarterly Assessment</td>
+                                        <td><input type="number">%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><input type="text"></td>
+                                        <td><input type="number"></td>
+                                        <td id="HideBorder">%<button>+</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>TOTAL Grade Percentage </td>
+                                        <td>100%</td>
+                                    </tr>
+                                </table>
+                            </li>
                         </table>
                     </div>
                 </td>
