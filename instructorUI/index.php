@@ -58,6 +58,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,12 +71,14 @@ $conn->close();
             color: green;
             font-weight: bold;
         }
+
         .selected-subject {
             background-color: #FF0000;
             border-color: #badbcc;
         }
     </style>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
@@ -94,7 +97,9 @@ $conn->close();
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Subjects:</h4></div>
+                        <div>
+                            <h4>Subjects:</h4>
+                        </div>
                         <?php foreach ($subjects as $subject): ?>
                             <div class="btnSubjects">
                                 <button onclick="selectSubject('<?php echo htmlspecialchars($subject['subject_code']); ?>', '<?php echo htmlspecialchars($subject['subject_name']); ?>', this)">
@@ -125,9 +130,15 @@ $conn->close();
                             <div id="containerPlan">
                                 <!-- Syllabus Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="../syllabus.html"><p>Syllabus</p></a>
+                                    <form action="edit_insert_syllabus.php" method="post" style="display: block;">
+                                        <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
+                                        <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
+                                        <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%; height: 100%;">
+                                            <p style="text-align: center; margin: 0;">Syllabus</p>
+                                        </button>
+                                    </form>
                                 </div>
-                                
+
                                 <!-- Competencies Plan Card -->
                                 <div class="planCard" data-subject-code="">
                                     <form action="insert_competencies.php" method="post" style="display: block;">
@@ -140,7 +151,7 @@ $conn->close();
                                 </div>
                             </div>
                         </div>
-                          
+
                         <div id="Topics" class="tabcontent">
                             <h6><br>Remark check if the competency is implemented.</h6>
                             <div id="container">
@@ -155,7 +166,7 @@ $conn->close();
                                 </table>
                             </div>
                         </div>
-                          
+
                         <div id="Comments" class="tabcontent">
                             <h6><br>Pop up Comments / Suggestions</h6>
                             <div id="containerComment" data-subject-code="">
@@ -171,13 +182,13 @@ $conn->close();
                                     </div>
                                 </div>
                                 <div class="commentCard">
-                            <div>
+                                    <div>
                                         <h6>ADGEC 1</h6>
                                     </div>
                                     <div>
                                         <p class="content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ducimus dolores id debitis cum accusamus inventore praesentium sit voluptatum, distinctio dignissimos odio laboriosam, omnis assumenda eos iusto officia aut itaque. Molestias!</p>
                                     </div>
-                                            <div>
+                                    <div>
                                         <p class="footerTopic">Topic No. 2</p>
                                     </div>
                                 </div>
@@ -189,4 +200,5 @@ $conn->close();
         </div>
     </div>
 </body>
+
 </html>

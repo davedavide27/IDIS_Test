@@ -13,14 +13,14 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
   }
   
-  // Function to select a subject and fetch its competencies
-  function selectSubject(subjectCode, subjectName, buttonElement) {
+// Function to select a subject and fetch its competencies
+function selectSubject(subjectCode, subjectName, buttonElement) {
     // Highlight the selected subject button
     document.querySelectorAll('.btnSubjects button').forEach(function(button) {
         button.classList.remove('selected-subject');
     });
     buttonElement.classList.add('selected-subject');
-  
+
     // Store selected subject in sessionStorage
     sessionStorage.setItem('selectedSubjectCode', subjectCode);
     sessionStorage.setItem('selectedSubjectName', subjectName);
@@ -28,13 +28,18 @@ function openTab(evt, tabName) {
     // Update hidden input fields in the Competencies form
     document.getElementById('selected_subject_code').value = subjectCode;
     document.getElementById('selected_subject_name').value = subjectName;
-  
+
+    // Update hidden input fields in the Syllabus form
+    document.getElementById('syllabus_subject_code').value = subjectCode;
+    document.getElementById('syllabus_subject_name').value = subjectName;
+
     // Filter content by selected subject
     filterContentBySubject(subjectCode);
-  
+
     // Fetch and display competencies for the selected subject
     fetchCompetencies(subjectCode);
-  }
+}
+
   
   // Function to filter content by selected subject
   function filterContentBySubject(subjectCode) {

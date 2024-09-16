@@ -13,94 +13,77 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
-$vpFullName = '';
-$instructors = [];
-$subjects = [];
+$subjectCode = '';
+$subjectName = '';
+$units = '';
+$hours = '';
+$department = '';
+$schoolYearStart = '';
+$schoolYearEnd = '';
+$gradingPeriod = '';
+$gradingQuarterStart = '';
+$gradingQuarterEnd = '';
+$totalCompetenciesDepEd = '';
+$totalCompetenciesSMCC = '';
+$totalInstitutionalCompetencies = '';
+$totalCompetenciesBAndC = '';
+$totalCompetenciesImplemented = '';
+$totalCompetenciesNotImplemented = '';
+$percentageCompetenciesImplemented = '';
+$preparedBy = '';
+$checkedBy = '';
+$notedBy = '';
 $competencies = [];
-$subject_code = '';
-$subject_name = '';
 
-// Check if the vp is logged in
-if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'vp') {
-    $vpId = $_SESSION['user_ID'];
+// Check if subject code is passed from the instructorUI/index.php
+if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
+    $subjectCode = $_GET['subject_code'];
+    $subjectName = $_GET['subject_name'];
 
-    // Fetch vp's full name based on the vp ID
-    $sql = "SELECT vp_fname, vp_mname, vp_lname FROM vp WHERE vp_ID = ?";
+    // Fetch all relevant data for the selected subject
+    $sql = "SELECT subject_code, subject_name, units, hours, department, school_year_start, school_year_end,
+            grading_period, grading_quarter_start, grading_quarter_end, total_competencies_deped_tesda_ched, 
+            total_competencies_smcc, total_institutional_competencies, total_competencies_b_and_c, 
+            total_competencies_implemented, total_competencies_not_implemented, percentage_competencies_implemented,
+            prepared_by, checked_by, noted_by, competency_description, remarks
+            FROM competencies 
+            WHERE subject_code = ?";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $vpId);
+    $stmt->bind_param("s", $subjectCode);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $vpFullName = $row['vp_fname'] . ' ' . $row['vp_mname'] . ' ' . $row['vp_lname'];
-        $_SESSION['user_fullname'] = $vpFullName; // Store the full name in session
-    } else {
-        $vpFullName = 'Unknown User';
-    }
-
-    $stmt->close();
-
-    // Fetch all instructors
-    $sql = "SELECT instructor_ID, instructor_fname, instructor_mname, instructor_lname FROM instructor";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
+        // Fetch data dynamically from the database
         while ($row = $result->fetch_assoc()) {
-            $instructors[] = $row;
+            $units = $row['units'];
+            $hours = $row['hours'];
+            $department = $row['department'];
+            $schoolYearStart = $row['school_year_start'];
+            $schoolYearEnd = $row['school_year_end'];
+            $gradingPeriod = $row['grading_period'];
+            $gradingQuarterStart = $row['grading_quarter_start'];
+            $gradingQuarterEnd = $row['grading_quarter_end'];
+            $totalCompetenciesDepEd = $row['total_competencies_deped_tesda_ched'];
+            $totalCompetenciesSMCC = $row['total_competencies_smcc'];
+            $totalInstitutionalCompetencies = $row['total_institutional_competencies'];
+            $totalCompetenciesBAndC = $row['total_competencies_b_and_c'];
+            $totalCompetenciesImplemented = $row['total_competencies_implemented'];
+            $totalCompetenciesNotImplemented = $row['total_competencies_not_implemented'];
+            $percentageCompetenciesImplemented = $row['percentage_competencies_implemented'];
+            $preparedBy = $row['prepared_by'];
+            $checkedBy = $row['checked_by'];
+            $notedBy = $row['noted_by'];
+
+            // Add competencies description and remarks to array
+            $competencies[] = [
+                'competency_description' => $row['competency_description'],
+                'remarks' => $row['remarks']
+            ];
         }
     }
-
-    // If an instructor is selected, fetch their subjects
-    if (isset($_GET['instructor_ID'])) {
-        $selectedInstructorID = $_GET['instructor_ID'];
-
-        $sql = "SELECT subject_code, subject_name FROM subject WHERE instructor_ID = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $selectedInstructorID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $subjects[] = $row;
-            }
-        }
-
-        $stmt->close();
-    }
-
-    // Fetch competencies based on the selected subject code
-    if (isset($_GET['subject_code'])) {
-        $subject_code = $_GET['subject_code'];
-
-        $sql = "SELECT subject_name FROM subject WHERE subject_code = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $subject_code);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $subject_name = $result->fetch_assoc()['subject_name'];
-        }
-
-        $stmt->close();
-
-        $sql = "SELECT competency_description, remarks FROM competencies WHERE subject_code = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $subject_code);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $competencies[] = $row;
-            }
-        }
-
-        $stmt->close();
-    }
+    $stmt->close();
 }
 
 $conn->close();
@@ -108,60 +91,250 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDIS - View Competencies</title>
+    <title>Dean UI - View Competencies</title>
     <style>
         @media print {
-            .no-print, .no-print * {
-                display: none !important;
-            }
-        }
-        .competency-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .competency-table th, .competency-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        .competency-table th {
-            background-color: white;
-            text-align: left;
-        }
-        .selected-subject {
-            background-color: #FF0000;
-            border-color: #badbcc;
-        }
+    .no-print, .no-print * {
+        display: none !important;
+        
+    }
+}
+body {
+    font-family: Arial, sans-serif;
+}
+.competency-table, .summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+.competency-table th, .competency-table td{
+    border: 1px solid #000;
+    padding: 8px;
+}
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.summary-table th, .summary-table td {
+    padding: 8px;
+    text-transform: uppercase;
+    font-weight: bold;
+    border: none;
+    text-align: left;
+    vertical-align: middle; /* Aligns text and numbers in the middle */
+    line-height: 1.8; /* Adjusts line height within rows */
+
+}
+
+.summary-table th:last-child, .summary-table td:last-child {
+    text-align: right;
+}
+
+.summary-table tr td:first-child {
+    padding-right: 20px; /* Adds spacing between the text and the separator */
+}
+
+.summary-table td {
+    border-bottom: 1px solid #000; /* Adds a line under each row */
+}
+
+.summary-table tr td:not(:last-child) {
+    border-right: 2px solid #000; /* Adds a vertical line between the text and number columns */
+    
+}
+
+.summary-table th:last-child, .summary-table td:last-child {
+    width: 150px; /* Ensures numbers are in a fixed width column */
+}
+
+.competency-table th, .summary-table th {
+    background-color: #a0a0a0;
+}
+.section-title {
+    font-weight: bold;
+}
+.header-info {
+    margin-top: 20px;
+    
+}
+.header-info th {
+    text-align: left;
+    width: 250px;
+}
+.header-info tr {
+        width: 150px; /* Ensures numbers are in a fixed width column */
+}
+.header-info td {
+    width: auto;
+    
+}
+.sign-section {
+    margin-top: 40px;
+}
+.sign-section td {
+    padding: 5px;
+}
     </style>
 </head>
+
 <body>
-    <div class="containerOfAll">
-        <?php if (isset($_GET['subject_code']) && !empty($subject_code)): ?>
-            <div class="competencyContainer">
-                <h2>Competencies for: <?php echo htmlspecialchars($subject_name); ?> (<?php echo htmlspecialchars($subject_code); ?>)</h2>
-                <table class="competency-table">
-                <button class="no-print" onclick="window.print()">Print this page</button>
-                <button class="no-print" onclick="window.history.back()">Back</button>
+    <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
+    <button class="no-print" onclick="window.history.back()">Back</button>
+    <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
+    <table class="header-info">
+        <tr>
+            <th>I. Subject code:</th>
+            <td><?php echo htmlspecialchars($subjectCode); ?></td>
+        </tr>
+        <tr>
+            <th>II. Subject title:</th>
+            <td><?php echo htmlspecialchars($subjectName); ?></td>
+        </tr>
+        <tr>
+            <th>III. Units:</th>
+            <td><?php echo htmlspecialchars($units); ?></td>
+        </tr>
+        <tr>
+            <th>IV. Hours:</th>
+            <td><?php echo htmlspecialchars($hours); ?></td>
+        </tr>
+        <tr>
+            <th>V. Department:</th>
+            <td><?php echo htmlspecialchars($department); ?></td>
+        </tr>
+        <tr>
+            <th>VI. School year:</th>
+            <td><?php echo htmlspecialchars($schoolYearStart . ' - ' . $schoolYearEnd); ?></td>
+        </tr>
+        <tr>
+            <th>VII. Grading period/quarter:</th>
+            <td>
+                <?php
+                echo htmlspecialchars($gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
+                ?>
+            </td>
+        </tr>
+    </table>
+    <table class="competency-table">
+        <thead>
+            <tr>
+                <th>SMCC Competencies</th>
+                <th>Remarks On Class</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (!empty($competencies)): ?>
+                <?php foreach ($competencies as $competency): ?>
                     <tr>
-                        <th>Competency Description</th>
-                        <th>Remarks</th>
+                        <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
+                        <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
                     </tr>
-                    <?php if (!empty($competencies)): ?>
-                        <?php foreach ($competencies as $competency): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
-                                <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2">No competencies found for this subject.</td>
-                        </tr>
-                    <?php endif; ?>
-                </table>
-        <?php endif; ?>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="2">No competencies found for this subject.</td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+
+    <table class="summary-table">
+        <tr>
+            <td>Total number of Competencies DepEd/TESDA/CHED:</td>
+            <td><?php echo htmlspecialchars($totalCompetenciesDepEd); ?></td>
+        </tr>
+        <tr>
+            <td>Total Number of Competencies SMCC based on DepEd/TESDA/CHED:</td>
+            <td><?php echo htmlspecialchars($totalCompetenciesSMCC); ?></td>
+        </tr>
+        <tr>
+            <td>Total Number of Institutional Competencies:</td>
+            <td><?php echo htmlspecialchars($totalInstitutionalCompetencies); ?></td>
+        </tr>
+        <tr>
+            <td>Total Number of B and C:</td>
+            <td><?php echo htmlspecialchars($totalCompetenciesBAndC); ?></td>
+        </tr>
+        <tr>
+            <td>Total Number of Competencies Implemented:</td>
+            <td><?php echo htmlspecialchars($totalCompetenciesImplemented); ?></td>
+        </tr>
+        <tr>
+            <td>Total Number of Competencies NOT Implemented:</td>
+            <td><?php echo htmlspecialchars($totalCompetenciesNotImplemented); ?></td>
+        </tr>
+        <tr>
+            <td>% Number of Competencies Implemented:</td>
+            <td><?php echo htmlspecialchars($percentageCompetenciesImplemented); ?>%</td>
+        </tr>
+    </table>
+
+    <div class="sign-section">
+        <table style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 40px 0;">
+            <tr>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Prepared by:</strong>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Checked by:</strong>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Noted by:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($preparedBy); ?>
+                </td>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($checkedBy); ?>
+                </td>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($notedBy); ?>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Subject Teacher</h4>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Subject Coordinator</h4>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Dean</h4>
+                </td>
+            </tr>
+        </table>
     </div>
+    <script>
+        function hidePrintHeaders() {
+            // Save the current document title
+            const originalTitle = document.title;
+
+            // Temporarily change the title
+            document.title = 'Print Competencies';
+
+            // Trigger print
+            window.print();
+
+            // Restore the original title after printing
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
+        }
+    </script>
 </body>
+
 </html>

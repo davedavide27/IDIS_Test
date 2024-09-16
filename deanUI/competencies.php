@@ -48,7 +48,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             prepared_by, checked_by, noted_by, competency_description, remarks
             FROM competencies 
             WHERE subject_code = ?";
-    
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $subjectCode);
     $stmt->execute();
@@ -91,11 +91,13 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean UI - View Competencies</title>
 </head>
+
 <body>
     <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
     <button class="no-print" onclick="window.history.back()">Back</button>
@@ -128,7 +130,11 @@ $conn->close();
         </tr>
         <tr>
             <th>VII. Grading period/quarter:</th>
-            <td><?php echo htmlspecialchars($gradingPeriod . ' <strong>FROM</strong> ' . $gradingQuarterStart . ' <strong>TO</strong> ' . $gradingQuarterEnd); ?></td>
+            <td>
+                <?php
+                echo htmlspecialchars($gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
+                ?>
+            </td>
         </tr>
     </table>
     <table class="competency-table">
@@ -186,58 +192,59 @@ $conn->close();
     </table>
 
     <div class="sign-section">
-    <table style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 40px 0;">
-        <tr>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <strong>Prepared by:</strong>
-            </td>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <strong>Checked by:</strong>
-            </td>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <strong>Noted by:</strong>
-            </td>
-        </tr>
-        <tr>
-            <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                <?php echo htmlspecialchars($preparedBy); ?>
-            </td>
-            <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                <?php echo htmlspecialchars($checkedBy); ?>
-            </td>
-            <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                <?php echo htmlspecialchars($notedBy); ?>
-            </td>
-        </tr>
-        <tr>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <h4>Subject Teacher</h4>
-            </td>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <h4>Subject Coordinator</h4>
-            </td>
-            <td style="width: 33.3%; padding-bottom: 10px;">
-                <h4>Dean</h4>
-            </td>
-        </tr>
-    </table>
-</div>
-<script>
-    function hidePrintHeaders() {
-        // Save the current document title
-        const originalTitle = document.title;
+        <table style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 40px 0;">
+            <tr>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Prepared by:</strong>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Checked by:</strong>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <strong>Noted by:</strong>
+                </td>
+            </tr>
+            <tr>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($preparedBy); ?>
+                </td>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($checkedBy); ?>
+                </td>
+                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
+                    <?php echo htmlspecialchars($notedBy); ?>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Subject Teacher</h4>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Subject Coordinator</h4>
+                </td>
+                <td style="width: 33.3%; padding-bottom: 10px;">
+                    <h4>Dean</h4>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        function hidePrintHeaders() {
+            // Save the current document title
+            const originalTitle = document.title;
 
-        // Temporarily change the title
-        document.title = 'Print Competencies';
+            // Temporarily change the title
+            document.title = 'Print Competencies';
 
-        // Trigger print
-        window.print();
+            // Trigger print
+            window.print();
 
-        // Restore the original title after printing
-        setTimeout(() => {
-            document.title = originalTitle;
-        }, 1000);
-    }
-</script>
+            // Restore the original title after printing
+            setTimeout(() => {
+                document.title = originalTitle;
+            }, 1000);
+        }
+    </script>
 </body>
+
 </html>

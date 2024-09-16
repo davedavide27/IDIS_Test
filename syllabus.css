@@ -1,0 +1,188 @@
+/* General Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.9); /* Transparent white */
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+h2, h3 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ccc;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
+
+/* Form Input Fields */
+input[type="text"], select, textarea {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+input[type="text"]::placeholder, textarea::placeholder {
+    color: #7f8c8d;
+}
+
+textarea {
+    height: 100px;
+}
+
+/* Buttons */
+.button {
+    background-color: #3498db;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #2980b9;
+}
+
+.add-row-button {
+    background-color: #2ecc71;
+    margin-top: 10px;
+}
+
+.add-row-button:hover {
+    background-color: #27ae60;
+}
+
+.remove-row-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.remove-row-button:hover {
+    background-color: #c0392b;
+}
+
+/* Header and Footer */
+.divHeader, .divFooter {
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+/* Logo styling */
+.headContents img {
+    max-width: 10%;
+    height: auto;
+}
+
+/* Back Button */
+.back-button {
+    background-color: #e74c3c;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.back-button:hover {
+    background-color: #c0392b;
+}
+
+/* Footer */
+.divFooter {
+    text-align: center;
+    padding: 20px;
+}
+
+/* Ensure proper table alignment */
+td {
+    vertical-align: top;
+}
+
+/* PILO column should span multiple rows */
+.pilo-column {
+    vertical-align: top;
+    width: 50%;
+}
+
+.gilo-column {
+    width: 50%;
+}
+
+.gilo-column select {
+    width: 90%;
+    margin-bottom: 10px;
+}
+
+.gilo-row {
+    width: 100%;
+}
+
+/* Ensure first row can't be deleted */
+.disable-remove-first-row .remove-row-button {
+    display: none;
+}
+
+/* Auto-resize Textarea */
+.autoResizeTextarea {
+    resize: none;
+    overflow: hidden;
+}
+
+    .section-prelim {
+        background-color: #f0f8ff;
+        /* Light Blue */
+    }
+
+    .section-midterm {
+        background-color: #fafad2;
+        /* Light Yellow */
+    }
+
+    .section-semifinal {
+        background-color: #e6e6fa;
+        /* Lavender */
+    }
+
+    .section-final {
+        background-color: #ffe4e1;
+        /* Light Coral */
+    }

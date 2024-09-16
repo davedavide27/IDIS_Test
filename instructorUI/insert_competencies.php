@@ -231,7 +231,6 @@ $conn->close();
         <?php unset($_SESSION['success_message']); // Clear the message after displaying 
         ?>
     <?php endif; ?>
-
     <h3>Competency Implementation</h3>
     <form action="" method="post">
         <input type="hidden" name="save_edits" value="1">
@@ -346,7 +345,6 @@ $conn->close();
         </div>
 
         <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
-        <button class="print-button no-print" type="button" onclick="window.print()">Print this page</button>
         <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
 
     </form>

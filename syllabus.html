@@ -1,63 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Syllabus</title>
-    <style>
-        @media print {
-            button,
-            .no-print,
-            .no-print * {
-                display: none !important;
-            }
 
-            input,
-            select {
-                border: none;
-                background: transparent;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                outline: none;
-                font-weight: bold;
-            }
-        }
-    </style>
-    <script>
-        //auto resize textarea
+    <script>//auto resize textarea
         document.addEventListener('DOMContentLoaded', () => {
             const textareas = document.querySelectorAll('.autoResizeTextarea');
-        
+
             const resizeTextarea = (textarea) => {
-                // Reset height to auto to shrink the textarea if needed
                 textarea.style.height = 'auto';
-                // Set the height to scrollHeight to expand the textarea
                 textarea.style.height = `${textarea.scrollHeight}px`;
             };
             textareas.forEach(textarea => {
-                // Attach event listener to each textarea
                 textarea.addEventListener('input', () => resizeTextarea(textarea));
-                // Initial resize for pre-existing content
                 resizeTextarea(textarea);
             });
         });
-        </script>
-
-    <link rel="stylesheet" href="instructorUI/style1.css">
+    </script>
 </head>
+
 <body>
+
+    <!-- Header Section -->
     <div class="divHeader">
-        <div class="headContents"><img src="smcclogo.jfif" alt=""></div>
-        <div class="headContents" style="text-align: center;font-size: 21px;">
-            <div style="font-size: x-large;color: rgba(28, 6, 80, 0.877);font-family: Calambria;">Saint Michael College of Caraga</div>
+        <div class="headContents">
+            <img src="smcclogo.jfif" alt="SMCC Logo" class="logo">
+        </div>
+        <div class="headContents" style="text-align: center; font-size: 21px;">
+            <div style="font-size: x-large; color: rgba(28, 6, 80, 0.877); font-family: Calambria;">Saint Michael College of Caraga</div>
             <div style="font-size: medium;">
                 <div style="font-family: Bookman Old Style;">Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
                 <div style="font-family: Calambria;">&emsp;Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892 &emsp;</div>
                 <div style="font-family: Bookman Old Style;"><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
             </div>
         </div>
-        <div class="headContents"><img src="ISO&PAB.png" alt=""></div>
+        <div class="headContents">
+            <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
+        </div>
     </div>
     
     <table class="report-container">
@@ -65,17 +47,15 @@
             <tr>
                 <td class="report-header-cell">
                     <div class="header-info">
-                        <div class="br"><br><br><br><br><br><hr></div>
+                        <div class="br"><br><br><br><br><hr></div>
                     </div>
                 </td>
             </tr>
-        </thead>
-        <tfoot class="report-footer">
             <tr>
-                <td class="report-footer-cell">
-                    <div class="footer-info">
-                        <div class="main">page no. <br><br><br><br><br></div>
-                    </div>
+                <td><input type="text" placeholder="Enter PILO"></td>
+                <td>
+                    <select><option value="">I</option><option value="">D</option><option value="">P</option></select>
+                    <select><option value="">I</option><option value="">D</option><option value="">P</option></select>
                 </td>
             </tr>
         </tfoot>
@@ -188,7 +168,7 @@
                             <li>Contact Hours: </li>
                             <br>
                             <li>Course Intended Learning Outcomes (CILO)
-                                <h3>COURSE MAPPING <br> <input type="text" name="" id="" style="text-align: center;"></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+                                <h3>COURSE MAPPING <br> <input type="text" name="" id="" ></h3><p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
                                 <br>
                                 <table>
                                     <tr>
@@ -349,54 +329,27 @@
                                         <td style="border: none;"><textarea class="autoResizeTextarea" style="width: 800%;"></textarea></td>
                                     </tr>
                                 </div>
-                                </table>
+                            </table>
                             </li>
-                            <li>Grading System
-                                <table class="XIItable" id="HideBorder">
-                                    <tr>
-                                        <th>Criteria</th>
-                                        <th>Percentage</th>
-                                        <th id="HideBorder"></th>
-                                    <tr>
-                                        <td>Written Task</td>
-                                        <td><input type="number">%</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="text"></td>
-                                        <td><input type="number">%</td>
-                                        <td id="HideBorder">%<button>+</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Performance Tasks</td>
-                                        <td><input type="number">%</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="text"></td>
-                                        <td><input type="number">%</td>
-                                        <td id="HideBorder">%<button>+</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Quarterly Assessment</td>
-                                        <td><input type="number">%</td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="text"></td>
-                                        <td><input type="number"></td>
-                                        <td id="HideBorder">%<button>+</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>TOTAL Grade Percentage </td>
-                                        <td>100%</td>
-                                    </tr>
-                                </table>
-                            </li>
+                            <li></li>
                         </table>
                     </div>
                 </td>
             </tr>
-        </tbody>
-    </table>
-    
-    <div class="divFooter"><img src="footer.png" alt="" style="height: fit-content;"></div>
+        </table>
+
+        <h4>Performance Tasks</h4>
+        <textarea class="autoResizeTextarea" placeholder="Enter Performance Tasks"></textarea>
+
+        <button class="button">Submit Syllabus</button>
+        <button class="back-button" onclick="window.location.href='instructorUI/index.php';">Back</button>
+    </div>
+
+    <!-- Footer Section -->
+    <div class="divFooter">
+        <p>page no.</p>
+    </div>
+
 </body>
+
 </html>
