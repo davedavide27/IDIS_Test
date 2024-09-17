@@ -231,16 +231,6 @@ $conn->close();
         <?php unset($_SESSION['success_message']); // Clear the message after displaying 
         ?>
     <?php endif; ?>
-    <?php
-    if (isset($_POST['subject_code'])) {
-        $SubjectCode = $_POST['subject_code'];
-        $SubjectName= $_POST['subject_name'];
-
-        // Debugging
-        echo "Subject Code: " . htmlspecialchars($SubjectCode);
-        echo "Subject Name: " . htmlspecialchars($SubjectName);
-    }
-    ?>
     <h3>Competency Implementation</h3>
     <form action="" method="post">
         <input type="hidden" name="save_edits" value="1">
