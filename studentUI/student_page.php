@@ -59,6 +59,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -71,13 +72,22 @@ $conn->close();
             color: green;
             font-weight: bold;
         }
+
         /* Highlighted subject button */
         .selected-subject {
-            background-color: #FF0000; /* Red background to indicate selection */
-            color: white; /* Change text color */
+            background-color: #FF0000;
+            color: white;
+        }
+
+        /* No data message */
+        .no-data-message {
+            text-align: center;
+            color: gray;
+            font-size: 16px;
         }
     </style>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
@@ -95,8 +105,10 @@ $conn->close();
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
-                        <div><h4>Assigned Subjects:</h4></div>
-                        
+                        <div>
+                            <h4>Assigned Subjects:</h4>
+                        </div>
+
                         <!-- Loop through assigned subjects and display them -->
                         <?php if (!empty($assignedSubjects)): ?>
                             <?php foreach ($assignedSubjects as $subject): ?>
@@ -107,7 +119,6 @@ $conn->close();
                         <?php else: ?>
                             <p>No subjects assigned yet.</p>
                         <?php endif; ?>
-                        
                     </div>
                 </div>
             </nav>
@@ -126,91 +137,41 @@ $conn->close();
                 <main>
                     <div class="filesContainer">
                         <div id="ILOs" class="tabcontent">
-                            <h6><br>Evaluation to Intended Learning Outcomes.</h6>
+                            <h6><br>Evaluation of Intended Learning Outcomes (ILOs).</h6>
                             <div id="container">
                                 <table class="remarksTable">
-                                    <tr>
-                                        <th>Intended Learning Outcomes (ILOs)</th>
-                                        <th>Comments</th>
-                                    </tr>
-                                    <tr>
-                                        <td> To create simple hello world program (PRELIM) </td>
-                                        <td><input type="text"><button>Submit</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td> To create simple hello world program (PRELIM) </td>
-                                        <td><input type="text"><button>Submit</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td><input type="text"><button>Submit</button></td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Intended Learning Outcomes (ILOs)</th>
+                                            <th>Comments</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
-                          
                         <div id="Topics" class="tabcontent">
                             <h6><br>Rate if the topics are being discussed clearly from 1 to 5.</h6>
                             <div id="container">
                                 <table class="remarksTable">
-                                    <tr>
-                                        <th>Course Outlines</th>
-                                        <th>Rating</th>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td class="inputRange">
-                                            <input type="radio" name="1range" id="1"><label for="1">1</label>
-                                            <input type="radio" name="1range" id="2"><label for="2">2</label>
-                                            <input type="radio" name="1range" id="3"><label for="3">3</label>
-                                            <input type="radio" name="1range" id="4"><label for="4">4</label>
-                                            <input type="radio" name="1range" id="5"><label for="5">5</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td class="inputRange">
-                                            <input type="radio" name="2range" id="1"><label for="1">1</label>
-                                            <input type="radio" name="2range" id="2"><label for="2">2</label>
-                                            <input type="radio" name="2range" id="3"><label for="3">3</label>
-                                            <input type="radio" name="2range" id="4"><label for="4">4</label>
-                                            <input type="radio" name="2range" id="5"><label for="5">5</label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>... </td>
-                                        <td class="inputRange">
-                                            <input type="radio" name="3range" id="1"><label for="1">1</label>
-                                            <input type="radio" name="3range" id="2"><label for="2">2</label>
-                                            <input type="radio" name="3range" id="3"><label for="3">3</label>
-                                            <input type="radio" name="3range" id="4"><label for="4">4</label>
-                                            <input type="radio" name="3range" id="5"><label for="5">5</label>
-                                        </td>
-                                    </tr>
-                                    <tr class="submitRate">
-                                        <td></td>
-                                        <td><button>Submit</button></td>
-                                    </tr>
+                                    <thead>
+                                        <tr>
+                                            <th>Course Outlines</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- This tbody will be dynamically updated -->
+                                    </tbody>
                                 </table>
                             </div>
-                        </div>
-                          
-                    </div>
-                </main>               
+                </main>
             </div>
         </div>
     </div>
-    <script>
-        // Function to show logout message
-        function showLogoutMessage(message) {
-            var logoutMessage = document.getElementById('logoutMessage');
-            logoutMessage.textContent = message;
-            logoutMessage.style.display = 'block';
-            setTimeout(function() {
-                logoutMessage.style.display = 'none';
-            }, 3000);
-        }
 
+    <script>
         // Function to handle subject selection and highlighting the selected button
         function selectSubject(buttonElement) {
             // Remove the 'selected-subject' class from all buttons
@@ -221,7 +182,192 @@ $conn->close();
 
             // Add the 'selected-subject' class to the clicked button
             buttonElement.classList.add('selected-subject');
+
+            // Get the subject code from the button's text
+            const subjectCode = buttonElement.textContent.match(/\(([^)]+)\)/)[1];
+
+            // Clear previous ILOs and Topics data before fetching new data
+            clearTable('#ILOs .remarksTable tbody');
+            clearTable('#Topics .remarksTable tbody');
+
+            // Fetch the ILOs and Topics for the selected subject using AJAX
+            fetchILOs(subjectCode);
+            fetchTopics(subjectCode); // Add this function to fetch topics
+        }
+
+        // Function to fetch ILOs for the selected subject via AJAX
+        function fetchILOs(subjectCode) {
+            const formData = new FormData();
+            formData.append('subject_code', subjectCode);
+
+            fetch('fetch_ilos.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendILOsToTable(data, subjectCode);
+                })
+                .catch(error => console.error('Error fetching ILOs:', error));
+        }
+
+        // Function to fetch Topics for the selected subject via AJAX
+        function fetchTopics(subjectCode) {
+            const formData = new FormData();
+            formData.append('subject_code', subjectCode);
+
+            fetch('fetch_topics.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    appendTopicsToTable(data, subjectCode);
+                })
+                .catch(error => console.error('Error fetching topics:', error));
+        }
+
+        // Function to clear the table content
+        function clearTable(tableSelector) {
+            const tableBody = document.querySelector(tableSelector);
+            tableBody.innerHTML = ''; // Clear the table content
+        }
+
+        // Function to append the ILOs to the existing table without overriding
+        function appendILOsToTable(data, subjectCode) {
+            const tableBody = document.querySelector('#ILOs .remarksTable tbody');
+
+            // Iterate over each section and append the ILOs
+            let hasData = false;
+
+            ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
+                if (data[section] && data[section].length > 0) {
+                    hasData = true;
+
+                    data[section].forEach(ilo => {
+                        const row = `
+                        <tr data-ilo="${ilo}_${section}">
+                            <td>${ilo} (${section})</td>
+                            <td>
+                                <input type="text" placeholder="Enter comments..." class="ilo-comment">
+                                <button onclick="submitComment('${subjectCode}', '${ilo}', this)">Submit</button>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row; // Append row without clearing the table
+                    });
+                }
+            });
+
+            // If there's no ILO data, display a "No data" message
+            if (!hasData) {
+                const noDataRow = `<tr><td colspan="2" class="no-data-message">No ILOs available for the selected subject.</td></tr>`;
+                tableBody.innerHTML = noDataRow;
+            }
+        }
+
+        // Function to append the Topics to the existing table without overriding
+        function appendTopicsToTable(data, subjectCode) {
+            const tableBody = document.querySelector('#Topics .remarksTable tbody');
+
+            // Iterate over each section and append the topics
+            let hasData = false;
+
+            ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
+                if (data[section] && data[section].length > 0) {
+                    hasData = true;
+
+                    data[section].forEach(topic => {
+                        const row = `
+                        <tr data-topic="${topic}_${section}">
+                            <td>${topic} (${section})</td>
+                            <td>
+                                <input type="radio" name="${topic}_rating" value="1">1
+                                <input type="radio" name="${topic}_rating" value="2">2
+                                <input type="radio" name="${topic}_rating" value="3">3
+                                <input type="radio" name="${topic}_rating" value="4">4
+                                <input type="radio" name="${topic}_rating" value="5">5
+                                <button onclick="submitRating('${subjectCode}', '${topic}', this)">Submit</button>
+                            </td>
+                        </tr>`;
+                        tableBody.innerHTML += row; // Append row without clearing the table
+                    });
+                }
+            });
+
+            // If there's no topic data, display a "No data" message
+            if (!hasData) {
+                const noDataRow = `<tr><td colspan="2" class="no-data-message">No topics available for the selected subject.</td></tr>`;
+                tableBody.innerHTML = noDataRow;
+            }
+        }
+
+        // Function to submit a comment for an ILO
+        function submitComment(subjectCode, ilo, buttonElement) {
+            const commentInput = buttonElement.previousElementSibling; // Get the comment input
+            const comment = commentInput.value.trim(); // Get and trim the comment input
+
+            if (comment === '') {
+                alert("Please enter a comment.");
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('subject_code', subjectCode);
+            formData.append('ilo', ilo);
+            formData.append('comment', comment);
+
+            fetch('submit_comment.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Comment submitted successfully.');
+                        commentInput.value = ''; // Clear the comment field
+                    } else {
+                        alert('Failed to submit comment.');
+                    }
+                })
+                .catch(error => console.error('Error submitting comment:', error));
+        }
+
+        // Function to submit a rating for a topic
+        function submitRating(subjectCode, topic, buttonElement) {
+            // Get the selected rating value for the topic
+            const selectedRating = document.querySelector(`input[name="${topic}_rating"]:checked`);
+
+            if (!selectedRating) {
+                alert("Please select a rating.");
+                return;
+            }
+
+            const rating = selectedRating.value; // Get the selected rating value
+
+            const formData = new FormData();
+            formData.append('subject_code', subjectCode);
+            formData.append('topic', topic);
+            formData.append('rating', rating);
+
+            fetch('submit_rating.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Rating submitted successfully.');
+                        selectedRating.checked = false; // Clear the selected rating
+                    } else {
+                        alert('Failed to submit rating.');
+                    }
+                })
+                .catch(error => console.error('Error submitting rating:', error));
         }
     </script>
+
+
+
 </body>
+
 </html>

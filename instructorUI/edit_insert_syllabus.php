@@ -28,7 +28,7 @@ $course_units = "";
 $course_description = "";
 $prerequisites_corequisites = "";
 $contact_hours = "";
-$performance_tasks = ""; // No more individual context columns like prelim, midterm, etc.
+$performance_tasks = "";
 
 // Fetch subject code and name from POST data
 if (isset($_POST['syllabus_subject_code']) && isset($_POST['syllabus_subject_name'])) {
@@ -41,7 +41,6 @@ if (isset($_POST['syllabus_subject_code']) && isset($_POST['syllabus_subject_nam
 
 // Fetch existing syllabus data if it exists
 if (!empty($subject_code)) {
-    // Fetch syllabus data
     $sql = "SELECT * FROM syllabus WHERE subject_code = ? AND instructor_ID = ?";
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("si", $subject_code, $instructor_ID);
@@ -53,7 +52,7 @@ if (!empty($subject_code)) {
                 $course_description = htmlspecialchars($row['course_description']);
                 $prerequisites_corequisites = htmlspecialchars($row['prerequisites_corequisites']);
                 $contact_hours = htmlspecialchars($row['contact_hours']);
-                $performance_tasks = htmlspecialchars($row['performance_tasks']); // Updated
+                $performance_tasks = htmlspecialchars($row['performance_tasks']);
             }
             $result->free();
         }
@@ -66,42 +65,56 @@ if (isset($_POST['save_syllabus'])) {
     $conn->begin_transaction(); // Begin transaction for atomicity
 
     try {
-        // Insert or update the syllabus table (excluding context columns)
-        $sqlInsertUpdate = "
-            INSERT INTO syllabus
-            (subject_code, instructor_ID, course_units, course_description, 
-            prerequisites_corequisites, contact_hours, performance_tasks)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            ON DUPLICATE KEY UPDATE 
-            course_units = VALUES(course_units), 
-            course_description = VALUES(course_description), 
-            prerequisites_corequisites = VALUES(prerequisites_corequisites), 
-            contact_hours = VALUES(contact_hours), 
-            performance_tasks = VALUES(performance_tasks)";
+        // Check if syllabus exists
+        $sqlCheckSyllabus = "SELECT * FROM syllabus WHERE subject_code = ? AND instructor_ID = ?";
+        $stmtCheckSyllabus = $conn->prepare($sqlCheckSyllabus);
+        $stmtCheckSyllabus->bind_param("si", $subject_code, $instructor_ID);
+        $stmtCheckSyllabus->execute();
+        $resultSyllabus = $stmtCheckSyllabus->get_result();
 
-        $stmtSave = $conn->prepare($sqlInsertUpdate);
-        $stmtSave->bind_param(
-            "sisssss",
-            $_POST['subject_code'],
-            $instructor_ID,
-            $_POST['course_units'],
-            $_POST['course_description'],
-            $_POST['prerequisites_corequisites'],
-            $_POST['contact_hours'],
-            $_POST['performance_tasks']
-        );
-
-        if (!$stmtSave->execute()) {
-            throw new Exception("Failed to save the syllabus: " . $stmtSave->error);
+        if ($resultSyllabus->num_rows > 0) {
+            // Update existing syllabus
+            $sqlUpdateSyllabus = "
+                UPDATE syllabus 
+                SET course_units = ?, course_description = ?, prerequisites_corequisites = ?, contact_hours = ?, performance_tasks = ? 
+                WHERE subject_code = ? AND instructor_ID = ?";
+            $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
+            $stmtUpdateSyllabus->bind_param(
+                "ssssssi",
+                $_POST['course_units'],
+                $_POST['course_description'],
+                $_POST['prerequisites_corequisites'],
+                $_POST['contact_hours'],
+                $_POST['performance_tasks'],
+                $subject_code,
+                $instructor_ID
+            );
+            $stmtUpdateSyllabus->execute();
+        } else {
+            // Insert new syllabus
+            $sqlInsertSyllabus = "
+                INSERT INTO syllabus (subject_code, instructor_ID, course_units, course_description, prerequisites_corequisites, contact_hours, performance_tasks)
+                VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmtInsertSyllabus = $conn->prepare($sqlInsertSyllabus);
+            $stmtInsertSyllabus->bind_param(
+                "sisssss",
+                $subject_code,
+                $instructor_ID,
+                $_POST['course_units'],
+                $_POST['course_description'],
+                $_POST['prerequisites_corequisites'],
+                $_POST['contact_hours'],
+                $_POST['performance_tasks']
+            );
+            $stmtInsertSyllabus->execute();
         }
 
-        // Handle Context Table (including hours)
-        // First clear existing context entries
+        // Clear existing context data
         $stmtClearContext = $conn->prepare("DELETE FROM context WHERE subject_code = ? AND instructor_ID = ?");
         $stmtClearContext->bind_param("si", $subject_code, $instructor_ID);
         $stmtClearContext->execute();
 
-        // Insert context data for each section (prelim, midterm, semifinal, final)
+        // Insert or update context data
         $sections = ['prelim', 'midterm', 'semifinal', 'final'];
         $stmtInsertContext = $conn->prepare("
             INSERT INTO context (instructor_id, subject_code, section, hours, ilo, topics, institutional_values, teaching_activities, resources, assessment_tasks, course_map)
@@ -125,10 +138,8 @@ if (isset($_POST['save_syllabus'])) {
         foreach ($sections as $section) {
             $section = strtoupper($section); // e.g., PRELIM, MIDTERM, etc.
 
-            // Ensure each value is an array, and handle multiple rows if necessary
             if (isset($_POST[$section . '_hours']) && is_array($_POST[$section . '_hours'])) {
                 foreach ($_POST[$section . '_hours'] as $index => $hour) {
-                    // Only insert non-null and non-empty values
                     $hours = !empty($_POST[$section . '_hours'][$index]) ? $_POST[$section . '_hours'][$index] : null;
                     $ilo = !empty($_POST[$section . '_ilo'][$index]) ? $_POST[$section . '_ilo'][$index] : null;
                     $topics = !empty($_POST[$section . '_topics'][$index]) ? $_POST[$section . '_topics'][$index] : null;
@@ -138,9 +149,64 @@ if (isset($_POST['save_syllabus'])) {
                     $assessment_tasks = !empty($_POST[$section . '_assessment'][$index]) ? $_POST[$section . '_assessment'][$index] : null;
                     $course_map = !empty($_POST[$section . '_course_map'][$index]) ? $_POST[$section . '_course_map'][$index] : null;
 
-                    // Only execute the query if at least one of the fields is not null
                     if ($hours || $ilo || $topics || $institutional_values || $teaching_activities || $resources || $assessment_tasks || $course_map) {
                         $stmtInsertContext->execute();
+                    }
+                }
+            }
+        }
+
+        // Clear existing PILO-GILO mappings for the subject
+        // Clear existing PILO-GILO mappings for the subject
+        $stmtClearPiloGiloMappings = $conn->prepare("DELETE FROM pilo_gilo_map WHERE subject_code = ? AND instructor_ID = ?");
+        $stmtClearPiloGiloMappings->bind_param("si", $subject_code, $instructor_ID);
+        $stmtClearPiloGiloMappings->execute();
+
+        // Insert new PILO-GILO mappings
+        if (isset($_POST['pilo']) && is_array($_POST['pilo']) && isset($_POST['gilo']) && is_array($_POST['gilo'])) {
+            $piloValues = $_POST['pilo'];
+            $giloValues = $_POST['gilo'];
+            $currentPiloIndex = 0;
+
+            foreach ($piloValues as $piloIndex => $piloValue) {
+                // Fetch the GILO values corresponding to the current PILO
+                while (isset($giloValues[$currentPiloIndex])) {
+                    $giloValue = $giloValues[$currentPiloIndex];
+
+                    if (!empty($piloValue) && !empty($giloValue)) {
+                        // Insert PILO and corresponding GILO
+                        $stmtPiloGilo = $conn->prepare("INSERT INTO pilo_gilo_map (subject_code, instructor_ID, pilo, gilo) VALUES (?, ?, ?, ?)");
+                        $stmtPiloGilo->bind_param("siss", $subject_code, $instructor_ID, $piloValue, $giloValue);
+                        if (!$stmtPiloGilo->execute()) {
+                            throw new Exception("Failed to insert PILO-GILO mapping: " . $stmtPiloGilo->error);
+                        }
+                    }
+                    $currentPiloIndex++;
+                }
+            }
+        }
+
+        // Clear existing CILO-GILO mappings for the subject
+        $stmtClearCiloGiloMappings = $conn->prepare("DELETE FROM cilo_gilo_map WHERE subject_code = ? AND instructor_ID = ?");
+        $stmtClearCiloGiloMappings->bind_param("si", $subject_code, $instructor_ID);
+        $stmtClearCiloGiloMappings->execute();
+
+        // Insert new CILO-GILO mappings
+        if (isset($_POST['cilo_description']) && isset($_POST['gilo1']) && isset($_POST['gilo2'])) {
+            $cilo_descriptions = $_POST['cilo_description'];
+            $gilo1_values = $_POST['gilo1'];
+            $gilo2_values = $_POST['gilo2'];
+
+            for ($i = 0; $i < count($cilo_descriptions); $i++) {
+                if (!empty($cilo_descriptions[$i])) {
+                    $cilo_description = $cilo_descriptions[$i];
+                    $gilo1 = $gilo1_values[$i];
+                    $gilo2 = $gilo2_values[$i];
+
+                    $stmtCiloGilo = $conn->prepare("INSERT INTO cilo_gilo_map (subject_code, instructor_ID, cilo_description, gilo1, gilo2) VALUES (?, ?, ?, ?, ?)");
+                    $stmtCiloGilo->bind_param("sisss", $subject_code, $instructor_ID, $cilo_description, $gilo1, $gilo2);
+                    if (!$stmtCiloGilo->execute()) {
+                        throw new Exception("Failed to insert CILO-GILO mapping: " . $stmtCiloGilo->error);
                     }
                 }
             }
@@ -152,7 +218,6 @@ if (isset($_POST['save_syllabus'])) {
         } else {
             throw new Exception("Transaction commit failed.");
         }
-
     } catch (Exception $e) {
         $conn->rollback();
         $_SESSION['error_message'] = $e->getMessage();
@@ -163,7 +228,6 @@ if (isset($_POST['save_syllabus'])) {
 // Close the connection
 $conn->close();
 ?>
-
 
 
 <!DOCTYPE html>
@@ -221,26 +285,26 @@ $conn->close();
 </head>
 
 <body>
-<?php
+    <?php
     // Check if success message exists
     if (isset($_SESSION['success_message'])) {
         $message = $_SESSION['success_message'];
         // Unset the session message after displaying it once
         unset($_SESSION['success_message']);
     ?>
-    <script>
-        // Show SweetAlert and redirect after clicking OK
-        window.onload = function() {
-            Swal.fire({
-                title: 'localhost says',
-                text: '<?php echo $message; ?>',
-                icon: 'success',
-                confirmButtonText: 'OK'
-            }).then(function() {
-                window.location.href = 'index.php'; // Redirect to index.php
-            });
-        };
-    </script>
+        <script>
+            // Show SweetAlert and redirect after clicking OK
+            window.onload = function() {
+                Swal.fire({
+                    title: 'localhost says',
+                    text: '<?php echo $message; ?>',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(function() {
+                    window.location.href = 'index.php'; // Redirect to index.php
+                });
+            };
+        </script>
     <?php
     }
     ?>
@@ -601,7 +665,7 @@ $conn->close();
                         <td><textarea name="PRELIM_assessment[]" class="autoResizeTextarea"></textarea></td>
                         <td><textarea name="PRELIM_course_map[]" class="autoResizeTextarea"></textarea></td>
                         <td>
-                            <button type="button" class="button add-row-button" onclick="addRow('finalSection')">+</button>
+                            <button type="button" class="button add-row-button" onclick="addRow('prelimSection')">+</button>
                             <button type="button" class="button remove-row-button" onclick="removeRow(this)">-</button>
                         </td>
                     </tr>
@@ -618,7 +682,7 @@ $conn->close();
                         <td><textarea name="MIDTERM_assessment[]" class="autoResizeTextarea"></textarea></td>
                         <td><textarea name="MIDTERM_course_map[]" class="autoResizeTextarea"></textarea></td>
                         <td>
-                            <button type="button" class="button add-row-button" onclick="addRow('finalSection')">+</button>
+                            <button type="button" class="button add-row-button" onclick="addRow('midtermSection')">+</button>
                             <button type="button" class="button remove-row-button" onclick="removeRow(this)">-</button>
                         </td>
                     </tr>
@@ -635,7 +699,7 @@ $conn->close();
                         <td><textarea name="SEMIFINAL_assessment[]" class="autoResizeTextarea"></textarea></td>
                         <td><textarea name="SEMIFINAL_course_map[]" class="autoResizeTextarea"></textarea></td>
                         <td>
-                            <button type="button" class="button add-row-button" onclick="addRow('finalSection')">+</button>
+                            <button type="button" class="button add-row-button" onclick="addRow('semifinalSection')">+</button>
                             <button type="button" class="button remove-row-button" onclick="removeRow(this)">-</button>
                         </td>
                     </tr>
