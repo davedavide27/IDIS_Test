@@ -13,6 +13,7 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
 $subjectCode = '';
 $subjectName = '';
 $units = '';
@@ -27,7 +28,7 @@ $totalCompetenciesDepEd = '';
 $totalCompetenciesSMCC = '';
 $totalInstitutionalCompetencies = '';
 $totalCompetenciesBAndC = '';
-$totalCompetenciesImplemented = '';
+$totalCompetenciesImplemented = ''; 
 $totalCompetenciesNotImplemented = '';
 $percentageCompetenciesImplemented = '';
 $preparedBy = '';
@@ -35,10 +36,9 @@ $checkedBy = '';
 $notedBy = '';
 $competencies = [];
 
-// Check if subject code is passed from the instructorUI/index.php
-if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
+// Check if subject code is passed
+if (isset($_GET['subject_code'])) {
     $subjectCode = $_GET['subject_code'];
-    $subjectName = $_GET['subject_name'];
 
     // Fetch all relevant data for the selected subject
     $sql = "SELECT subject_code, subject_name, units, hours, department, school_year_start, school_year_end,
@@ -57,6 +57,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
     if ($result->num_rows > 0) {
         // Fetch data dynamically from the database
         while ($row = $result->fetch_assoc()) {
+            $subjectName = $row['subject_name'];  // Add subject name here
             $units = $row['units'];
             $hours = $row['hours'];
             $department = $row['department'];
@@ -89,6 +90,8 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
 $conn->close();
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -96,103 +99,13 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean UI - View Competencies</title>
-    <style>
-        @media print {
-    .no-print, .no-print * {
-        display: none !important;
-        
-    }
-}
-body {
-    font-family: Arial, sans-serif;
-}
-.competency-table, .summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-.competency-table th, .competency-table td{
-    border: 1px solid #000;
-    padding: 8px;
-}
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.summary-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-}
-
-.summary-table th, .summary-table td {
-    padding: 8px;
-    text-transform: uppercase;
-    font-weight: bold;
-    border: none;
-    text-align: left;
-    vertical-align: middle; /* Aligns text and numbers in the middle */
-    line-height: 1.8; /* Adjusts line height within rows */
-
-}
-
-.summary-table th:last-child, .summary-table td:last-child {
-    text-align: right;
-}
-
-.summary-table tr td:first-child {
-    padding-right: 20px; /* Adds spacing between the text and the separator */
-}
-
-.summary-table td {
-    border-bottom: 1px solid #000; /* Adds a line under each row */
-}
-
-.summary-table tr td:not(:last-child) {
-    border-right: 2px solid #000; /* Adds a vertical line between the text and number columns */
-    
-}
-
-.summary-table th:last-child, .summary-table td:last-child {
-    width: 150px; /* Ensures numbers are in a fixed width column */
-}
-
-.competency-table th, .summary-table th {
-    background-color: #a0a0a0;
-}
-.section-title {
-    font-weight: bold;
-}
-.header-info {
-    margin-top: 20px;
-    
-}
-.header-info th {
-    text-align: left;
-    width: 250px;
-}
-.header-info tr {
-        width: 150px; /* Ensures numbers are in a fixed width column */
-}
-.header-info td {
-    width: auto;
-    
-}
-.sign-section {
-    margin-top: 40px;
-}
-.sign-section td {
-    padding: 5px;
-}
-    </style>
 </head>
 
 <body>
     <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
     <button class="no-print" onclick="window.history.back()">Back</button>
     <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
+    <link rel="stylesheet" href="../deanUI/view_competencies.css">
     <table class="header-info">
         <tr>
             <th>I. Subject code:</th>

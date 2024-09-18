@@ -76,6 +76,28 @@ $conn->close();
             background-color: #FF0000;
             border-color: #badbcc;
         }
+
+        .commentCard {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .commentCard h6 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .commentCard .content {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .commentCard .footerTopic {
+            font-size: 0.9em;
+            color: #666;
+        }
     </style>
 </head>
 
@@ -170,35 +192,10 @@ $conn->close();
                         <div id="Comments" class="tabcontent">
                             <h6><br>Pop up Comments / Suggestions</h6>
                             <div id="containerComment" data-subject-code="">
-                                <div class="commentCard">
-                                    <div>
-                                        <h6>ADGEC 1</h6>
-                                    </div>
-                                    <div>
-                                        <p class="content">/*comments*/</p>
-                                    </div>
-                                    <div>
-                                        <p class="footerTopic">Topic No. 3</p>
-                                    </div>
-                                </div>
-                                <div class="commentCard">
-                                    <div>
-                                        <h6>ADGEC 1</h6>
-                                    </div>
-                                    <div>
-                                        <p class="content">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ducimus dolores id debitis cum accusamus inventore praesentium sit voluptatum, distinctio dignissimos odio laboriosam, omnis assumenda eos iusto officia aut itaque. Molestias!</p>
-                                    </div>
-                                    <div>
-                                        <p class="footerTopic">Topic No. 2</p>
-                                    </div>
-                                </div>
+                                <!-- The comments will be dynamically appended here by JavaScript -->
                             </div>
                         </div>
-                    </div>
-                </main>
-            </div>
-        </div>
-    </div>
+
 </body>
 
 </html>

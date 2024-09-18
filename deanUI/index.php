@@ -69,6 +69,7 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,6 +77,7 @@ $conn->close();
     <link rel="stylesheet" href="dean.css">
     <script src="dean.js"></script>
 </head>
+
 <body>
     <div class="containerOfAll">
         <div class="subjectsContainer">
@@ -141,10 +143,11 @@ $conn->close();
                             <h6><br>Implement</h6>
                             <div id="container_plans">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="../syllabus.html">
+                                    <a href="#" id="syllabusLink" onclick="printSyllabus()">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>
+
                                 <div class="planCard" id="competenciesCard" style="display: none;">
                                     <a href="competencies.php" id="competenciesLink">
                                         <p>Competencies</p>
@@ -192,6 +195,8 @@ $conn->close();
 
             // Set the subject code and name dynamically in the Competencies link
             document.getElementById('competenciesLink').href = `competencies.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+                        // Set the subject code and name dynamically in the Competencies link
+            document.getElementById('syllabusLink').href = `print_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
         }
 
         // Function to open a tab
@@ -210,4 +215,5 @@ $conn->close();
         }
     </script>
 </body>
+
 </html>

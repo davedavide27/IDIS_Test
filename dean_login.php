@@ -11,7 +11,6 @@
         <header>
             <h2>INSTRUCTIONAL DELIVERY IMPLEMENTATION SYSTEM</h2>
         </header>
-        
         <div class="login-wrapper">
             <div class="logo"></div>
             <h2>LOGIN AS DEAN</h2>

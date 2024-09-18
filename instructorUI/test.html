@@ -31,7 +31,7 @@
     </style>
 </head>
 <body>
-    <!--<li>sdsdsd
+    <li>sdsdsd
         <div id="container"></div>
         <table class="table3">
             <tr>
@@ -65,7 +65,7 @@
                 resizeTextarea(textarea);
             });
         });
-        </script>-->
+        </script>
 
         <table class="report-container">
             <thead class="report-header">
@@ -96,5 +96,14 @@
                 </tr>
             </tbody>
         </table>
+        
+    <input type="text" id="percentageInput" placeholder="Enter number">
+
+    <script>
+        document.getElementById('percentageInput').addEventListener('input', function() {
+            let value = this.value.replace(/[^0-9.]/g, ''); // Remove non-numeric characters
+            this.value = value ? `${value}%` : ''; // Append '%' if value is not empty
+        });
+    </script>
 </body>
 </html>

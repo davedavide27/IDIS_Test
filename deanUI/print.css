@@ -1,0 +1,88 @@
+
+/* Hide buttons during print */
+@media print {
+
+    .print-button,
+    .back-button {
+        display: none;
+    }
+
+    /* Adjust body and table for print margins */
+    body,
+    html {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Ensure the table fits within the page */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        /* Ensures columns don't expand beyond page width */
+        word-wrap: break-word;
+        page-break-inside: avoid;
+        /* Avoid breaking inside table rows */
+        margin: 0 auto;
+        /* Center the table to ensure it's within the print area */
+    }
+
+    th,
+    td {
+        border: 1px solid black;
+        padding: 6px;
+        text-align: left;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+
+    th {
+        background-color: #3498db;
+        color: white;
+    }
+
+    /* Prevent table rows from splitting across pages */
+    tr {
+        page-break-inside: avoid;
+    }
+
+    tbody {
+        page-break-before: auto;
+        page-break-after: auto;
+    }
+
+    /* Ensures background colors are retained when printing */
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Force page size and margins to avoid clipping */
+    @page {
+        size: A4;
+        /* Adjust to the page size (A4, Letter, etc.) */
+        margin: 10mm;
+        /* Adjust margins to ensure all borders are printed */
+    }
+}
+
+/* Default table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: auto;
+    /* Allows table to adjust to content */
+}
+
+th,
+td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #3498db;
+    color: white;
+}
