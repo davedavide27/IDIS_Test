@@ -126,6 +126,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Display Syllabus</title>
     <link rel="stylesheet" href="../syllabus.css">
+    <link rel="stylesheet" href="print.css">
     <style>
         /* Hide buttons during print */
         @media print {
@@ -408,6 +409,9 @@ $conn->close();
         <!-- Print Button -->
         <button class="print-button" onclick="printSyllabus()">Print</button>
         <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+        <!-- Download Word Button -->
+        <button class="download-button" onclick="window.location.href='../download_syllabus.php?subject_code=<?php echo $subject_code; ?>&subject_name=<?php echo $subject_name; ?>'">Download as Word</button>
+
 
         <script>
             function printSyllabus() {

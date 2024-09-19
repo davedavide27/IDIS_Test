@@ -121,7 +121,7 @@ $conn->close();
 
                 <!-- Static display of competencies count -->
                 <h4 style="text-align: center;">
-                    Competencies: 
+                    Competencies:
                     <span id="competenciesCount"><?php echo $competenciesCount; ?> out of <?php echo $competenciesCount; ?></span>
                 </h4>
 
@@ -174,7 +174,7 @@ $conn->close();
                             <h6><br>View for Signatures</h6>
                             <div id="container">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="../instructorUI/syllabus.html">
+                                    <a href="#" id="syllabusLink" onclick="printSyllabus()">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>
@@ -216,6 +216,7 @@ $conn->close();
             buttonElement.classList.add('selected-subject');
 
             // Fetch competencies for the selected subject
+            document.getElementById("syllabusCard").style.display = "block";
             fetchCompetencies(subjectCode);
 
             // Store selected subject in sessionStorage
@@ -228,6 +229,11 @@ $conn->close();
 
             // Update the competencies link with the selected subject
             document.getElementById('competenciesLink').href = 'view_competencies.php?subject_code=' + subjectCode;
+            // Set the subject code and name dynamically in the Competencies link
+            document.getElementById(
+                "syllabusLink"
+            ).href = `display_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+
         }
 
         // Function to fetch the competencies from PHP
@@ -235,7 +241,7 @@ $conn->close();
             var xhr = new XMLHttpRequest();
             xhr.open('POST', 'display_total_comp.php', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function () {
+            xhr.onload = function() {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
                     document.getElementById('competenciesCount').innerText = response.subject_competencies + " out of " + response.total_competencies;
@@ -245,7 +251,7 @@ $conn->close();
         }
 
         // Initialize the page and auto-select the previously selected subject
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // Check if a subject was selected before
             var selectedSubjectCode = sessionStorage.getItem('selectedSubjectCode');
             var selectedSubjectName = sessionStorage.getItem('selectedSubjectName');
@@ -259,6 +265,8 @@ $conn->close();
             }
         });
     </script>
+
+
 </body>
 
 </html>

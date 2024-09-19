@@ -406,7 +406,7 @@ $conn->close();
 
             <table id="piloGiloTable">
                 <tr>
-                    <th>Program Intended Learning Outcomes (PILOs)</th>
+                    <th>Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
                     <th>Graduate Intended Learning Outcomes (GILOs)</th>
                     <th><button type="button" class="button add-row-button" onclick="addPiloGiloRow()">+</button></th>
                 </tr>
@@ -533,7 +533,8 @@ $conn->close();
 
             <table id="ciloGiloTable">
                 <tr>
-                    <th>CILO Description</th>
+                    <th>Course Intended Learning Outcomes (CILOs)<br><br>
+                        After completion of the program, the student must be able to:</th>
                     <th>GILOs</th>
                     <th>GILOs</th>
                     <th><button type="button" class="button add-row-button" onclick="addCiloGiloRow()">+</button></th>
