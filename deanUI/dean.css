@@ -144,7 +144,7 @@ main{
 
 .navtab {
     display: grid;
-    grid-template-columns: 49% 49%;
+    grid-template-columns: 50% 50%;
 }
 .navtab button{
     border-top-left-radius: 5pt;

@@ -112,11 +112,6 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($instructorFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($instructorId); ?></ul>
                 </div>
-                <div>
-                    <form action="../logout.php" method="post">
-                        <button type="submit">Logout</button>
-                    </form>
-                </div>
                 <div class="subsContainer">
                     <div class="subjects">
                         <div>
@@ -131,6 +126,11 @@ $conn->close();
                         <?php endforeach; ?>
                     </div>
                 </div>
+
+                <form action="../logout.php" method="post">
+                    <button class="logout_btn" type="submit">Logout</button>
+                </form>
+
             </nav>
             <div class="implementContainer">
                 <header>

@@ -121,6 +121,7 @@ $conn->close();
                 <?php else: ?>
                     <h4 style="text-align: center;">No subjects assigned to this instructor.</h4>
                 <?php endif; ?>
+                
                 <form action="../logout.php" method="post">
                     <button class="logout_btn" type="submit">Logout</button>
                 </form>
