@@ -236,7 +236,7 @@ function appendCommentsToContainer(data, subjectCode) {
             const commentHTML = `
               <div class="commentCard">
                   <h6>ILO: ${iloData.ilo || "N/A"}</h6>
-                  <p><strong>Comment:</strong> ${comment.comment || "No comment provided"}</p>
+                  <h6><strong>Comment:</strong> ${comment.comment || "No comment provided"}</h6>
                   <p><strong>Date:</strong> ${new Date(comment.timestamp).toLocaleString()}</p>
               </div>
             `;

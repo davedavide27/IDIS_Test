@@ -75,7 +75,7 @@ if (isset($_POST['approve'])) {
 
     if ($stmtUpdate->execute()) {
         // Trigger JavaScript alert after successful approval
-        echo "<script>alert('localhost says: Subject code $subjectCode is approved');</script>";
+        echo "<script>alert('Subject code $subjectCode is approved');</script>";
         // Refresh the page to reflect the updated status
         echo "<script>window.location.href = '?subject_code=$subjectCode&subject_name=$subjectName';</script>";
     } else {
@@ -118,11 +118,12 @@ $conn->close();
 
         /* Approve button */
         .approve-button {
-            padding: 10px;
+            padding: 5px;
             background-color: blue;
             color: white;
             border: none;
             cursor: pointer;
+            align-items: left;
         }
     </style>
 </head>
@@ -132,6 +133,13 @@ $conn->close();
     <button class="no-print" onclick="window.location.href='index.php';">Back</button>
 
     <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
+
+    <!-- Approve button (only show if status is PENDING) -->
+    <?php if ($status === 'PENDING'): ?>
+        <form method="post" style="text-align: center; margin-bottom: 20px;" onsubmit="return confirmApprove()">
+            <button class="approve-button" type="submit" name="approve">Approve Competency</button>
+        </form>
+    <?php endif; ?>
 
     <table class="header-info">
         <tr>
@@ -261,7 +269,7 @@ $conn->close();
         }
 
         function confirmApprove() {
-            return confirm('Approve subject?');
+            return confirm('Approve Competency?');
         }
     </script>
 </body>

@@ -28,10 +28,10 @@ $course_description = "";
 $prerequisites_corequisites = "";
 $contact_hours = "";
 $performance_tasks = "";
+$status = "PENDING"; // Default status for syllabus
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
-$status = "PENDING"; // Default status for syllabus
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -51,7 +51,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $prerequisites_corequisites = htmlspecialchars($row['prerequisites_corequisites']);
             $contact_hours = htmlspecialchars($row['contact_hours']);
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
-            $status = htmlspecialchars($row['status']);  // Fetch the syllabus status
+            $status = htmlspecialchars($row['status']);  // Get the syllabus status
         } else {
             echo '<script>alert("localhost says: No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
         }
@@ -114,6 +114,49 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
     }
 } else {
     $_SESSION['error_message'] = "Subject code or name not provided.";
+}
+
+// Handle "Approve" button click
+if (isset($_POST['approve'])) {
+    // Update the status to "APPROVED" in the syllabus table
+    $sqlUpdateSyllabus = "UPDATE syllabus SET status = 'APPROVED' WHERE subject_code = ?";
+    $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
+    $stmtUpdateSyllabus->bind_param("s", $subject_code);
+
+    // Update the status in the related tables (cilo_gilo_map, pilo_gilo_map, context)
+    $sqlUpdateCiloGilo = "UPDATE cilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
+    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
+    $sqlUpdateContext = "UPDATE context SET status = 'APPROVED' WHERE subject_code = ?";
+
+    // Prepare and execute the queries
+    $stmtUpdateCiloGilo = $conn->prepare($sqlUpdateCiloGilo);
+    $stmtUpdatePiloGilo = $conn->prepare($sqlUpdatePiloGilo);
+    $stmtUpdateContext = $conn->prepare($sqlUpdateContext);
+
+    $stmtUpdateCiloGilo->bind_param("s", $subject_code);
+    $stmtUpdatePiloGilo->bind_param("s", $subject_code);
+    $stmtUpdateContext->bind_param("s", $subject_code);
+
+    // Execute all updates
+    if (
+        $stmtUpdateSyllabus->execute() &&
+        $stmtUpdateCiloGilo->execute() &&
+        $stmtUpdatePiloGilo->execute() &&
+        $stmtUpdateContext->execute()
+    ) {
+        // Trigger JavaScript alert after successful approval
+        echo "<script>alert('Subject code $subject_code and all related data are approved');</script>";
+        // Refresh the page to reflect the updated status
+        echo "<script>window.location.href = '?subject_code=$subject_code&subject_name=$subject_name';</script>";
+    } else {
+        echo "Error updating status: " . $stmtUpdateSyllabus->error;
+    }
+
+    // Close the prepared statements
+    $stmtUpdateSyllabus->close();
+    $stmtUpdateCiloGilo->close();
+    $stmtUpdatePiloGilo->close();
+    $stmtUpdateContext->close();
 }
 
 $conn->close();
@@ -277,6 +320,13 @@ $conn->close();
     <!-- Main Content Section -->
     <div class="container">
         <h2>Syllabus Information</h2>
+
+        <!-- Approve button (only show if status is PENDING) -->
+        <?php if ($status === 'PENDING'): ?>
+            <form method="post" style="text-align: center; margin-bottom: 20px;" onsubmit="return confirmApprove()">
+                <button class="approve-button" type="submit" name="approve">Approve</button>
+            </form>
+        <?php endif; ?>
         <!-- Display Course Information -->
         <h3>Course Information</h3>
         <ul>

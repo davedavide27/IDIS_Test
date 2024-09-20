@@ -233,73 +233,91 @@ $conn->close();
             tableBody.innerHTML = ''; // Clear the table content
         }
 
-        // Function to append the ILOs to the existing table without overriding
-        function appendILOsToTable(data, subjectCode) {
-            const tableBody = document.querySelector('#ILOs .remarksTable tbody');
+// Function to append the ILOs to the existing table without overriding
+function appendILOsToTable(data, subjectCode) {
+    const tableBody = document.querySelector('#ILOs .remarksTable tbody');
 
-            // Iterate over each section and append the ILOs
-            let hasData = false;
+    // Clear existing content
+    tableBody.innerHTML = '';
 
-            ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
-                if (data[section] && data[section].length > 0) {
-                    hasData = true;
+    if (data.message) {
+        // If there's a message (e.g., no approved ILOs), display it
+        const noDataRow = `<tr><td colspan="2" class="no-data-message">${data.message}</td></tr>`;
+        tableBody.innerHTML = noDataRow;
+    } else {
+        // Iterate over each section and append the ILOs
+        let hasData = false;
 
-                    data[section].forEach(ilo => {
-                        const row = `
-                        <tr data-ilo="${ilo}_${section}">
-                            <td>${ilo} (${section})</td>
-                            <td>
-                                <input type="text" placeholder="Enter comments..." class="ilo-comment">
-                                <button onclick="submitComment('${subjectCode}', '${ilo}', this)">Submit</button>
-                            </td>
-                        </tr>`;
-                        tableBody.innerHTML += row; // Append row without clearing the table
-                    });
-                }
-            });
+        ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
+            if (data[section] && data[section].length > 0) {
+                hasData = true;
 
-            // If there's no ILO data, display a "No data" message
-            if (!hasData) {
-                const noDataRow = `<tr><td colspan="2" class="no-data-message">No ILOs available for the selected subject.</td></tr>`;
-                tableBody.innerHTML = noDataRow;
+                data[section].forEach(ilo => {
+                    const row = `
+                    <tr data-ilo="${ilo}_${section}">
+                        <td>${ilo} (${section})</td>
+                        <td>
+                            <input type="text" placeholder="Enter comments..." class="ilo-comment">
+                            <button onclick="submitComment('${subjectCode}', '${ilo}', this)">Submit</button>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row; // Append row without clearing the table
+                });
             }
+        });
+
+        // If there's no ILO data, display a "No data" message
+        if (!hasData) {
+            const noDataRow = `<tr><td colspan="2" class="no-data-message">No ILOs available for the selected subject.</td></tr>`;
+            tableBody.innerHTML = noDataRow;
         }
+    }
+}
 
-        // Function to append the Topics to the existing table without overriding
-        function appendTopicsToTable(data, subjectCode) {
-            const tableBody = document.querySelector('#Topics .remarksTable tbody');
+// Function to append the Topics to the existing table without overriding
+function appendTopicsToTable(data, subjectCode) {
+    const tableBody = document.querySelector('#Topics .remarksTable tbody');
 
-            // Iterate over each section and append the topics
-            let hasData = false;
+    // Clear existing content
+    tableBody.innerHTML = '';
 
-            ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
-                if (data[section] && data[section].length > 0) {
-                    hasData = true;
+    if (data.message) {
+        // If there's a message (e.g., no approved topics), display it
+        const noDataRow = `<tr><td colspan="2" class="no-data-message">${data.message}</td></tr>`;
+        tableBody.innerHTML = noDataRow;
+    } else {
+        // Iterate over each section and append the topics
+        let hasData = false;
 
-                    data[section].forEach(topic => {
-                        const row = `
-                        <tr data-topic="${topic}_${section}">
-                            <td>${topic} (${section})</td>
-                            <td>
-                                <input type="radio" name="${topic}_rating" value="1">1
-                                <input type="radio" name="${topic}_rating" value="2">2
-                                <input type="radio" name="${topic}_rating" value="3">3
-                                <input type="radio" name="${topic}_rating" value="4">4
-                                <input type="radio" name="${topic}_rating" value="5">5
-                                <button onclick="submitRating('${subjectCode}', '${topic}', this)">Submit</button>
-                            </td>
-                        </tr>`;
-                        tableBody.innerHTML += row; // Append row without clearing the table
-                    });
-                }
-            });
+        ['PRELIM', 'MIDTERM', 'SEMIFINAL', 'FINAL'].forEach(section => {
+            if (data[section] && data[section].length > 0) {
+                hasData = true;
 
-            // If there's no topic data, display a "No data" message
-            if (!hasData) {
-                const noDataRow = `<tr><td colspan="2" class="no-data-message">No topics available for the selected subject.</td></tr>`;
-                tableBody.innerHTML = noDataRow;
+                data[section].forEach(topic => {
+                    const row = `
+                    <tr data-topic="${topic}_${section}">
+                        <td>${topic} (${section})</td>
+                        <td>
+                            <input type="radio" name="${topic}_rating" value="1">1
+                            <input type="radio" name="${topic}_rating" value="2">2
+                            <input type="radio" name="${topic}_rating" value="3">3
+                            <input type="radio" name="${topic}_rating" value="4">4
+                            <input type="radio" name="${topic}_rating" value="5">5
+                            <button onclick="submitRating('${subjectCode}', '${topic}', this)">Submit</button>
+                        </td>
+                    </tr>`;
+                    tableBody.innerHTML += row; // Append row without clearing the table
+                });
             }
+        });
+
+        // If there's no topic data, display a "No data" message
+        if (!hasData) {
+            const noDataRow = `<tr><td colspan="2" class="no-data-message">No topics available for the selected subject.</td></tr>`;
+            tableBody.innerHTML = noDataRow;
         }
+    }
+}
 
         // Function to submit a comment for an ILO
         function submitComment(subjectCode, ilo, buttonElement) {

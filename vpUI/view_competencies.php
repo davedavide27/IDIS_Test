@@ -28,13 +28,14 @@ $totalCompetenciesDepEd = '';
 $totalCompetenciesSMCC = '';
 $totalInstitutionalCompetencies = '';
 $totalCompetenciesBAndC = '';
-$totalCompetenciesImplemented = ''; 
+$totalCompetenciesImplemented = '';
 $totalCompetenciesNotImplemented = '';
 $percentageCompetenciesImplemented = '';
 $preparedBy = '';
 $checkedBy = '';
 $notedBy = '';
 $competencies = [];
+$status = 'PENDING';  // Default status
 
 // Check if subject code is passed
 if (isset($_GET['subject_code'])) {
@@ -45,7 +46,7 @@ if (isset($_GET['subject_code'])) {
             grading_period, grading_quarter_start, grading_quarter_end, total_competencies_deped_tesda_ched, 
             total_competencies_smcc, total_institutional_competencies, total_competencies_b_and_c, 
             total_competencies_implemented, total_competencies_not_implemented, percentage_competencies_implemented,
-            prepared_by, checked_by, noted_by, competency_description, remarks
+            prepared_by, checked_by, noted_by, competency_description, remarks, status
             FROM competencies 
             WHERE subject_code = ?";
 
@@ -76,6 +77,7 @@ if (isset($_GET['subject_code'])) {
             $preparedBy = $row['prepared_by'];
             $checkedBy = $row['checked_by'];
             $notedBy = $row['noted_by'];
+            $status = $row['status'];  // Fetch current status
 
             // Add competencies description and remarks to array
             $competencies[] = [
@@ -99,14 +101,51 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean UI - View Competencies</title>
+    <link rel="stylesheet" href="view_competencies.css">
+    <style>
+        /* Style for the status button */
+        .status-button {
+            padding: 5px;
+            font-size: 12px;
+            color: white;
+            border: none;
+            cursor: default;
+        }
+
+        /* Red for PENDING */
+        .status-button.pending {
+            background-color: red;
+        }
+
+        /* Green for APPROVED */
+        .status-button.approved {
+            background-color: green;
+        }
+
+        /* Approve button */
+        .approve-button {
+            padding: 10px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
-    <button class="no-print" onclick="window.history.back()">Back</button>
+    <button class="no-print" onclick="window.location.href='index.php';">Back</button>
+
     <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
-    <link rel="stylesheet" href="../deanUI/view_competencies.css">
+
     <table class="header-info">
+        <tr>
+            <th>Status</th>
+            <td> <button class="status-button <?php echo strtolower($status); ?>">
+                    <?php echo htmlspecialchars($status); ?>
+                </button></td>
+        </tr>
         <tr>
             <th>I. Subject code:</th>
             <td><?php echo htmlspecialchars($subjectCode); ?></td>
@@ -140,6 +179,7 @@ $conn->close();
             </td>
         </tr>
     </table>
+
     <table class="competency-table">
         <thead>
             <tr>
@@ -165,87 +205,69 @@ $conn->close();
 
     <table class="summary-table">
         <tr>
-            <td>Total number of Competencies DepEd/TESDA/CHED:</td>
+            <td>Total Competencies DepEd/TESDA/CHED:</td>
             <td><?php echo htmlspecialchars($totalCompetenciesDepEd); ?></td>
         </tr>
         <tr>
-            <td>Total Number of Competencies SMCC based on DepEd/TESDA/CHED:</td>
+            <td>Total Competencies SMCC:</td>
             <td><?php echo htmlspecialchars($totalCompetenciesSMCC); ?></td>
         </tr>
         <tr>
-            <td>Total Number of Institutional Competencies:</td>
+            <td>Total Institutional Competencies:</td>
             <td><?php echo htmlspecialchars($totalInstitutionalCompetencies); ?></td>
         </tr>
         <tr>
-            <td>Total Number of B and C:</td>
+            <td>Total B and C Competencies:</td>
             <td><?php echo htmlspecialchars($totalCompetenciesBAndC); ?></td>
         </tr>
         <tr>
-            <td>Total Number of Competencies Implemented:</td>
+            <td>Total Competencies Implemented:</td>
             <td><?php echo htmlspecialchars($totalCompetenciesImplemented); ?></td>
         </tr>
         <tr>
-            <td>Total Number of Competencies NOT Implemented:</td>
+            <td>Total Competencies NOT Implemented:</td>
             <td><?php echo htmlspecialchars($totalCompetenciesNotImplemented); ?></td>
         </tr>
         <tr>
-            <td>% Number of Competencies Implemented:</td>
+            <td>% Competencies Implemented:</td>
             <td><?php echo htmlspecialchars($percentageCompetenciesImplemented); ?>%</td>
         </tr>
     </table>
 
     <div class="sign-section">
-        <table style="width: 100%; text-align: center; border-collapse: separate; border-spacing: 40px 0;">
+        <table style="width: 100%; text-align: center; border-spacing: 40px 0;">
             <tr>
-                <td style="width: 33.3%; padding-bottom: 10px;">
-                    <strong>Prepared by:</strong>
-                </td>
-                <td style="width: 33.3%; padding-bottom: 10px;">
-                    <strong>Checked by:</strong>
-                </td>
-                <td style="width: 33.3%; padding-bottom: 10px;">
-                    <strong>Noted by:</strong>
-                </td>
+                <td><strong>Prepared by:</strong></td>
+                <td><strong>Checked by:</strong></td>
+                <td><strong>Noted by:</strong></td>
             </tr>
             <tr>
-                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                    <?php echo htmlspecialchars($preparedBy); ?>
-                </td>
-                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                    <?php echo htmlspecialchars($checkedBy); ?>
-                </td>
-                <td style="border-bottom: 1px solid black; padding-bottom: 10px;">
-                    <?php echo htmlspecialchars($notedBy); ?>
-                </td>
+                <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($preparedBy); ?></td>
+                <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($checkedBy); ?></td>
+                <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($notedBy); ?></td>
             </tr>
             <tr>
-                <td style="width: 33.3%; padding-bottom: 10px;">
+                <td>
                     <h4>Subject Teacher</h4>
                 </td>
-                <td style="width: 33.3%; padding-bottom: 10px;">
+                <td>
                     <h4>Subject Coordinator</h4>
                 </td>
-                <td style="width: 33.3%; padding-bottom: 10px;">
+                <td>
                     <h4>Dean</h4>
                 </td>
             </tr>
         </table>
     </div>
+
     <script>
         function hidePrintHeaders() {
-            // Save the current document title
-            const originalTitle = document.title;
-
-            // Temporarily change the title
-            document.title = 'Print Competencies';
-
-            // Trigger print
+            // Trigger print without headers
             window.print();
+        }
 
-            // Restore the original title after printing
-            setTimeout(() => {
-                document.title = originalTitle;
-            }, 1000);
+        function confirmApprove() {
+            return confirm('Approve Competency?');
         }
     </script>
 </body>

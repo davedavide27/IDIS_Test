@@ -31,6 +31,7 @@ $performance_tasks = "";
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
+$status ="PENDING";
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -50,6 +51,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $prerequisites_corequisites = htmlspecialchars($row['prerequisites_corequisites']);
             $contact_hours = htmlspecialchars($row['contact_hours']);
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
+            $status = htmlspecialchars($row['status']);  // Fetch the syllabus status
         } else {
             echo '<script>alert("localhost says: No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
         }
@@ -144,7 +146,6 @@ $conn->close();
                 padding: 0;
             }
 
-            /* Ensure the table fits within the page */
             table {
                 width: 100%;
                 border-collapse: collapse;
@@ -162,7 +163,6 @@ $conn->close();
                 overflow-wrap: break-word;
                 word-wrap: break-word;
                 white-space: normal;
-                /* Ensure long content wraps within the cell */
             }
 
             th {
@@ -170,7 +170,6 @@ $conn->close();
                 color: white;
             }
 
-            /* Prevent table rows from splitting across pages */
             tr {
                 page-break-inside: avoid;
             }
@@ -180,13 +179,11 @@ $conn->close();
                 page-break-after: auto;
             }
 
-            /* Ensures background colors are retained when printing */
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
             }
 
-            /* Force page size and margins to avoid clipping */
             @page {
                 size: A4;
                 margin: 10mm;
@@ -198,7 +195,6 @@ $conn->close();
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            /* Prevents the table from resizing */
         }
 
         th,
@@ -209,7 +205,6 @@ $conn->close();
             overflow-wrap: break-word;
             word-wrap: break-word;
             white-space: normal;
-            /* Ensures long text wraps in the cell */
         }
 
         th {
@@ -217,17 +212,38 @@ $conn->close();
             color: white;
         }
 
-        /* Ensure the table remains within the container */
         table {
             max-width: 100%;
-            /* Prevents the table from overflowing its container */
             margin: 0 auto;
         }
 
-        /* Adjust cells that contain long words without spaces */
         td {
             word-break: break-word;
-            /* Forces long words to break */
+        }
+
+        .status-button {
+            padding: 5px;
+            font-size: 12px;
+            color: white;
+            border: none;
+            cursor: default;
+        }
+
+        .status-button.pending {
+            background-color: red;
+        }
+
+        .status-button.approved {
+            background-color: green;
+        }
+
+        .approve-button {
+            padding: 5px;
+            background-color: blue;
+            color: white;
+            border: none;
+            cursor: pointer;
+            align-items: left;
         }
     </style>
 </head>
@@ -266,6 +282,9 @@ $conn->close();
         <!-- Display Course Information -->
         <h3>Course Information</h3>
         <ul>
+        <li><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
+                    <?php echo htmlspecialchars($status); ?>
+                </button></li>
             <li><b>Course Code:</b> <?php echo htmlspecialchars($subject_code); ?></li>
             <li><b>Course Name:</b> <?php echo htmlspecialchars($subject_name); ?></li>
             <li><b>Course Units:</b> <?php echo !empty($course_units) ? htmlspecialchars($course_units) : 'No data available'; ?></li>
