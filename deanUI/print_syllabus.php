@@ -28,10 +28,10 @@ $course_description = "";
 $prerequisites_corequisites = "";
 $contact_hours = "";
 $performance_tasks = "";
+$status = "PENDING"; // Default status for syllabus
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
-$status = "PENDING"; // Default status for syllabus
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -51,7 +51,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $prerequisites_corequisites = htmlspecialchars($row['prerequisites_corequisites']);
             $contact_hours = htmlspecialchars($row['contact_hours']);
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
-            $status = htmlspecialchars($row['status']);  // Fetch the syllabus status
+            $status = htmlspecialchars($row['status']);  // Get the syllabus status
         } else {
             echo '<script>alert("localhost says: No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
         }
@@ -60,8 +60,8 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         $_SESSION['error_message'] = "Error preparing syllabus query: " . $conn->error;
     }
 
-    // Fetch PILO-GILO mappings
-    $sqlPiloGilo = "SELECT * FROM pilo_gilo_map WHERE subject_code = ?";
+    // Fetch PILO-GILO mappings with updated columns
+    $sqlPiloGilo = "SELECT pilo, a, b, c, d FROM pilo_gilo_map WHERE subject_code = ?";
     if ($stmt = $conn->prepare($sqlPiloGilo)) {
         $stmt->bind_param("s", $subject_code);
         $stmt->execute();
@@ -69,23 +69,39 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         while ($row = $result->fetch_assoc()) {
             $pilo_gilo[] = [
                 'pilo' => htmlspecialchars($row['pilo']),
-                'gilo' => htmlspecialchars($row['gilo'])
+                'a' => htmlspecialchars($row['a']),
+                'b' => htmlspecialchars($row['b']),
+                'c' => htmlspecialchars($row['c']),
+                'd' => htmlspecialchars($row['d'])
             ];
         }
         $stmt->close();
     }
 
-    // Fetch CILO-GILO mappings
-    $sqlCiloGilo = "SELECT * FROM cilo_gilo_map WHERE subject_code = ?";
+    // Fetch CILO-GILO mappings with updated columns (a-o)
+    $sqlCiloGilo = "SELECT cilo_description, a, b, c, d, e, f, g, h, i, j, k, l, m, n, o FROM cilo_gilo_map WHERE subject_code = ?";
     if ($stmt = $conn->prepare($sqlCiloGilo)) {
         $stmt->bind_param("s", $subject_code);
         $stmt->execute();
         $result = $stmt->get_result();
         while ($row = $result->fetch_assoc()) {
             $cilos[] = [
-                'description' => htmlspecialchars($row['cilo_description']),
-                'gilo1' => htmlspecialchars($row['gilo1']),
-                'gilo2' => htmlspecialchars($row['gilo2'])
+                'cilo_description' => htmlspecialchars($row['cilo_description']),
+                'a' => htmlspecialchars($row['a']),
+                'b' => htmlspecialchars($row['b']),
+                'c' => htmlspecialchars($row['c']),
+                'd' => htmlspecialchars($row['d']),
+                'e' => htmlspecialchars($row['e']),
+                'f' => htmlspecialchars($row['f']),
+                'g' => htmlspecialchars($row['g']),
+                'h' => htmlspecialchars($row['h']),
+                'i' => htmlspecialchars($row['i']),
+                'j' => htmlspecialchars($row['j']),
+                'k' => htmlspecialchars($row['k']),
+                'l' => htmlspecialchars($row['l']),
+                'm' => htmlspecialchars($row['m']),
+                'n' => htmlspecialchars($row['n']),
+                'o' => htmlspecialchars($row['o'])
             ];
         }
         $stmt->close();
@@ -116,8 +132,52 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
     $_SESSION['error_message'] = "Subject code or name not provided.";
 }
 
+// Handle "Approve" button click
+if (isset($_POST['approve'])) {
+    // Update the status to "APPROVED" in the syllabus table
+    $sqlUpdateSyllabus = "UPDATE syllabus SET status = 'APPROVED' WHERE subject_code = ?";
+    $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
+    $stmtUpdateSyllabus->bind_param("s", $subject_code);
+
+    // Update the status in the related tables (cilo_gilo_map, pilo_gilo_map, context)
+    $sqlUpdateCiloGilo = "UPDATE cilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
+    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
+    $sqlUpdateContext = "UPDATE context SET status = 'APPROVED' WHERE subject_code = ?";
+
+    // Prepare and execute the queries
+    $stmtUpdateCiloGilo = $conn->prepare($sqlUpdateCiloGilo);
+    $stmtUpdatePiloGilo = $conn->prepare($sqlUpdatePiloGilo);
+    $stmtUpdateContext = $conn->prepare($sqlUpdateContext);
+
+    $stmtUpdateCiloGilo->bind_param("s", $subject_code);
+    $stmtUpdatePiloGilo->bind_param("s", $subject_code);
+    $stmtUpdateContext->bind_param("s", $subject_code);
+
+    // Execute all updates
+    if (
+        $stmtUpdateSyllabus->execute() &&
+        $stmtUpdateCiloGilo->execute() &&
+        $stmtUpdatePiloGilo->execute() &&
+        $stmtUpdateContext->execute()
+    ) {
+        // Trigger JavaScript alert after successful approval
+        echo "<script>alert('Subject code $subject_code and all related data are approved');</script>";
+        // Refresh the page to reflect the updated status
+        echo "<script>window.location.href = '?subject_code=$subject_code&subject_name=$subject_name';</script>";
+    } else {
+        echo "Error updating status: " . $stmtUpdateSyllabus->error;
+    }
+
+    // Close the prepared statements
+    $stmtUpdateSyllabus->close();
+    $stmtUpdateCiloGilo->close();
+    $stmtUpdatePiloGilo->close();
+    $stmtUpdateContext->close();
+}
+
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>
@@ -129,12 +189,26 @@ $conn->close();
     <title>Display Syllabus</title>
     <link rel="stylesheet" href="../syllabus.css">
     <style>
-        /* Hide buttons during print */
+        /* Hide buttons and status during print */
         @media print {
 
             .print-button,
-            .back-button {
+            .back-button,
+            .status-container,
+            .status-button {
                 display: none;
+                /* Hide specific elements during print */
+            }
+
+            .container {
+                max-width: 1500px;
+                /* Set the width to fit A4 for printing */
+                margin: 40px auto;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.9);
+                /* Transparent white */
+                border-radius: 8px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
             }
 
             /* Adjust body and table for print margins */
@@ -147,16 +221,16 @@ $conn->close();
 
             table {
                 width: 100%;
-                border-collapse: collapse;
-                table-layout: fixed;
-                word-wrap: break-word;
-                page-break-inside: avoid;
                 margin: 0 auto;
+                /* Center the table */
+                border-collapse: collapse;
+                /* Ensure no double borders */
             }
 
             th,
             td {
                 border: 1px solid black;
+                /* Ensure visible borders in print */
                 padding: 6px;
                 text-align: left;
                 overflow-wrap: break-word;
@@ -166,36 +240,43 @@ $conn->close();
 
             th {
                 background-color: #3498db;
+                /* Keep the header background in print */
                 color: white;
             }
 
             tr {
                 page-break-inside: avoid;
-            }
-
-            tbody {
-                page-break-before: auto;
-                page-break-after: auto;
+                /* Prevent rows from splitting across pages */
             }
 
             body {
                 -webkit-print-color-adjust: exact;
+                /* Ensure exact colors in print */
                 print-color-adjust: exact;
             }
 
             @page {
                 size: A4;
+                /* Set the print size */
                 margin: 10mm;
             }
+
+            .context-styled-table {
+                page-break-inside: avoid;
+                table-layout: auto;
+                /* Auto layout to fit printing width */
+            }
+
+            .context-styled-table th,
+            .context-styled-table td {
+                font-size: 10pt;
+                /* Ensures text fits when printed */
+                padding: 5px;
+            }
+
         }
 
-        /* Default table styling for screen */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-
+        /* Default table styling for the screen */
         th,
         td {
             border: 1px solid black;
@@ -208,18 +289,22 @@ $conn->close();
 
         th {
             background-color: #3498db;
+            /* Blue header for screen */
             color: white;
         }
 
         table {
-            max-width: 100%;
-            margin: 0 auto;
+            width: 100%;
+            border-collapse: collapse;
+            /* Avoid double borders */
         }
 
         td {
             word-break: break-word;
+            /* Break long words for proper table display */
         }
 
+        /* Status Button Styling */
         .status-button {
             padding: 5px;
             font-size: 12px;
@@ -228,6 +313,7 @@ $conn->close();
             cursor: default;
         }
 
+        /* Status color indicators */
         .status-button.pending {
             background-color: red;
         }
@@ -236,6 +322,7 @@ $conn->close();
             background-color: green;
         }
 
+        /* Approve button styling */
         .approve-button {
             padding: 5px;
             background-color: blue;
@@ -244,7 +331,68 @@ $conn->close();
             cursor: pointer;
             align-items: left;
         }
+
+        /* Context Table Specific Styling */
+        .context-styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            table-layout: fixed;
+            /* Prevents columns from being too wide */
+        }
+
+        .context-styled-table th,
+        .context-styled-table td {
+            border: 1px solid black;
+            padding: 8px;
+            /* Uniform padding for cells */
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+            /* Ensures content breaks within the cells */
+            white-space: pre-wrap;
+            /* Maintains new lines in text (like for topics and outcomes) */
+        }
+
+        .context-styled-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .context-styled-table td {
+            background-color: white;
+        }
+
+        /* Formatting for ILO/Competency column */
+        .context-styled-table td:nth-child(2) strong {
+            color: red;
+            /* Prelim, Midterm, etc. sections */
+            display: block;
+            margin-bottom: 4px;
+            /* Reduced bottom margin */
+            margin-top: 4px;
+            /* Reduced top margin to balance section spacing */
+        }
+
+        .context-styled-table td {
+            padding: 8px;
+            /* Slightly reduced padding for better space utilization */
+        }
+
+        /* Bullet points inside table cells */
+        .context-styled-table td ul {
+            padding-left: 20px;
+            /* Indents bullet points */
+            margin: 0;
+            /* Removes default margin */
+        }
+
+        .context-styled-table td ul li {
+            list-style-type: disc;
+            /* Disc style for bullet points */
+        }
     </style>
+
 </head>
 
 <body>
@@ -256,39 +404,37 @@ $conn->close();
         </div>
     <?php endif; ?>
 
-    <!-- Header Section -->
-    <div class="divHeader">
-        <div class="headContents">
-            <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
-        </div>
-        <div class="headContents" style="text-align: center; font-size: 21px;">
-            <div style="font-size: x-large; color: rgba(28, 6, 80, 0.877); font-family: Calambria;">Saint Michael College of Caraga</div>
-            <div style="font-size: medium;">
-                <div style="font-family: Bookman Old Style;">Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
-                <div style="font-family: Calambria;">&emsp;Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892 &emsp;</div>
-                <div style="font-family: Bookman Old Style;"><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
-            </div>
-        </div>
-        <div class="headContents">
-            <img src="../ISO&PAB.png" alt="Accreditation Logos" class="logo">
-        </div>
-    </div>
-
     <!-- Main Content Section -->
     <div class="container">
+        <!-- Header Section -->
+        <div class="divHeader">
+            <div class="header-container">
+                <!-- Left Section (Logo) -->
+                <div class="headContents header-left">
+                    <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
+                </div>
+                <!-- Center Section (Text) -->
+                <div class="headContents header-center">
+                    <div class="college-name">Saint Michael College of Caraga</div>
+                    <div class="college-details">
+                        <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
+                        <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
+                        <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
+                    </div>
+                </div>
+                <!-- Right Section (Accreditation Logos) -->
+                <div class="headContents header-right">
+                    <img src="../ISO&PAB.png" alt="Accreditation Logos" class="logo">
+                </div>
+            </div>
+        </div>
         <h2>Syllabus Information</h2>
+
         <!-- Display Course Information -->
-        <h3>Course Information</h3>
         <ul>
-            <li><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
+            <li class="status-container"><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
                     <?php echo htmlspecialchars($status); ?>
                 </button></li>
-            <li><b>Course Code:</b> <?php echo htmlspecialchars($subject_code); ?></li>
-            <li><b>Course Name:</b> <?php echo htmlspecialchars($subject_name); ?></li>
-            <li><b>Course Units:</b> <?php echo !empty($course_units) ? htmlspecialchars($course_units) : 'No data available'; ?></li>
-            <li><b>Course Description:</b> <?php echo !empty($course_description) ? htmlspecialchars($course_description) : 'No data available'; ?></li>
-            <li><b>Prerequisites:</b> <?php echo !empty($prerequisites_corequisites) ? htmlspecialchars($prerequisites_corequisites) : 'No data available'; ?></li>
-            <li><b>Contact Hours:</b> <?php echo !empty($contact_hours) ? htmlspecialchars($contact_hours) : 'No data available'; ?></li>
         </ul>
 
         <!-- Vision, Mission, Goal, Objectives, Michaelinian Identity -->
@@ -339,21 +485,46 @@ $conn->close();
         <!-- PILO-GILO Table -->
         <table id="piloGiloTable">
             <tr>
-                <th>Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
-                <th>Graduate Intended Learning Outcomes (GILOs)</th>
+                <!-- Header for PILO section -->
+                <th rowspan="2">Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
+
+                <!-- Header for GILO section -->
+                <th colspan="4" style="text-align:center">Graduate Intended Learning Outcomes (GILOs)</th>
+            </tr>
+            <tr>
+                <!-- Adding GILO labels for columns a to d -->
+                <th>a</th>
+                <th>b</th>
+                <th>c</th>
+                <th>d</th>
             </tr>
             <?php if (!empty($pilo_gilo)) {
                 foreach ($pilo_gilo as $mapping) { ?>
                     <tr>
+                        <!-- Display PILO description -->
                         <td><?php echo htmlspecialchars($mapping['pilo']); ?></td>
-                        <td><?php echo htmlspecialchars($mapping['gilo']); ?></td>
+                        <!-- Display each GILO value (from a to d) -->
+                        <td><?php echo htmlspecialchars($mapping['a']); ?></td>
+                        <td><?php echo htmlspecialchars($mapping['b']); ?></td>
+                        <td><?php echo htmlspecialchars($mapping['c']); ?></td>
+                        <td><?php echo htmlspecialchars($mapping['d']); ?></td>
                     </tr>
             <?php }
             } else {
-                echo "<tr><td colspan='2'>No PILOs-GILOs data available.</td></tr>";
+                echo "<tr><td colspan='5'>No PILOs-GILOs data available.</td></tr>";
             } ?>
         </table>
 
+        <!-- Display Course Information -->
+        <h3>Course Information</h3>
+        <ul>
+            <li><b>Course Code:</b> <?php echo htmlspecialchars($subject_code); ?></li>
+            <li><b>Course Name:</b> <?php echo htmlspecialchars($subject_name); ?></li>
+            <li><b>Course Units:</b> <?php echo !empty($course_units) ? htmlspecialchars($course_units) : 'No data available'; ?></li>
+            <li><b>Course Description:</b> <?php echo !empty($course_description) ? htmlspecialchars($course_description) : 'No data available'; ?></li>
+            <li><b>Prerequisites:</b> <?php echo !empty($prerequisites_corequisites) ? htmlspecialchars($prerequisites_corequisites) : 'No data available'; ?></li>
+            <li><b>Contact Hours:</b> <?php echo !empty($contact_hours) ? htmlspecialchars($contact_hours) : 'No data available'; ?></li>
+        </ul>
 
         <!-- Course Intended Learning Outcomes -->
         <h3>Course Intended Learning Outcomes (CILO)</h3>
@@ -363,32 +534,62 @@ $conn->close();
         <!-- CILO-GILO Table -->
         <table id="ciloGiloTable">
             <tr>
-                <th>Course Intended Learning Outcomes (CILOs)<br><br>
-                    After completion of the program, the student must be able to:</th>
-                <th>GILO 1</th>
-                <th>GILO 2</th>
+                <th rowspan="2">Course Intended Learning Outcomes (CILOs)<br><br>
+                    After completion of the course, the student must be able to:
+                </th>
+                <th colspan="15" style="text-align: center">Program Intended Learning Outcome (PILO)</th>
+            </tr>
+            <!-- Adding columns for a to o -->
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>d</th>
+            <th>e</th>
+            <th>f</th>
+            <th>g</th>
+            <th>h</th>
+            <th>i</th>
+            <th>j</th>
+            <th>k</th>
+            <th>l</th>
+            <th>m</th>
+            <th>n</th>
+            <th>o</th>
             </tr>
             <?php if (!empty($cilos)) {
                 foreach ($cilos as $cilo) { ?>
                     <tr>
-                        <td><?php echo htmlspecialchars($cilo['description']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['gilo1']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['gilo2']); ?></td>
+                        <!-- Display CILO description -->
+                        <td><?php echo htmlspecialchars($cilo['cilo_description']); ?></td>
+                        <!-- Display each GILO value (from a to o) -->
+                        <td><?php echo htmlspecialchars($cilo['a']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['b']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['c']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['d']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['e']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['f']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['g']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['h']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['i']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['j']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['k']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['l']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['m']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['n']); ?></td>
+                        <td><?php echo htmlspecialchars($cilo['o']); ?></td>
                     </tr>
             <?php }
             } else {
-                echo "<tr><td colspan='3'>No CILOs-GILOs data available.</td></tr>";
+                echo "<tr><td colspan='16'>No CILOs-GILOs data available.</td></tr>";
             } ?>
         </table>
 
 
-        <!-- Context Table -->
         <h4>Context</h4>
-        <table id="contextTable">
+        <table id="contextTable" class="context-styled-table">
             <thead>
                 <tr>
-                    <th>Section</th>
-                    <th>Hours</th>
+                    <th>Hour(s)</th>
                     <th>Intended Learning Outcomes (ILO) / Competency(ies)</th>
                     <th>Topics</th>
                     <th>Institutional Values</th>
@@ -399,23 +600,50 @@ $conn->close();
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($context)) {
-                    foreach ($context as $row) { ?>
-                        <tr>
-                            <td><?php echo $row['section']; ?></td>
-                            <td><?php echo $row['hours']; ?></td>
-                            <td><?php echo $row['ilo']; ?></td>
-                            <td><?php echo $row['topics']; ?></td>
-                            <td><?php echo $row['institutional_values']; ?></td>
-                            <td><?php echo $row['teaching_activities']; ?></td>
-                            <td><?php echo $row['resources']; ?></td>
-                            <td><?php echo $row['assessment']; ?></td>
-                            <td><?php echo $row['course_map']; ?></td>
-                        </tr>
-                <?php }
+                <?php
+                if (!empty($context)) {
+                    $displayedSections = []; // Keep track of displayed sections
+                    foreach ($context as $row) {
+                        // Check if the section has already been displayed
+                        if (!in_array(strtoupper($row['section']), $displayedSections)) {
+                            $displayedSections[] = strtoupper($row['section']); // Add the section to the array
+                ?>
+                            <tr>
+                                <td><?php echo $row['hours']; ?></td>
+                                <td>
+                                    <strong><?php echo strtoupper($row['section']); ?></strong><br>
+                                    <?php echo nl2br($row['ilo']); ?>
+                                </td>
+                                <td><?php echo nl2br($row['topics']); ?></td>
+                                <td><?php echo $row['institutional_values']; ?></td>
+                                <td><?php echo nl2br($row['teaching_activities']); ?></td>
+                                <td><?php echo nl2br($row['resources']); ?></td>
+                                <td><?php echo nl2br($row['assessment']); ?></td>
+                                <td><?php echo $row['course_map']; ?></td>
+                            </tr>
+                        <?php
+                        } else {
+                            // For subsequent rows in the same section, don't display the section name again
+                        ?>
+                            <tr>
+                                <td><?php echo $row['hours']; ?></td>
+                                <td>
+                                    <?php echo nl2br($row['ilo']); ?>
+                                </td>
+                                <td><?php echo nl2br($row['topics']); ?></td>
+                                <td><?php echo $row['institutional_values']; ?></td>
+                                <td><?php echo nl2br($row['teaching_activities']); ?></td>
+                                <td><?php echo nl2br($row['resources']); ?></td>
+                                <td><?php echo nl2br($row['assessment']); ?></td>
+                                <td><?php echo $row['course_map']; ?></td>
+                            </tr>
+                <?php
+                        }
+                    }
                 } else {
-                    echo "<tr><td colspan='9'>No context data available.</td></tr>";
-                } ?>
+                    echo "<tr><td colspan='8'>No context data available.</td></tr>";
+                }
+                ?>
             </tbody>
         </table>
 
@@ -426,20 +654,18 @@ $conn->close();
         <!-- Print Button -->
         <button class="print-button" onclick="printSyllabus()">Print</button>
         <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
-
-        <script>
-            function printSyllabus() {
-                window.print();
-            }
-
-            function confirmApprove() {
-                return confirm('Approve Syllabus?');
-            }
-        </script>
+        <div class="divFooter">
+            <img src="../footer.png" alt="Membership Logos" class="member-logos">
+        </div>
 
 
     </div>
 
+    <script>
+        function printSyllabus() {
+            window.print();
+        }
+    </script>
 </body>
 
 </html>

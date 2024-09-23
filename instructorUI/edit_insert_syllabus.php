@@ -157,34 +157,38 @@ if (isset($_POST['save_syllabus'])) {
         }
 
         // Clear existing PILO-GILO mappings for the subject
-        // Clear existing PILO-GILO mappings for the subject
         $stmtClearPiloGiloMappings = $conn->prepare("DELETE FROM pilo_gilo_map WHERE subject_code = ? AND instructor_ID = ?");
         $stmtClearPiloGiloMappings->bind_param("si", $subject_code, $instructor_ID);
         $stmtClearPiloGiloMappings->execute();
 
         // Insert new PILO-GILO mappings
-        if (isset($_POST['pilo']) && is_array($_POST['pilo']) && isset($_POST['gilo']) && is_array($_POST['gilo'])) {
+        if (isset($_POST['pilo']) && is_array($_POST['pilo'])) {
             $piloValues = $_POST['pilo'];
-            $giloValues = $_POST['gilo'];
-            $currentPiloIndex = 0;
+            $a_values = $_POST['a'];
+            $b_values = $_POST['b'];
+            $c_values = $_POST['c'];
+            $d_values = $_POST['d'];
 
-            foreach ($piloValues as $piloIndex => $piloValue) {
-                // Fetch the GILO values corresponding to the current PILO
-                while (isset($giloValues[$currentPiloIndex])) {
-                    $giloValue = $giloValues[$currentPiloIndex];
+            for ($i = 0; $i < count($piloValues); $i++) {
+                $pilo = $piloValues[$i];
 
-                    if (!empty($piloValue) && !empty($giloValue)) {
-                        // Insert PILO and corresponding GILO
-                        $stmtPiloGilo = $conn->prepare("INSERT INTO pilo_gilo_map (subject_code, instructor_ID, pilo, gilo) VALUES (?, ?, ?, ?)");
-                        $stmtPiloGilo->bind_param("siss", $subject_code, $instructor_ID, $piloValue, $giloValue);
-                        if (!$stmtPiloGilo->execute()) {
-                            throw new Exception("Failed to insert PILO-GILO mapping: " . $stmtPiloGilo->error);
-                        }
+                // Use default values if the GILO values are empty or missing
+                $a = !empty($a_values[$i]) ? $a_values[$i] : '';
+                $b = !empty($b_values[$i]) ? $b_values[$i] : '';
+                $c = !empty($c_values[$i]) ? $c_values[$i] : '';
+                $d = !empty($d_values[$i]) ? $d_values[$i] : '';
+
+                if (!empty($pilo)) {
+                    // Insert PILO and corresponding GILOs (a, b, c, d)
+                    $stmtPiloGilo = $conn->prepare("INSERT INTO pilo_gilo_map (subject_code, instructor_ID, pilo, a, b, c, d) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                    $stmtPiloGilo->bind_param("sisssss", $subject_code, $instructor_ID, $pilo, $a, $b, $c, $d);
+                    if (!$stmtPiloGilo->execute()) {
+                        throw new Exception("Failed to insert PILO-GILO mapping: " . $stmtPiloGilo->error);
                     }
-                    $currentPiloIndex++;
                 }
             }
         }
+
 
         // Clear existing CILO-GILO mappings for the subject
         $stmtClearCiloGiloMappings = $conn->prepare("DELETE FROM cilo_gilo_map WHERE subject_code = ? AND instructor_ID = ?");
@@ -192,26 +196,78 @@ if (isset($_POST['save_syllabus'])) {
         $stmtClearCiloGiloMappings->execute();
 
         // Insert new CILO-GILO mappings
-        if (isset($_POST['cilo_description']) && isset($_POST['gilo1']) && isset($_POST['gilo2'])) {
+        if (isset($_POST['cilo_description']) && is_array($_POST['cilo_description'])) {
             $cilo_descriptions = $_POST['cilo_description'];
-            $gilo1_values = $_POST['gilo1'];
-            $gilo2_values = $_POST['gilo2'];
+            $a_values = $_POST['a'];
+            $b_values = $_POST['b'];
+            $c_values = $_POST['c'];
+            $d_values = $_POST['d'];
+            $e_values = $_POST['e'];
+            $f_values = $_POST['f'];
+            $g_values = $_POST['g'];
+            $h_values = $_POST['h'];
+            $i_values = $_POST['i'];
+            $j_values = $_POST['j'];
+            $k_values = $_POST['k'];
+            $l_values = $_POST['l'];
+            $m_values = $_POST['m'];
+            $n_values = $_POST['n'];
+            $o_values = $_POST['o'];
 
+            // Loop through CILOs and GILOs
             for ($i = 0; $i < count($cilo_descriptions); $i++) {
-                if (!empty($cilo_descriptions[$i])) {
-                    $cilo_description = $cilo_descriptions[$i];
-                    $gilo1 = $gilo1_values[$i];
-                    $gilo2 = $gilo2_values[$i];
+                $cilo_description = !empty($cilo_descriptions[$i]) ? $cilo_descriptions[$i] : null;
+                $a = $a_values[$i] ?? '';
+                $b = $b_values[$i] ?? '';
+                $c = $c_values[$i] ?? '';
+                $d = $d_values[$i] ?? '';
+                $e = $e_values[$i] ?? '';
+                $f = $f_values[$i] ?? '';
+                $g = $g_values[$i] ?? '';
+                $h = $h_values[$i] ?? '';
+                $i_col = $i_values[$i] ?? '';  // Avoid conflict with loop variable $i
+                $j = $j_values[$i] ?? '';
+                $k = $k_values[$i] ?? '';
+                $l = $l_values[$i] ?? '';
+                $m = $m_values[$i] ?? '';
+                $n = $n_values[$i] ?? '';
+                $o = $o_values[$i] ?? '';
 
-                    $stmtCiloGilo = $conn->prepare("INSERT INTO cilo_gilo_map (subject_code, instructor_ID, cilo_description, gilo1, gilo2) VALUES (?, ?, ?, ?, ?)");
-                    $stmtCiloGilo->bind_param("sisss", $subject_code, $instructor_ID, $cilo_description, $gilo1, $gilo2);
-                    if (!$stmtCiloGilo->execute()) {
-                        throw new Exception("Failed to insert CILO-GILO mapping: " . $stmtCiloGilo->error);
-                    }
+                // Prepare and bind the INSERT query for CILO-GILO mapping
+                $stmtCiloGilo = $conn->prepare("
+                INSERT INTO cilo_gilo_map (
+                    subject_code, instructor_ID, cilo_description,
+                    a, b, c, d, e, f, g, h, i, j, k, l, m, n, o
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ");
+                $stmtCiloGilo->bind_param(
+                    "sissssssssssssssss",
+                    $subject_code,
+                    $instructor_ID,
+                    $cilo_description,
+                    $a,
+                    $b,
+                    $c,
+                    $d,
+                    $e,
+                    $f,
+                    $g,
+                    $h,
+                    $i_col,
+                    $j,
+                    $k,
+                    $l,
+                    $m,
+                    $n,
+                    $o
+                );
+
+                // Execute the statement and handle any errors
+                if (!$stmtCiloGilo->execute()) {
+                    throw new Exception("Failed to insert CILO-GILO mapping: " . $stmtCiloGilo->error);
                 }
             }
         }
-
         // Commit the transaction
         if ($conn->commit()) {
             echo "<script>alert('Syllabus submitted successfully!'); window.location.href='index.php';</script>";
@@ -240,7 +296,18 @@ $conn->close();
     <link rel="stylesheet" href="../syllabus.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
+    <style>
+        select {
+            width: 100%;
+            /* Stretch to fill the available space */
+            min-width: 44px;
+            /* Increase the minimum width */
+            max-width: 100%;
+            /* Ensure the select element uses the full cell width */
+            padding: 4px;
+            /* Adjust padding for better spacing */
+        }
+    </style>
     <script>
         // Auto resize textarea
         document.addEventListener('DOMContentLoaded', () => {
@@ -255,18 +322,6 @@ $conn->close();
                 resizeTextarea(textarea);
             });
         });
-    </script>
-
-    <script>
-        var piloValue = <?php echo $pilo_json; ?>;
-        var giloArray = <?php echo $gilo_json; ?>;
-
-        // Call the populatePiloGiloRows function after the page has loaded
-        window.onload = function() {
-            if (piloValue !== "" && giloArray.length > 0) {
-                populatePiloGiloRows(piloValue, giloArray);
-            }
-        };
     </script>
 
     <?php
@@ -308,27 +363,32 @@ $conn->close();
     <?php
     }
     ?>
-    <!-- Header Section -->
-    <div class="divHeader">
-        <div class="headContents">
-            <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
-        </div>
-        <div class="headContents" style="text-align: center; font-size: 21px;">
-            <div style="font-size: x-large; color: rgba(28, 6, 80, 0.877); font-family: Calambria;">Saint Michael College of Caraga</div>
-            <div style="font-size: medium;">
-                <div style="font-family: Bookman Old Style;">Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
-                <div style="font-family: Calambria;">&emsp;Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892 &emsp;</div>
-                <div style="font-family: Bookman Old Style;"><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
-            </div>
-        </div>
-        <div class="headContents">
-            <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
-        </div>
-    </div>
 
 
     <!-- Main Content Section -->
     <div class="container">
+        <!-- Header Section -->
+        <div class="divHeader">
+            <div class="header-container">
+                <!-- Left Section (Logo) -->
+                <div class="headContents header-left">
+                    <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
+                </div>
+                <!-- Center Section (Text) -->
+                <div class="headContents header-center">
+                    <div class="college-name">Saint Michael College of Caraga</div>
+                    <div class="college-details">
+                        <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
+                        <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
+                        <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
+                    </div>
+                </div>
+                <!-- Right Section (Accreditation Logos) -->
+                <div class="headContents header-right">
+                    <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
+                </div>
+            </div>
+        </div>
         <h2>Edit Syllabus</h2>
         <!-- Display messages if any -->
         <?php
@@ -404,53 +464,91 @@ $conn->close();
             <h4>PROGRAM MAPPING</h4>
             <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
 
-            <table id="piloGiloTable">
-                <tr>
-                    <th>Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
-                    <th>Graduate Intended Learning Outcomes (GILOs)</th>
-                    <th><button type="button" class="button add-row-button" onclick="addPiloGiloRow()">+</button></th>
-                </tr>
-                <!-- Template row -->
-                <tr class="piloGiloRow">
-                    <td>
-                        <textarea name="pilo[]" placeholder="Enter PILO"></textarea>
-                    </td>
-                    <td>
-                        <select name="gilo[]">
-                            <option value="I">I</option>
-                            <option value="D">D</option>
-                            <option value="P">P</option>
-                        </select>
-                    </td>
-                    <td><button type="button" class="button remove-row-button" onclick="removePiloGiloRow(this)" disabled>-</button></td>
-                </tr>
+            <table id="piloGiloTable" class="pilo-gilo-table">
+                <thead>
+                    <tr>
+                        <th>Program Intended Learning Outcomes (PILOs)<br><br>After completion of the program, the student must be able to:</th>
+                        <th colspan="4">Graduate Intended Learning Outcomes (GILOs)</th>
+                        <th><button type="button" class="button add-row-button" onclick="addPiloGiloRow()">+</button></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>a</th>
+                        <th>b</th>
+                        <th>c</th>
+                        <th>d</th>
+                        <th></th> <!-- Empty header for the remove button -->
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Template row -->
+                    <tr class="piloGiloRow">
+                        <td>
+                            <textarea name="pilo[]" placeholder="Enter PILO"></textarea>
+                        </td>
+                        <td><select name="a[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select></td>
+                        <td><select name="b[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select></td>
+                        <td><select name="c[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select></td>
+                        <td><select name="d[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select></td>
+                        <td>
+                            <button type="button" class="button remove-row-button" onclick="removePiloGiloRow(this)" disabled>-</button>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
+
 
             <script>
                 // Function to populate existing data into the table
-                function populatePiloGiloRows(piloValue, giloArray) {
-                    var firstRow = document.querySelector('.piloGiloRow');
+                function populatePiloGiloRows(piloArray, giloAArray, giloBArray, giloCArray, giloDArray) {
                     var table = document.getElementById('piloGiloTable');
 
-                    // Set the first row's PILO and first GILO values
-                    firstRow.querySelector('textarea[name="pilo[]"]').value = piloValue;
-                    firstRow.querySelector('select[name="gilo[]"]').value = giloArray[0];
+                    // Loop through the PILO and GILO arrays
+                    for (var i = 0; i < piloArray.length; i++) {
+                        var newRow;
 
-                    // If there are more GILO values, create additional rows without adding the PILO field
-                    for (var i = 1; i < giloArray.length; i++) {
-                        var newRow = firstRow.cloneNode(true);
+                        if (i === 0) {
+                            // For the first row, use the existing template row
+                            newRow = document.querySelector('.piloGiloRow');
+                        } else {
+                            // For subsequent rows, clone the first row
+                            newRow = document.querySelector('.piloGiloRow').cloneNode(true);
 
-                        // Remove the PILO field for subsequent rows (leave blank)
-                        newRow.querySelector('textarea[name="pilo[]"]').remove();
+                            // Enable the remove button for new rows
+                            newRow.querySelector('button.remove-row-button').disabled = false;
 
-                        // Set the GILO field for the new row
-                        newRow.querySelector('select[name="gilo[]"]').value = giloArray[i];
+                            // Append the new row to the table
+                            table.appendChild(newRow);
+                        }
 
-                        // Enable the remove button for the new row
-                        newRow.querySelector('button.remove-row-button').disabled = false;
+                        // Set the PILO field for the row
+                        newRow.querySelector('textarea[name="pilo[]"]').value = piloArray[i];
 
-                        // Append the new row to the table
-                        table.appendChild(newRow);
+                        // Set the GILO fields for the row
+                        newRow.querySelector('select[name="a[]"]').value = giloAArray[i];
+                        newRow.querySelector('select[name="b[]"]').value = giloBArray[i];
+                        newRow.querySelector('select[name="c[]"]').value = giloCArray[i];
+                        newRow.querySelector('select[name="d[]"]').value = giloDArray[i];
                     }
                 }
 
@@ -459,11 +557,12 @@ $conn->close();
                     var firstRow = document.querySelector('.piloGiloRow');
                     var newRow = firstRow.cloneNode(true);
 
-                    // Remove the PILO field for new rows
-                    newRow.querySelector('textarea[name="pilo[]"]').remove();
-
-                    // Reset GILO field (select) for the new row
-                    newRow.querySelector('select[name="gilo[]"]').selectedIndex = 0;
+                    // Clear the values for the new row's inputs
+                    newRow.querySelector('textarea[name="pilo[]"]').value = ''; // Clear PILO field
+                    newRow.querySelector('select[name="a[]"]').selectedIndex = 0; // Reset GILO a select box
+                    newRow.querySelector('select[name="b[]"]').selectedIndex = 0; // Reset GILO b select box
+                    newRow.querySelector('select[name="c[]"]').selectedIndex = 0; // Reset GILO c select box
+                    newRow.querySelector('select[name="d[]"]').selectedIndex = 0; // Reset GILO d select box
 
                     // Enable the remove button for the new row
                     newRow.querySelector('button.remove-row-button').disabled = false;
@@ -495,12 +594,19 @@ $conn->close();
                     var subjectCode = '<?php echo $subject_code; ?>'; // Use dynamic subject code from PHP
 
                     if (subjectCode) {
-                        fetch('fetch_cilo_pilo.php?subject_code=' + encodeURIComponent(subjectCode))
+                        fetch('fetch_pilo_gilo.php?subject_code=' + encodeURIComponent(subjectCode))
                             .then(response => response.json())
                             .then(data => {
-                                if (data.pilo && data.gilo && data.gilo.length > 0) {
-                                    // Display only the first PILO and multiple GILOs
-                                    populatePiloGiloRows(data.pilo[0], data.gilo); // Display only the first PILO
+                                if (data.pilo && data.a && data.b && data.c && data.d && data.pilo.length > 0) {
+                                    // Ensure the number of PILOs and GILOs match
+                                    if (data.pilo.length === data.a.length &&
+                                        data.pilo.length === data.b.length &&
+                                        data.pilo.length === data.c.length &&
+                                        data.pilo.length === data.d.length) {
+                                        populatePiloGiloRows(data.pilo, data.a, data.b, data.c, data.d); // Populate with PILO and GILO data
+                                    } else {
+                                        console.warn('Mismatch between number of PILOs and GILOs.');
+                                    }
                                 } else {
                                     console.warn('No data found for the specified subject code.');
                                 }
@@ -531,101 +637,275 @@ $conn->close();
             <h4>COURSE MAPPING</h4>
             <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
 
-            <table id="ciloGiloTable">
-                <tr>
-                    <th>Course Intended Learning Outcomes (CILOs)<br><br>
-                        After completion of the program, the student must be able to:</th>
-                    <th>GILOs</th>
-                    <th>GILOs</th>
-                    <th><button type="button" class="button add-row-button" onclick="addCiloGiloRow()">+</button></th>
-                </tr>
-                <tr class="ciloGiloRow">
-                    <td><textarea name="cilo_description[]" class="autoResizeTextarea"></textarea></td>
-                    <td>
-                        <select name="gilo1[]">
-                            <option value="I">I</option>
-                            <option value="D">D</option>
-                            <option value="P">P</option>
-                        </select>
-                    </td>
-                    <td>
-                        <select name="gilo2[]">
-                            <option value="I">I</option>
-                            <option value="D">D</option>
-                            <option value="P">P</option>
-                        </select>
-                    </td>
-                    <td><button type="button" class="button remove-row-button" onclick="removeCiloGiloRow(this)" disabled>-</button></td>
-                </tr>
+            <table id="ciloGiloTable" border="1">
+                <thead>
+                    <!-- New row for the header that spans across columns a to o -->
+                    <tr>
+                        <th rowspan="2">Course Intended Learning Outcomes (CILOs)<br><br>
+                            After completion of the course, the student must be able to:
+                        </th>
+                        <th colspan="15" style="text-align: center">Program Intended Learning Outcome (PILO)</th>
+                        <th rowspan="2"><button type="button" class="button add-row-button" onclick="addCiloGiloRow()">+</button></th>
+                    </tr>
+                    <!-- Sub-header for individual PILO columns -->
+                    <tr>
+                        <th>a</th>
+                        <th>b</th>
+                        <th>c</th>
+                        <th>d</th>
+                        <th>e</th>
+                        <th>f</th>
+                        <th>g</th>
+                        <th>h</th>
+                        <th>i</th>
+                        <th>j</th>
+                        <th>k</th>
+                        <th>l</th>
+                        <th>m</th>
+                        <th>n</th>
+                        <th>o</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ciloGiloRow">
+                        <td><textarea name="cilo_description[]" class="autoResizeTextarea" placeholder="Enter CILO"></textarea></td>
+                        <!-- PILO selections for each column -->
+                        <td>
+                            <select name="a[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="b[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="c[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="d[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="e[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="f[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="g[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="h[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="i[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="j[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="k[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="l[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="m[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="n[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="o[]">
+                                <option value=""></option>
+                                <option value="I">I</option>
+                                <option value="D">D</option>
+                                <option value="P">P</option>
+                            </select>
+                        </td>
+                        <td><button type="button" class="button remove-row-button" onclick="removeCiloGiloRow(this)" disabled>-</button></td>
+                    </tr>
+                </tbody>
             </table>
+
+
             <script>
+                // Function to resize the select element based on its selected option
+                function adjustSelectWidth(select) {
+                    // Create a temporary element to calculate the width of the selected option
+                    const temp = document.createElement("span");
+                    temp.style.visibility = "hidden";
+                    temp.style.fontSize = window.getComputedStyle(select).fontSize; // Ensure the font size matches
+                    temp.textContent = select.options[select.selectedIndex].text;
+
+                    document.body.appendChild(temp); // Add to the DOM to measure its width
+
+                    // Adjust the select element's width based on the calculated width
+                    select.style.width = temp.offsetWidth + 20 + "px"; // Adding some padding
+
+                    document.body.removeChild(temp); // Clean up the temporary element
+                }
+
+                // Add an event listener to each select element to resize it when the value changes
+                document.querySelectorAll('select[name$="[]"]').forEach(select => {
+                    // Initial adjustment on page load
+                    adjustSelectWidth(select);
+
+                    // Adjust when the user changes the selected value
+                    select.addEventListener('change', function() {
+                        adjustSelectWidth(this);
+                    });
+                });
+
                 // Function to populate existing data into the table
                 function populateCiloGiloRows(ciloData) {
                     const table = document.getElementById('ciloGiloTable');
                     const firstRow = document.querySelector('.ciloGiloRow');
 
-                    // Set the first row with the first CILO and GILO values
-                    firstRow.querySelector('textarea[name="cilo_description[]"]').value = ciloData.cilo[0];
-                    firstRow.querySelector('select[name="gilo1[]"]').value = ciloData.cilo_gilo1[0];
-                    firstRow.querySelector('select[name="gilo2[]"]').value = ciloData.cilo_gilo2[0];
+                    // Clear all existing rows except the first one
+                    const rows = table.querySelectorAll('.ciloGiloRow');
+                    rows.forEach((row, index) => {
+                        if (index !== 0) row.remove(); // Keep only the first row template
+                    });
 
-                    // Add additional rows for the remaining CILOs and GILOs
+                    // Populate the first row with data
+                    if (ciloData.cilo.length > 0) {
+                        populateRow(firstRow, ciloData, 0); // Populate the first row with the first set of CILO data
+                    }
+
+                    // Add additional rows for the remaining CILOs
                     for (let i = 1; i < ciloData.cilo.length; i++) {
-                        const newRow = firstRow.cloneNode(true);
-
-                        // Set the CILO and GILO values for each new row
-                        newRow.querySelector('textarea[name="cilo_description[]"]').value = ciloData.cilo[i];
-                        newRow.querySelector('select[name="gilo1[]"]').value = ciloData.cilo_gilo1[i];
-                        newRow.querySelector('select[name="gilo2[]"]').value = ciloData.cilo_gilo2[i];
-
-                        // Enable the remove button for additional rows
-                        newRow.querySelector('button.remove-row-button').disabled = false;
-
-                        // Append the new row to the table
-                        table.appendChild(newRow);
+                        const newRow = firstRow.cloneNode(true); // Clone the first row
+                        populateRow(newRow, ciloData, i); // Populate the new row with CILO data
+                        newRow.querySelector('button.remove-row-button').disabled = false; // Enable the remove button for new rows
+                        table.querySelector('tbody').appendChild(newRow); // Append the new row to the table
                     }
                 }
 
-                // Add new row for CILO-GILO mapping
+                // Function to populate each row with CILO data (excluding gilo1 and gilo2)
+                function populateRow(row, ciloData, index) {
+                    row.querySelector('textarea[name="cilo_description[]"]').value = ciloData.cilo[index] || '';
+
+                    // Populate the columns a to o
+                    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'].forEach(col => {
+                        row.querySelector(`select[name="${col}[]"]`).value = ciloData[col][index] || '';
+                    });
+                }
+
+                // Add new row for CILO mapping
                 function addCiloGiloRow() {
-                    const lastRow = document.querySelector('.ciloGiloRow');
-                    const newRow = lastRow.cloneNode(true);
+                    const table = document.getElementById('ciloGiloTable');
+                    const firstRow = document.querySelector('.ciloGiloRow'); // Select the first row to clone
+                    const newRow = firstRow.cloneNode(true); // Clone the row
 
                     // Clear the textarea and reset the select inputs
                     newRow.querySelector('textarea[name="cilo_description[]"]').value = '';
-                    newRow.querySelector('select[name="gilo1[]"]').selectedIndex = 0;
-                    newRow.querySelector('select[name="gilo2[]"]').selectedIndex = 0;
+                    newRow.querySelectorAll('select').forEach(select => {
+                        select.value = ''; // Reset each select input to the empty option
+                    });
 
-                    // Enable the remove button for new rows
+                    // Enable the remove button for the new row
                     newRow.querySelector('button.remove-row-button').disabled = false;
 
-                    // Append the new row to the table
-                    document.getElementById('ciloGiloTable').appendChild(newRow);
+                    // Set the remove button function
+                    newRow.querySelector('button.remove-row-button').onclick = function() {
+                        removeCiloGiloRow(this);
+                    };
+
+                    // Append the new row to the table body
+                    table.querySelector('tbody').appendChild(newRow);
                 }
 
-                // Remove a CILO-GILO row, ensuring at least 1 row remains
+                // Remove a CILO row, ensuring at least 1 row remains
                 function removeCiloGiloRow(button) {
                     const table = document.getElementById('ciloGiloTable');
                     const rows = table.getElementsByClassName('ciloGiloRow');
 
                     if (rows.length > 1) {
-                        button.closest('.ciloGiloRow').remove();
+                        button.closest('.ciloGiloRow').remove(); // Remove the row if there is more than one
                     } else {
                         alert('At least one row must remain.');
                     }
                 }
 
-                // Fetch the CILO and GILO data when the page loads
+                // Fetch the CILO data when the page loads
                 document.addEventListener('DOMContentLoaded', function() {
-                    // Use PHP to pass the subject code from server-side to client-side
                     const subjectCode = '<?php echo $subject_code; ?>'; // Use dynamic subject code from PHP
 
                     if (subjectCode) {
-                        fetch('fetch_cilo_pilo.php?subject_code=' + encodeURIComponent(subjectCode))
+                        fetch('fetch_cilo_gilo.php?subject_code=' + encodeURIComponent(subjectCode))
                             .then(response => response.json())
                             .then(data => {
+                                console.log(data); // Log the received data for debugging
                                 if (data.cilo && data.cilo.length > 0) {
-                                    populateCiloGiloRows(data); // Populate with CILO-GILO data
+                                    populateCiloGiloRows(data); // Populate with CILO data
                                 }
                             })
                             .catch(error => {
@@ -636,6 +916,7 @@ $conn->close();
                     }
                 });
             </script>
+
 
 
             <h4>Context</h4>
@@ -818,6 +1099,9 @@ $conn->close();
 
             <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+            <div class="divFooter">
+                <img src="../footer.png" alt="Membership Logos" class="member-logos">
+            </div>
         </form>
     </div>
 
@@ -835,5 +1119,8 @@ $conn->close();
         return true;
     }
 </script>
+
+</div>
+</div>
 
 </html>

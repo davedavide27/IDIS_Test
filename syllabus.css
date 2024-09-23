@@ -10,15 +10,13 @@ body {
 .container {
     max-width: 1200px;
     margin: 40px auto;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    /* Transparent white */
+    padding: 40px;
+    background-color: rgba(255, 255, 255, 0.9); /* Transparent white */
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-h2,
-h3 {
+h2, h3 {
     text-align: center;
     color: #2c3e50;
 }
@@ -29,16 +27,12 @@ table {
     margin-bottom: 20px;
 }
 
-table,
-th,
-td {
+table, th, td {
     border: 1px solid #ccc;
 }
 
-th,
-td {
+th, td {
     padding: 10px;
-    text-align: left;
 }
 
 th {
@@ -59,10 +53,6 @@ textarea {
     resize: vertical;
 }
 
-input[type="text"]::placeholder,
-textarea::placeholder {
-    color: #7f8c8d;
-}
 
 textarea {
     height: 100px;
@@ -104,19 +94,71 @@ textarea {
     background-color: #c0392b;
 }
 
-/* Header and Footer */
-.divHeader,
-.divFooter {
-    text-align: center;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 8px;
-    margin-bottom: 20px;
+/* General styling for the header */
+.divHeader {
+    width: 100%;
+    padding: 10px 0;
+    background-color: white;
+    border-bottom: 1px solid #000;
 }
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Left section for the logo */
+.header-left img {
+    max-width: 150px; /* Adjust based on your logo size */
+    height: auto;
+}
+
+/* Center section for the college name and details */
+.header-center {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.college-name {
+    font-size: 24px;
+    color: rgba(28, 6, 80, 0.877);
+    font-family: Calambria, serif;
+}
+
+.college-details {
+    font-size: 14px;
+    font-family: 'Bookman Old Style', serif;
+}
+
+.college-details a {
+    color: blue;
+    text-decoration: none;
+}
+
+/* Right section for the accreditation logos */
+.header-right img {
+    max-width: 150px; /* Adjust based on the logo size */
+    height: auto;
+}
+
+
+/* Updated Footer Styling */
+.member-logos {
+    width: 100%;
+    background-color: white;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 
 /* Logo styling */
 .headContents img {
-    max-width: 10%;
+    max-width: 100px;
     height: auto;
 }
 
@@ -131,22 +173,32 @@ textarea {
     display: inline-block;
 }
 
+
 .back-button:hover {
     background-color: #c0392b;
 }
 
-/* Footer */
-.divFooter {
-    text-align: center;
-    padding: 20px;
+/* Back Button */
+.print-button {
+    background-color: #343efb;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
 }
 
-/* Ensure proper table alignment */
+
+.print-button:hover {
+    background-color: #272fbc;
+}
+
+/* Table content */
 td {
     vertical-align: top;
 }
 
-/* PILO column should span multiple rows */
 .pilo-column {
     vertical-align: top;
     width: 50%;
@@ -177,21 +229,17 @@ td {
 }
 
 .section-prelim {
-    background-color: #f0f8ff;
-    /* Light Blue */
+    background-color: #f0f8ff; /* Light Blue */
 }
 
 .section-midterm {
-    background-color: #fafad2;
-    /* Light Yellow */
+    background-color: #fafad2; /* Light Yellow */
 }
 
 .section-semifinal {
-    background-color: #e6e6fa;
-    /* Lavender */
+    background-color: #e6e6fa; /* Lavender */
 }
 
 .section-final {
-    background-color: #ffe4e1;
-    /* Light Coral */
+    background-color: #ffe4e1; /* Light Coral */
 }

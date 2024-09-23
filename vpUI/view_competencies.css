@@ -1,7 +1,11 @@
 @media print {
-    .no-print, .no-print * {
-        display: none !important;
-        
+
+    .print-button,
+    .back-button,
+    .status-container,
+    .status-button {
+        display: none;
+        /* Hide specific elements during print */
     }
 }
 body {

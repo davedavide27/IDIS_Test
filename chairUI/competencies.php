@@ -97,6 +97,16 @@ $conn->close();
     <title>Dean UI - View Competencies</title>
     <link rel="stylesheet" href="view_competencies.css">
     <style>
+        @media print {
+
+            .print-button,
+            .back-button,
+            .status-container,
+            .status-button {
+                display: none;
+            }
+        }
+
         /* Style for the status button */
         .status-button {
             padding: 5px;
@@ -136,14 +146,14 @@ $conn->close();
 
     <!-- Approve button (only show if status is PENDING) -->
     <?php if ($status === 'PENDING'): ?>
-        <form method="post" style="text-align: center; margin-bottom: 20px;" onsubmit="return confirmApprove()">
+        <form method="post" class="status-container" style="text-align: center; margin-bottom: 20px;" onsubmit="return confirmApprove()">
             <button class="approve-button" type="submit" name="approve">Approve Competency</button>
         </form>
     <?php endif; ?>
 
     <table class="header-info">
         <tr>
-            <th>Status</th>
+            <th class="status-container">Status</th>
             <td> <button class="status-button <?php echo strtolower($status); ?>">
                     <?php echo htmlspecialchars($status); ?>
                 </button></td>

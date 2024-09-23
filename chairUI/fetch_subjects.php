@@ -48,4 +48,4 @@ if (isset($_GET['instructor_id'])) {
 }
 
 $conn->close();
-?>
+

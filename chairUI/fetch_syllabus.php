@@ -51,4 +51,4 @@ if (isset($_GET['instructor_id'])) {
 
 echo json_encode($response);
 $conn->close();
-?>
+

@@ -103,6 +103,18 @@ $conn->close();
     <title>Dean UI - View Competencies</title>
     <link rel="stylesheet" href="view_competencies.css">
     <style>
+        @media print {
+
+            .print-button,
+            .back-button,
+            .status-container,
+            .status-button {
+                display: none;
+            }
+        }
+
+        /* Hide specific elements during print */
+
         /* Style for the status button */
         .status-button {
             padding: 5px;
@@ -141,7 +153,7 @@ $conn->close();
 
     <table class="header-info">
         <tr>
-            <th>Status</th>
+            <th class="status-container">Status</th>
             <td> <button class="status-button <?php echo strtolower($status); ?>">
                     <?php echo htmlspecialchars($status); ?>
                 </button></td>
