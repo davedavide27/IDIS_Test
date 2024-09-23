@@ -307,8 +307,6 @@ $conn->close();
             vertical-align: top;
             word-wrap: break-word;
             /* Ensures content breaks within the cells */
-            white-space: pre-wrap;
-            /* Maintains new lines in text (like for topics and outcomes) */
         }
 
         .context-styled-table th {
@@ -559,11 +557,11 @@ $conn->close();
             <tbody>
                 <?php
                 if (!empty($context)) {
-                    $displayedSections = []; // Keep track of displayed sections
+                    $displayedSections = []; // Track displayed sections
                     foreach ($context as $row) {
-                        // Check if the section has already been displayed
+                        // Display section header only once
                         if (!in_array(strtoupper($row['section']), $displayedSections)) {
-                            $displayedSections[] = strtoupper($row['section']); // Add the section to the array
+                            $displayedSections[] = strtoupper($row['section']);
                 ?>
                             <tr>
                                 <td><?php echo $row['hours']; ?></td>
@@ -580,13 +578,10 @@ $conn->close();
                             </tr>
                         <?php
                         } else {
-                            // For subsequent rows in the same section, don't display the section name again
                         ?>
                             <tr>
                                 <td><?php echo $row['hours']; ?></td>
-                                <td>
-                                    <?php echo nl2br($row['ilo']); ?>
-                                </td>
+                                <td><?php echo nl2br($row['ilo']); ?></td>
                                 <td><?php echo nl2br($row['topics']); ?></td>
                                 <td><?php echo $row['institutional_values']; ?></td>
                                 <td><?php echo nl2br($row['teaching_activities']); ?></td>
@@ -601,14 +596,16 @@ $conn->close();
                     echo "<tr><td colspan='8'>No context data available.</td></tr>";
                 }
                 ?>
+                <!-- Performance Tasks Section -->
+                <tr>
+                    <td colspan="8" class="performance-task">
+                        <strong>Performance Tasks:</strong><br>
+                        <?php echo !empty($performance_tasks) ? nl2br(htmlspecialchars($performance_tasks)) : 'No performance tasks available'; ?>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
-
-
-
-        <!-- Performance Tasks Section -->
-        <h4>Performance Tasks</h4>
-        <p><?php echo !empty($performance_tasks) ? htmlspecialchars($performance_tasks) : 'No data available'; ?></p>
 
         <!-- Print Button -->
         <button class="print-button" onclick="printSyllabus()">Print</button>

@@ -322,15 +322,70 @@ $conn->close();
             background-color: green;
         }
 
-        /* Approve button styling */
-        .approve-button {
-            padding: 5px;
-            background-color: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-            align-items: left;
+        /* Button container to align the buttons side by side */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            /* Center the buttons */
+            gap: 20px;
+            /* Add space between buttons */
+            margin-top: 20px;
         }
+
+        /* Adjust back button styling to match the approve button */
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .back-button:active {
+            background-color: #bd2130;
+            transform: translateY(1px);
+        }
+
+        /* Same approve button styling */
+        .approve-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #28a745;
+            /* Green background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .approve-button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .approve-button:active {
+            background-color: #1e7e34;
+            transform: translateY(1px);
+        }
+
 
         /* Context Table Specific Styling */
         .context-styled-table {
@@ -338,20 +393,15 @@ $conn->close();
             border-collapse: collapse;
             margin: 20px auto;
             table-layout: fixed;
-            /* Prevents columns from being too wide */
         }
 
         .context-styled-table th,
         .context-styled-table td {
             border: 1px solid black;
             padding: 8px;
-            /* Uniform padding for cells */
             text-align: left;
             vertical-align: top;
             word-wrap: break-word;
-            /* Ensures content breaks within the cells */
-            white-space: pre-wrap;
-            /* Maintains new lines in text (like for topics and outcomes) */
         }
 
         .context-styled-table th {
@@ -366,30 +416,25 @@ $conn->close();
         /* Formatting for ILO/Competency column */
         .context-styled-table td:nth-child(2) strong {
             color: red;
-            /* Prelim, Midterm, etc. sections */
             display: block;
             margin-bottom: 4px;
-            /* Reduced bottom margin */
             margin-top: 4px;
-            /* Reduced top margin to balance section spacing */
         }
 
-        .context-styled-table td {
-            padding: 8px;
-            /* Slightly reduced padding for better space utilization */
-        }
-
-        /* Bullet points inside table cells */
-        .context-styled-table td ul {
-            padding-left: 20px;
-            /* Indents bullet points */
+        /* Performance Task Row Styling */
+        /* Performance Task Row Styling */
+        .performance-task {
+            background-color: #f9f9f9;
+            padding: 5px;
+            /* Reduced padding */
+            font-weight: bold;
+            text-align: left;
+            border-top: 2px solid #3498db;
             margin: 0;
-            /* Removes default margin */
-        }
-
-        .context-styled-table td ul li {
-            list-style-type: disc;
-            /* Disc style for bullet points */
+            /* Remove any margins */
+            line-height: 1.2;
+            /* Adjust line spacing */
+            word-wrap: break-word;
         }
     </style>
 
@@ -602,11 +647,11 @@ $conn->close();
             <tbody>
                 <?php
                 if (!empty($context)) {
-                    $displayedSections = []; // Keep track of displayed sections
+                    $displayedSections = []; // Track displayed sections
                     foreach ($context as $row) {
-                        // Check if the section has already been displayed
+                        // Display section header only once
                         if (!in_array(strtoupper($row['section']), $displayedSections)) {
-                            $displayedSections[] = strtoupper($row['section']); // Add the section to the array
+                            $displayedSections[] = strtoupper($row['section']);
                 ?>
                             <tr>
                                 <td><?php echo $row['hours']; ?></td>
@@ -623,13 +668,10 @@ $conn->close();
                             </tr>
                         <?php
                         } else {
-                            // For subsequent rows in the same section, don't display the section name again
                         ?>
                             <tr>
                                 <td><?php echo $row['hours']; ?></td>
-                                <td>
-                                    <?php echo nl2br($row['ilo']); ?>
-                                </td>
+                                <td><?php echo nl2br($row['ilo']); ?></td>
                                 <td><?php echo nl2br($row['topics']); ?></td>
                                 <td><?php echo $row['institutional_values']; ?></td>
                                 <td><?php echo nl2br($row['teaching_activities']); ?></td>
@@ -644,19 +686,34 @@ $conn->close();
                     echo "<tr><td colspan='8'>No context data available.</td></tr>";
                 }
                 ?>
+                <!-- Performance Tasks Section -->
+                <tr>
+                    <td colspan="8" class="performance-task">
+                        <strong>Performance Tasks:</strong><br>
+                        <?php echo !empty($performance_tasks) ? nl2br(htmlspecialchars($performance_tasks)) : 'No performance tasks available'; ?>
+                    </td>
+                </tr>
+
             </tbody>
         </table>
 
-        <!-- Performance Tasks Section -->
-        <h4>Performance Tasks</h4>
-        <p><?php echo !empty($performance_tasks) ? htmlspecialchars($performance_tasks) : 'No data available'; ?></p>
 
         <!-- Print Button -->
-        <button class="print-button" onclick="printSyllabus()">Print</button>
-        <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+        <!-- Approve button (only show if status is PENDING) -->
+        <div class="button-container">
+            <?php if ($status === 'PENDING'): ?>
+                <form method="post" onsubmit="return confirmApprove()">
+                    <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
+                </form>
+            <?php endif; ?>
+
+            <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+        </div>
+
         <div class="divFooter">
             <img src="../footer.png" alt="Membership Logos" class="member-logos">
         </div>
+
 
 
     </div>
@@ -665,7 +722,12 @@ $conn->close();
         function printSyllabus() {
             window.print();
         }
+
+        function confirmApprove() {
+            return confirm('Approve Syllabus?');
+        }
     </script>
+
 </body>
 
 </html>
