@@ -102,10 +102,15 @@ function fetchCompetencies(subjectCode) {
         response.forEach(function (competency) {
           const row = document.createElement("tr");
           row.innerHTML = `
-                        <td>${competency.competency_description}</td>
-                        <td class="inputCheck"><input type="checkbox" ${
-                          competency.remarks === "IMPLEMENTED" ? "checked" : ""
-                        }></td>
+<td>${competency.competency_description}</td>
+<td class="inputCheck">
+    <label>
+        <input type="checkbox" disabled ${
+          competency.remarks === "IMPLEMENTED" ? "checked" : ""
+        } />
+        <span>Implemented</span>
+    </label>
+</td>
                     `;
           tableBody.appendChild(row);
         });
@@ -188,71 +193,89 @@ function showLogoutMessage(message) {
 
 // Function to fetch Topics and Comments for the selected subject via AJAX
 function fetchTopicsAndComments(subjectCode) {
-    const formData = new FormData();
-    formData.append("subject_code", subjectCode);
+  const formData = new FormData();
+  formData.append("subject_code", subjectCode);
 
-    console.log("Sending subject code:", subjectCode); // Check if the subject code is correct
+  console.log("Sending subject code:", subjectCode); // Check if the subject code is correct
 
-    fetch("fetch_comments.php", {
-      method: "POST",
-      body: formData,
+  fetch("fetch_comments.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log("Data received:", data); // For debugging purposes
+      appendCommentsToContainer(data);
     })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Data received:", data); // For debugging purposes
-        appendCommentsToContainer(data, subjectCode);
-      })
-      .catch((error) => {
-        console.error("Error fetching topics and comments:", error);
-        document.querySelector("#containerComment").innerHTML =
-          "<p>Error fetching comments. Please try again later.</p>";
-      });
+    .catch((error) => {
+      console.error("Error fetching topics and comments:", error);
+      document.querySelector("#containerComment").innerHTML =
+        "<p>Error fetching comments. Please try again later.</p>";
+    });
 }
 
 // Function to dynamically append the comments to the comments container
-function appendCommentsToContainer(data, subjectCode) {
-    const commentContainer = document.querySelector("#containerComment");
+function appendCommentsToContainer(data) {
+  const commentContainer = document.querySelector("#containerComment");
 
-    if (!commentContainer) {
-      console.error("Comment container not found.");
-      return;
-    }
+  if (!commentContainer) {
+    console.error("Comment container not found.");
+    return;
+  }
 
-    // Clear previous content
-    commentContainer.innerHTML = "";
+  // Clear previous content
+  commentContainer.innerHTML = "";
 
-    let hasData = false;
+  let hasData = false;
 
-    // Check if the data has comments or show "no comments"
-    if (data && Object.keys(data).length > 0) {
-      hasData = true;
+  // Check if the data has comments or show "no comments"
+  if (data && Object.keys(data).length > 0) {
+    hasData = true;
 
-      // Iterate over ILOs
-      Object.keys(data).forEach((iloKey) => {
-        const iloData = data[iloKey];
+    let commentCounter = 1; // Initialize a counter for comments
 
-        if (iloData.comments && iloData.comments.length > 0) {
-          iloData.comments.forEach((comment) => {
-            const commentHTML = `
-              <div class="commentCard">
-                  <h6>ILO: ${iloData.ilo || "N/A"}</h6>
-                  <h6><strong>Comment:</strong> ${comment.comment || "No comment provided"}</h6>
-                  <p><strong>Date:</strong> ${new Date(comment.timestamp).toLocaleString()}</p>
-              </div>
-            `;
+    // Iterate over ILOs
+    Object.keys(data).forEach((iloKey) => {
+      const iloData = data[iloKey];
 
-            // Append each comment for the ILO
-            commentContainer.innerHTML += commentHTML;
-          });
-        } else {
-          commentContainer.innerHTML += `<p>No comments for ILO: ${iloData.ilo || "N/A"}</p>`;
-        }
-      });
-    }
+      if (iloData.comments && iloData.comments.length > 0) {
+        iloData.comments.forEach((comment) => {
+          const commentHTML = `
+                    <div class="commentCard">
+                        <p><strong>Comment #${commentCounter}</strong><br> <strong>ILO:</strong> ${
+            iloData.ilo || "N/A"
+          }</p>
+                        <p><strong>Comment: </strong>${
+                          comment.comment || "No comment provided"
+                        }</p>
+            <p><strong>Date: </strong> ${new Date(comment.timestamp)
+              .toLocaleString("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+                hour12: true,
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })
+              .replace(" at ", " || ")}</p>
+                    </div>
+                  `;
+          // Append each comment for the ILO
+          commentContainer.innerHTML += commentHTML;
+          commentCounter++; // Increment the counter for each comment
+        });
+      } else {
+        commentContainer.innerHTML += `<p>No comments for ILO: ${
+          iloData.ilo || "N/A"
+        }</p>`;
+      }
+    });
+  }
 
-    if (!hasData) {
-      commentContainer.innerHTML = "<p>No comments available for the selected subject.</p>";
-    }
+  if (!hasData) {
+    commentContainer.innerHTML =
+      "<p>No comments available for the selected subject.</p>";
+  }
 }
 
 // Automatically fetch comments for the default or selected subject
@@ -260,6 +283,6 @@ document.querySelectorAll(".btnSubjects button").forEach((button) => {
   button.addEventListener("click", function () {
     const subjectCode = this.getAttribute("data-subject-code");
     console.log("Button clicked for subject:", subjectCode); // For debugging the clicked subject
-    selectSubject(subjectCode, this.innerText, this);
+    fetchTopicsAndComments(subjectCode); // Fetch the topics and comments
   });
 });

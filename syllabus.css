@@ -162,21 +162,33 @@ textarea {
     height: auto;
 }
 
-/* Back Button */
-.back-button {
-    background-color: #e74c3c;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
-}
+        /* Adjust back button styling to match the approve button */
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 0%;
+        }
+    
+        .back-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
 
-
-.back-button:hover {
-    background-color: #c0392b;
-}
+        .back-button:active {
+            background-color: #bd2130;
+            transform: translateY(1px);
+        }
 
 /* Back Button */
 .print-button {

@@ -121,7 +121,7 @@ $conn->close();
                 <?php else: ?>
                     <h4 style="text-align: center;">No subjects assigned to this instructor.</h4>
                 <?php endif; ?>
-                
+
                 <form action="../logout.php" method="post">
                     <button class="logout_btn" type="submit">Logout</button>
                 </form>
@@ -160,25 +160,26 @@ $conn->close();
                             <h6><br>The table below concludes all inputs.</h6>
                             <div id="container_ompe">
                                 <table class="remarksTable">
-                                    <tr>
-                                        <th>Competencies</th>
-                                        <th>Teacher's remarks</th>
-                                        <th>Students' ratings</th>
-                                        <th>Interpretation</th>
-                                    </tr>
-                                    <?php foreach ($competencies as $competency): ?>
+                                    <thead>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
-                                            <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
+                                            <th>Competencies</th>
+                                            <th>Teacher's Remarks</th>
+                                            <th>Average Student Rating</th>
+                                            <th>Interpretation</th>
                                         </tr>
-                                    <?php endforeach; ?>
+                                    </thead>
+                                    <tbody id="interpretationTableBody">
+                                        <!-- Dynamic rows will be inserted here by JavaScript -->
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                </main>
             </div>
         </div>
+        </main>
+    </div>
+    </div>
     </div>
 
     <script>
@@ -196,9 +197,14 @@ $conn->close();
 
             // Set the subject code and name dynamically in the Competencies link
             document.getElementById('competenciesLink').href = `competencies.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
-                        // Set the subject code and name dynamically in the Competencies link
+            // Set the subject code and name dynamically in the Syllabus link
             document.getElementById('syllabusLink').href = `print_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+
+            // Fetch and display interpretation for the selected subject
+            console.log("Calling fetchAndDisplayInterpretation with subjectCode:", subjectCode);
+            fetchAndDisplayInterpretation(subjectCode); // Make sure this function is called when a subject is selected
         }
+
 
         // Function to open a tab
         function openTab(evt, tabName) {

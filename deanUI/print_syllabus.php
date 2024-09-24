@@ -188,6 +188,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Display Syllabus</title>
     <link rel="stylesheet" href="../syllabus.css">
+    <link rel="stylesheet" href="custom_table.css">
     <style>
         /* Hide buttons and status during print */
         @media print {
@@ -197,74 +198,74 @@ $conn->close();
             .status-container,
             .status-button {
                 display: none;
-                /* Hide specific elements during print */
-            }
 
-
-            /* Adjust body and table for print margins */
-            body,
-            html {
-                width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            table {
-                width: 100%;
-                margin: 0 auto;
-                /* Center the table */
-                border-collapse: collapse;
-                /* Ensure no double borders */
-            }
-
-            th,
-            td {
-                border: 1px solid black;
-                /* Ensure visible borders in print */
-                padding: 6px;
-                text-align: left;
-                overflow-wrap: break-word;
-                word-wrap: break-word;
-                white-space: normal;
-            }
-
-            th {
-                background-color: #3498db;
-                /* Keep the header background in print */
-                color: white;
-            }
-
-            tr {
-                page-break-inside: avoid;
-                /* Prevent rows from splitting across pages */
-            }
-
-            body {
-                -webkit-print-color-adjust: exact;
-                /* Ensure exact colors in print */
-                print-color-adjust: exact;
-            }
-
-            @page {
-                size: A4;
-                /* Set the print size */
-                margin: 10mm;
-            }
-
-            .context-styled-table {
-                page-break-inside: avoid;
-                table-layout: auto;
-                /* Auto layout to fit printing width */
-            }
-
-            .context-styled-table th,
-            .context-styled-table td {
-                font-size: 10pt;
-                /* Ensures text fits when printed */
-                padding: 5px;
             }
 
         }
+
+        /* Adjust body and table for print margins */
+        body,
+        html {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            margin: 0 auto;
+            /* Center the table */
+            border-collapse: collapse;
+            /* Ensure no double borders */
+        }
+
+        th,
+        td {
+            border: 1px solid black;
+            /* Ensure visible borders in print */
+            padding: 6px;
+            text-align: left;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        th {
+            background-color: #3498db;
+            /* Keep the header background in print */
+            color: white;
+        }
+
+        tr {
+            page-break-inside: avoid;
+            /* Prevent rows from splitting across pages */
+        }
+
+        body {
+            -webkit-print-color-adjust: exact;
+            /* Ensure exact colors in print */
+            print-color-adjust: exact;
+        }
+
+        @page {
+            size: A4;
+            /* Set the print size */
+            margin: 10mm;
+        }
+
+        .context-styled-table {
+            page-break-inside: avoid;
+            table-layout: auto;
+            /* Auto layout to fit printing width */
+        }
+
+        .context-styled-table th,
+        .context-styled-table td {
+            font-size: 10pt;
+            /* Ensures text fits when printed */
+            padding: 5px;
+        }
+
 
         /* Default table styling for the screen */
         th,
@@ -323,14 +324,14 @@ $conn->close();
         }
 
         /* Context Table Specific Styling */
-/* Context Table Specific Styling */
-.context-styled-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px auto;
-    table-layout: fixed;
-    /* Prevents columns from being too wide */
-}
+        /* Context Table Specific Styling */
+        .context-styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            table-layout: fixed;
+            /* Prevents columns from being too wide */
+        }
 
         .context-styled-table th,
         .context-styled-table td {
@@ -642,14 +643,103 @@ $conn->close();
             </tbody>
         </table>
 
+        <h4>XII. Grading System</h4>
+        <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th>Criteria</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="red-text">Written Task</span><br>
+                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
+                        &nbsp;&nbsp;&nbsp;- Written Task
+                    </td>
+                    <td><span class="red-text">30%</span><br>
+                        &nbsp;&nbsp;&nbsp;15%<br>
+                        &nbsp;&nbsp;&nbsp;15%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Performance Tasks</span><br>
+                        &nbsp;&nbsp;&nbsp;- Attendance<br>
+                        &nbsp;&nbsp;&nbsp;- Behavior<br>
+                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                    </td>
+                    <td><span class="red-text">40%</span><br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;30%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Quarterly Assessment</span></td>
+                    <td><span class="red-text">30%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TOTAL Grade Percentage</strong></td>
+                    <td><strong>100%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Signature Section -->
+        <table id="signatureTable" class="custom-table">
+            <tbody>
+                <tr>
+                    <td rowspan="4" class="logo-cell">
+                        <img src="../image.png" alt="Logo"><br>
+                        <span class="red-text">Curriculum 2022</span>
+                    </td>
+                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Prepared by:</span><br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Subject Teacher
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Resources Checked & Verified by:</span><br>
+                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                        College Librarian
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Reviewed by:</span><br>
+                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                        BSIT Program Chair<br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Dean
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="info-cell-approved">
+                        <span class="red-text">Approved by:</span><br>
+                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                        Vice President for Academic Affairs and Research
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
         <!-- Print Button -->
         <button class="print-button" onclick="printSyllabus()">Print</button>
         <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
         <div class="divFooter">
             <img src="../footer.png" alt="Membership Logos" class="member-logos">
         </div>
-
-
     </div>
 
     <script>

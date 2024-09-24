@@ -165,6 +165,12 @@ if (isset($_POST['save_edits'])) {
                 $stmtInsert->execute();
                 $competency_ids_from_db[] = $stmtInsert->insert_id;
             }
+
+            // After inserting or updating, insert into course_outline_rating
+            $stmtInsertRating = $conn->prepare("INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, rating, competency_description) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmtInsertRating->bind_param("isssis", $studentId, $_POST['subject_code'], $section, $topic, $rating, $competency_description);
+            $stmtInsertRating->execute();
+            $stmtInsertRating->close();
         }
 
         // Delete competencies that are not in the POST request (removed by the user)
@@ -187,6 +193,7 @@ if (isset($_POST['save_edits'])) {
 // Close the connection
 $conn->close();
 ?>
+
 
 
 <!DOCTYPE html>

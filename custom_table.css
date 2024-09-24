@@ -1,0 +1,72 @@
+/* Grading and Signature Table Styling */
+.custom-table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+}
+
+.custom-table, .custom-table th, .custom-table td {
+    border: 1px solid black;
+}
+
+.custom-table th, .custom-table td {
+    padding: 8px;
+}
+
+.custom-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    text-align: left;
+}
+
+.custom-table strong {
+    font-weight: bold;
+}
+
+.red-text {
+    color: red;
+}
+
+.custom-table img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100px;
+}
+
+.custom-table .logo-cell {
+    text-align: center;
+    vertical-align: middle;
+    width: 25%;
+}
+
+.custom-table .title-cell {
+    text-align: center;
+    vertical-align: middle;
+    width: 50%;
+}
+
+.custom-table .info-cell {
+    padding: 15px;
+    vertical-align: top;
+    text-align: center;
+    font-size: 14px;
+}
+
+.custom-table .signature-cell {
+    text-align: center;
+    vertical-align: bottom;
+    padding-top: 40px;
+    font-size: 12px;
+}
+
+/* Specific Print Adjustments */
+@media print {
+    .custom-table th, .custom-table td {
+        font-size: 10pt;
+        padding: 6px;
+    }
+
+    .custom-table img {
+        max-width: 80px;
+    }
+}

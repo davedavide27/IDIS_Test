@@ -66,37 +66,83 @@ $conn->close();
     <link rel="stylesheet" href="style.css">
     <script src="instructor.js"></script>
     <style>
+        /* Logout Message Styling */
         .logout-message {
             display: none;
-            color: green;
+            color: #28a745;
+            /* Use a consistent green color */
             font-weight: bold;
         }
 
+        /* Selected Subject Button Styling */
         .selected-subject {
             background-color: #FF0000;
-            border-color: #badbcc;
-        }
-
-        .commentCard {
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
+            /* Add some thickness to the border */
+            color: white;
+            /* Make text white for better contrast */
             padding: 10px;
-            background-color: #f9f9f9;
+            /* Add padding to make it look more like a button */
+            border-radius: 5px;
+            /* Add border-radius for smooth edges */
         }
 
+        /* Comment Card Styling */
+        .commentCard {
+            border: 2px solid #ccc;
+            /* Light grey border */
+            border-radius: 8px;
+            /* Slight rounding of corners */
+            margin-bottom: 15px;
+            /* Increase spacing between cards */
+            padding: 15px;
+            /* Increase padding inside the card */
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Add subtle shadow for depth */
+            width: 96.5%;
+            text-align: left;
+            justify-content: left;
+            line-height: 1.8;
+        }
+
+        /* Comment Card Title Styling */
         .commentCard h6 {
             font-size: 1.2em;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            /* Increase margin for better separation */
+            font-weight: bold;
+            /* Make the text bolder */
+            color: #333;
+            /* Darker color for better readability */
         }
 
+        /* Comment Card Content Styling */
         .commentCard .content {
             font-size: 1em;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            /* Add more space after content */
+            color: #555;
+            /* Slightly lighter text color */
         }
 
+        /* Comment Card Footer Topic Styling */
         .commentCard .footerTopic {
             font-size: 0.9em;
             color: #666;
+            /* Lighter grey for footers */
+            font-style: italic;
+            /* Italicized for differentiation */
+        }
+
+
+        #containerComment ,
+        #competenciesTable {
+            max-height: 420pt;
+            /* Adjust height to control scrollable area */
+            overflow-y: auto;
+            /* Allow scrolling when content overflows */
+            padding: 10px;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -140,7 +186,7 @@ $conn->close();
                     <div>
                         <nav class="navtab">
                             <button class="tablinks" onclick="openTab(event, 'ILOs')">Plans</button>
-                            <button class="tablinks" onclick="openTab(event, 'Topics')">Competencies</button>
+                            <button class="tablinks" onclick="openTab(event, 'Competencies')">Competencies</button>
                             <button class="tablinks" onclick="openTab(event, 'Comments')">Comments</button>
                         </nav>
                     </div>
@@ -174,7 +220,7 @@ $conn->close();
                             </div>
                         </div>
 
-                        <div id="Topics" class="tabcontent">
+                        <div id="Competencies" class="tabcontent">
                             <h6><br>Remark check if the competency is implemented.</h6>
                             <div id="container">
                                 <table class="remarksTable" id="competenciesTable" data-subject-code="">
@@ -194,8 +240,6 @@ $conn->close();
                             <div id="containerComment" data-subject-code="">
                                 <!-- The comments will be dynamically appended here by JavaScript -->
                             </div>
-                        </div>
-
 </body>
 
 </html>

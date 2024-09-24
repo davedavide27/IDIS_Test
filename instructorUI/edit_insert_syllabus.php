@@ -294,6 +294,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Syllabus</title>
     <link rel="stylesheet" href="../syllabus.css">
+    <link rel="stylesheet" href="custom_table.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -1088,6 +1089,95 @@ $conn->close();
                 }
             </script>
 
+<h4>XII. Grading System</h4>
+        <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th>Criteria</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="red-text">Written Task</span><br>
+                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
+                        &nbsp;&nbsp;&nbsp;- Written Task
+                    </td>
+                    <td><span class="red-text">30%</span><br>
+                        &nbsp;&nbsp;&nbsp;15%<br>
+                        &nbsp;&nbsp;&nbsp;15%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Performance Tasks</span><br>
+                        &nbsp;&nbsp;&nbsp;- Attendance<br>
+                        &nbsp;&nbsp;&nbsp;- Behavior<br>
+                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                    </td>
+                    <td><span class="red-text">40%</span><br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;30%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Quarterly Assessment</span></td>
+                    <td><span class="red-text">30%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TOTAL Grade Percentage</strong></td>
+                    <td><strong>100%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Signature Section -->
+        <table id="signatureTable" class="custom-table">
+            <tbody>
+                <tr>
+                    <td rowspan="4" class="logo-cell">
+                        <img src="../image.png" alt="Logo"><br>
+                        <span class="red-text">Curriculum 2022</span>
+                    </td>
+                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Prepared by:</span><br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Subject Teacher
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Resources Checked & Verified by:</span><br>
+                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                        College Librarian
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Reviewed by:</span><br>
+                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                        BSIT Program Chair<br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Dean
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="info-cell-approved">
+                        <span class="red-text">Approved by:</span><br>
+                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                        Vice President for Academic Affairs and Research
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+            </tbody>
+        </table>
 
             <!-- Performance Tasks Section -->
             <h4>Performance Tasks</h4>

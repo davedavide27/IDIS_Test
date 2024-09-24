@@ -13,21 +13,25 @@ function openTab(evt, tabName) {
   evt.currentTarget.className += " active";
 }
 
-// Function to select a subject and fetch its syllabus and competencies
 function selectSubject(subjectCode, subjectName, buttonElement) {
+  console.log("Subject selected:", subjectCode, subjectName); // This will verify if the function is being triggered
+  
   // Highlight the selected subject button
-  document.querySelectorAll('.btnSubjects button').forEach(function(button) {
-      button.classList.remove('selected-subject');
+  document.querySelectorAll(".btnSubjects button").forEach(function (button) {
+      button.classList.remove("selected-subject");
   });
-  buttonElement.classList.add('selected-subject');
+  buttonElement.classList.add("selected-subject");
 
   // Store the selected subject code and name in sessionStorage
-  sessionStorage.setItem('selectedSubjectCode', subjectCode);
-  sessionStorage.setItem('selectedSubjectName', subjectName);
+  sessionStorage.setItem("selectedSubjectCode", subjectCode);
+  sessionStorage.setItem("selectedSubjectName", subjectName);
 
   // Fetch syllabus and competencies for the selected subject
   fetchSyllabus(subjectCode, subjectName);
   fetchCompetencies(subjectCode, subjectName);
+
+  console.log("Calling fetchAndDisplayInterpretation with subjectCode:", subjectCode);
+  fetchAndDisplayInterpretation(subjectCode); // Fetch and display interpretation
 }
 
 // Function to fetch competencies for the selected subject
@@ -74,6 +78,73 @@ function fetchCompetencies(subjectCode, subjectName) {
 
   request.send(`subject_code=${encodeURIComponent(subjectCode)}`);
 }
+
+
+
+function fetchAndDisplayInterpretation(subjectCode) {
+  console.log("Sending request to competencies_interpretation.php for subject:", subjectCode);
+
+  const tableBody = document.getElementById('interpretationTableBody');
+  tableBody.innerHTML = ''; // Clear existing table content
+
+  // Create a new XMLHttpRequest
+  const request = new XMLHttpRequest();
+  request.open('POST', 'competencies_interpretation.php', true);
+  request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+  request.onload = function() {
+      if (this.status === 200) {
+          try {
+              // Parse the JSON response
+              const response = JSON.parse(this.responseText);
+
+              console.log("Received response:", response);  // For debugging purposes
+
+              // Check if an error is returned
+              if (response.error) {
+                  alert(response.error);
+              } else {
+                  // Check if competencies were found
+                  if (response.competencies.length > 0) {
+                      response.competencies.forEach(function(competency) {
+                          // Create a new row for each competency
+                          const row = document.createElement('tr');
+                          row.innerHTML = `
+                              <td>${competency.competency_description}</td>
+                              <td>${competency.remarks === 'IMPLEMENTED' ? 'IMPLEMENTED' : 'NOT IMPLEMENTED'}</td>
+                              <td>${competency.average_student_rating}</td> <!-- Correct field -->
+                              <td>${competency.interpretation}</td>
+                          `;
+                          tableBody.appendChild(row);
+                      });
+                  } else {
+                      // If no competencies were found, show a message
+                      const row = document.createElement('tr');
+                      row.innerHTML = `<td colspan="4">No competencies found for this subject.</td>`;
+                      tableBody.appendChild(row);
+                  }
+              }
+          } catch (e) {
+              console.error("Error parsing JSON response:", e);
+              alert('Error processing data. Please try again.');
+          }
+      } else {
+          console.error("Failed to fetch interpretation. Status:", this.status);
+          alert('Failed to fetch interpretation. Please try again.');
+      }
+  };
+
+  request.onerror = function() {
+      console.error("Network error while fetching interpretation.");
+      alert('A network error occurred. Please check your connection.');
+  };
+
+  // Send the request with the subject_code as a POST parameter
+  request.send(`subject_code=${encodeURIComponent(subjectCode)}`);
+}
+
+
+
 
 // Function to fetch syllabus for the selected subject
 function fetchSyllabus(subjectCode, subjectName) {

@@ -145,6 +145,7 @@ $conn->close();
     <title>Display Syllabus</title>
     <link rel="stylesheet" href="../syllabus.css">
     <link rel="stylesheet" href="print.css">
+    <link rel="stylesheet" href="custom_table.css">
     <style>
         /* Hide buttons and status during print */
         @media print {
@@ -226,7 +227,7 @@ $conn->close();
 
             .context-styled-table th,
             .context-styled-table td {
-                font-size: 10pt;
+                font-size: 12pt;
                 /* Ensures text fits when printed */
                 padding: 5px;
             }
@@ -289,6 +290,62 @@ $conn->close();
             align-items: left;
         }
 
+        /* Adjust back button styling to match the approve button */
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #dc3545;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 0%;
+        }
+
+        .back-button:hover {
+            background-color: #660d0d;
+            transform: translateY(-2px);
+        }
+
+        .back-button:active {
+            background-color: #bd2130;
+            transform: translateY(1px);
+        }
+
+        /* Adjust back button styling to match the approve button */
+        .print-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #3498db;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: 0%;
+        }
+
+        .print-button:hover {
+            background-color: #00008B;
+            transform: translateY(-2px);
+        }
+
+        .print-button:active {
+            background-color: #bd2130;
+            transform: translateY(1px);
+        }
+
         /* Context Table Specific Styling */
         .context-styled-table {
             width: 100%;
@@ -312,9 +369,11 @@ $conn->close();
         .context-styled-table th {
             background-color: #3498db;
             color: white;
+            font-size: 10pt;
         }
 
         .context-styled-table td {
+            font-size: 10pt;
             background-color: white;
         }
 
@@ -606,6 +665,99 @@ $conn->close();
 
             </tbody>
         </table>
+
+        <h4>XII. Grading System</h4>
+        <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
+            <thead>
+                <tr>
+                    <th>Criteria</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="red-text">Written Task</span><br>
+                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
+                        &nbsp;&nbsp;&nbsp;- Written Task
+                    </td>
+                    <td><span class="red-text">30%</span><br>
+                        &nbsp;&nbsp;&nbsp;15%<br>
+                        &nbsp;&nbsp;&nbsp;15%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Performance Tasks</span><br>
+                        &nbsp;&nbsp;&nbsp;- Attendance<br>
+                        &nbsp;&nbsp;&nbsp;- Behavior<br>
+                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                    </td>
+                    <td><span class="red-text">40%</span><br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;5%<br>
+                        &nbsp;&nbsp;&nbsp;30%
+                    </td>
+                </tr>
+                <tr>
+                    <td><span class="red-text">Quarterly Assessment</span></td>
+                    <td><span class="red-text">30%</span></td>
+                </tr>
+                <tr>
+                    <td><strong>TOTAL Grade Percentage</strong></td>
+                    <td><strong>100%</strong></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Signature Section -->
+        <table id="signatureTable" class="custom-table">
+            <tbody>
+                <tr>
+                    <td rowspan="4" class="logo-cell">
+                        <img src="../image.png" alt="Logo"><br>
+                        <span class="red-text">Curriculum 2022</span>
+                    </td>
+                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Prepared by:</span><br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Subject Teacher
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Resources Checked & Verified by:</span><br>
+                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                        College Librarian
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td class="info-cell">
+                        <span class="red-text">Reviewed by:</span><br>
+                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                        BSIT Program Chair<br>
+                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        Dean
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="info-cell-approved">
+                        <span class="red-text">Approved by:</span><br>
+                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                        Vice President for Academic Affairs and Research
+                    </td>
+                    <td class="signature-cell">_____________<br>Date</td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
 
         <!-- Print Button -->
         <button class="print-button" onclick="printSyllabus()">Print</button>

@@ -3,11 +3,12 @@
 *{
     margin: 0%;
     font-family: 'Montserrat', sans-serif;
+    
 }
 .containerOfAll{
     display: grid;
     background-color: #0C1821;
-    height: 577pt;
+    height: 580pt;
 }
 div .logo{
     text-align: center;
@@ -27,7 +28,7 @@ body{
 /*CONTAINERS*/
 .subjectsContainer{
     display: grid;
-    grid-template-columns: 15% 85%;
+    grid-template-columns: 15% 84.9%;
 }
 .navSubject{
     background-color: #324A5F;
@@ -161,7 +162,7 @@ header{
 .tabcontent{
   display: none;
   text-align: center;
-  height: 250pt;
+  height: 540pt;
 }
 
 .tablinks{
@@ -243,8 +244,8 @@ a{
 }
 .planCard{
     background-color: whitesmoke;
-    width: 170pt;
-    height: 180pt;
+    width: 300pt;
+    height: 300pt;
     margin: 20pt;
     border-top-right-radius: 10pt;
     border-bottom-left-radius: 10pt;

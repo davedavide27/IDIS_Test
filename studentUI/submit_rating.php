@@ -20,41 +20,62 @@ if (!isset($_SESSION['user_ID']) || $_SESSION['user_type'] != 'student') {
 
 $studentId = $_SESSION['user_ID'];
 
-// Get POST data
+// Get POST data (ratings should be a JSON string)
 $subjectCode = $_POST['subject_code'] ?? '';
-$topic = $_POST['topic'] ?? '';
-$rating = $_POST['rating'] ?? '';
+$ratings = json_decode($_POST['ratings'], true);
 
-if (empty($subjectCode) || empty($topic) || empty($rating)) {
-    echo json_encode(['success' => false, 'message' => 'Missing data']);
+if (empty($subjectCode) || empty($ratings) || !is_array($ratings)) {
+    echo json_encode(['success' => false, 'message' => 'Missing or invalid data']);
     exit();
 }
 
-// Check if a rating for this topic already exists
-$sql = "SELECT * FROM course_outline_ratings WHERE student_id = ? AND subject_code = ? AND topic = ?";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("iss", $studentId, $subjectCode, $topic);
-$stmt->execute();
-$result = $stmt->get_result();
+$successCount = 0;
+$failCount = 0;
 
-if ($result->num_rows > 0) {
-    // Update existing rating
-    $sql = "UPDATE course_outline_ratings SET rating = ?, submitted_at = NOW() WHERE student_id = ? AND subject_code = ? AND topic = ?";
+// Iterate over all the ratings submitted
+foreach ($ratings as $topicWithSection => $rating) {
+    // Parse the topic and section from the data-topic format (e.g., "topic_section")
+    list($topic, $section) = explode('_', $topicWithSection);
+
+    if (empty($topic) || empty($rating) || empty($section)) {
+        $failCount++;
+        continue;
+    }
+
+    // Check if a rating for this topic and section already exists for the student
+    $sql = "SELECT * FROM course_outline_ratings WHERE student_id = ? AND subject_code = ? AND topic = ? AND section = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("iiss", $rating, $studentId, $subjectCode, $topic);
-} else {
-    // Insert new rating
-    $sql = "INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, rating) VALUES (?, ?, '', ?, ?)";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("issi", $studentId, $subjectCode, $topic, $rating);
+    $stmt->bind_param("isss", $studentId, $subjectCode, $topic, $section);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Update existing rating
+        $sql = "UPDATE course_outline_ratings SET rating = ?, submitted_at = NOW() WHERE student_id = ? AND subject_code = ? AND topic = ? AND section = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iisss", $rating, $studentId, $subjectCode, $topic, $section);
+    } else {
+        // Insert new rating with section
+        $sql = "INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, rating) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isssi", $studentId, $subjectCode, $section, $topic, $rating);
+    }
+
+    // Execute query
+    if ($stmt->execute()) {
+        $successCount++;
+    } else {
+        $failCount++;
+    }
 }
 
-if ($stmt->execute()) {
-    echo json_encode(['success' => true]);
-} else {
-    echo json_encode(['success' => false, 'message' => 'Failed to submit rating']);
-}
-
+// Close the statement and connection
 $stmt->close();
 $conn->close();
-?>
+
+// Send the response with success and fail counts
+if ($successCount > 0) {
+    echo json_encode(['success' => true, 'message' => "$successCount ratings submitted successfully", 'failures' => $failCount]);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Failed to submit ratings', 'failures' => $failCount]);
+}
