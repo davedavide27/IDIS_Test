@@ -131,12 +131,12 @@ style.innerHTML = `
 
     /* Styling for the table headers */
     .remarksTable thead th {
-        background-color: brown;
+        background-color: black;
         color: white;
         padding: 12px;
         font-size: 16px;
         text-align: center;
-        border: 2px solid black;
+        border: 1px solid white;
     }
 
     /* Styling for table rows and cells */

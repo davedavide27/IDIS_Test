@@ -16,7 +16,6 @@ if ($conn->connect_error) {
 
 $studentFullName = '';
 $assignedSubjects = []; // Array to store assigned subjects
-$instructorFullName = ''; // To store the full name of the instructor for the selected subject
 
 // Check if the student is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
@@ -57,11 +56,6 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
             'subject_code' => $row['subject_code'],
             'instructor_fullname' => $row['instructor_fname'] . ' ' . $row['instructor_mname'] . ' ' . $row['instructor_lname']
         ];
-    }
-
-    // Set the instructor of the first subject by default (if applicable)
-    if (!empty($assignedSubjects)) {
-        $instructorFullName = $assignedSubjects[0]['instructor_fullname'];
     }
 
     $stmt->close();
@@ -121,8 +115,9 @@ $conn->close();
                 <div>
                     <ul>Name: <?php echo htmlspecialchars($studentFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($studentId); ?></ul>
-                    <ul id="assignedInstructor">Instructor Assigned: <?php echo htmlspecialchars($assignedSubjects[0]['instructor_fullname']); ?></ul>
 
+                    <!-- Instructor Assigned will initially be empty -->
+                    <ul id="assignedInstructor">Instructor Assigned: <span id="instructorName">N/A</span></ul>
                 </div>
                 <div>
                     <button onclick="location.href='../logout.php';" class="logout-button">Logout</button>
@@ -195,6 +190,7 @@ $conn->close();
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
                 </main>
             </div>
         </div>

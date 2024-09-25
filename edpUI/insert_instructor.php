@@ -69,7 +69,8 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="insert_student.css"> <!-- External CSS file shared with insert_student.php -->
+    <link rel="stylesheet" href="insert_student.css">
+    <link rel="stylesheet" href="../style2.css">
     <title>Create Instructor</title>
     <style>
         .containerOfAll {
@@ -81,10 +82,14 @@ $conn->close();
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
         }
 
-        h3, h4 {
+        h3,
+        h4 {
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1.25rem;
+            ;
         }
+
 
         .notification-container {
             position: fixed;
@@ -156,6 +161,7 @@ $conn->close();
         .back-button:hover {
             background-color: #d32f2f;
         }
+        
     </style>
 </head>
 
@@ -207,7 +213,7 @@ $conn->close();
             <label for="password">Password:</label>
             <input type="password" name="password" required>
 
-            <button type="submit" name="create_instructor">Create Instructor</button>
+            <button type="submit" style="margin: 0 auto; display: block;"name="create_instructor">Create Instructor</button>
         </form>
     </div>
 

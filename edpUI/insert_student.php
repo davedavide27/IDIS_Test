@@ -20,9 +20,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch all available courses for selection
+// Fetch all available courses from the courses table for selection
 $courses = [];
-$sqlCourses = "SELECT DISTINCT course FROM student"; // Assuming 'course' column holds course names
+$sqlCourses = "SELECT course_id, course FROM courses"; // Fetch courses from 'courses' table
 $resultCourses = $conn->query($sqlCourses);
 if ($resultCourses->num_rows > 0) {
     while ($row = $resultCourses->fetch_assoc()) {
@@ -37,12 +37,25 @@ if (isset($_POST['create_student'])) {
     $student_mname = $_POST['student_mname'];
     $student_lname = $_POST['student_lname'];
     $password = $_POST['password'];  // Store password as plain text
-    $course = $_POST['course'];
+    $course_id = $_POST['course'];  // Capture course_id from the form
     $section = $_POST['section'];
     $year_level = $_POST['year_level'];
 
+    // Fetch the course name based on the selected course_id
+    $sqlCourseName = "SELECT course FROM courses WHERE course_id = ?";
+    $stmtCourse = $conn->prepare($sqlCourseName);
+    $stmtCourse->bind_param("i", $course_id);
+    $stmtCourse->execute();
+    $resultCourse = $stmtCourse->get_result();
+    $courseName = '';
+    if ($resultCourse->num_rows > 0) {
+        $courseRow = $resultCourse->fetch_assoc();
+        $courseName = $courseRow['course'];
+    }
+    $stmtCourse->close();
+
     // Check for validation
-    if (empty($student_ID) || empty($student_fname) || empty($student_lname) || empty($password) || empty($course) || empty($section) || empty($year_level)) {
+    if (empty($student_ID) || empty($student_fname) || empty($student_lname) || empty($password) || empty($course_id) || empty($section) || empty($year_level)) {
         $_SESSION['error_message'] = "All fields are required!";
     } else {
         // Check if the student ID already exists
@@ -55,9 +68,9 @@ if (isset($_POST['create_student'])) {
             // Student ID already exists
             $_SESSION['error_message'] = "Student ID already exists!";
         } else {
-            // Insert the student into the database
+            // Insert the student into the database, including the course name from the courses table
             $stmt = $conn->prepare("INSERT INTO student (student_ID, student_fname, student_mname, student_lname, password, course, section, year_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("issssssi", $student_ID, $student_fname, $student_mname, $student_lname, $password, $course, $section, $year_level);
+            $stmt->bind_param("issssssi", $student_ID, $student_fname, $student_mname, $student_lname, $password, $courseName, $section, $year_level);
 
             if ($stmt->execute()) {
                 $_SESSION['success_message'] = "Student successfully created!";
@@ -83,6 +96,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="insert_student.css">
+    <link rel="stylesheet" href="../style2.css">
     <title>Create Student</title>
     <style>
         .containerOfAll {
@@ -94,9 +108,11 @@ $conn->close();
             box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
         }
 
-        h3, h4 {
+        h3,
+        h4 {
             text-align: center;
             margin-bottom: 20px;
+            font-size: 1.25rem;
         }
 
         .notification-container {
@@ -169,6 +185,35 @@ $conn->close();
         .back-button:hover {
             background-color: #d32f2f;
         }
+
+        /* Dropdown styling */
+        select {
+            display: block;
+            width: 100%;
+            height: 40px;
+            padding: 6px 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        select:hover {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+        }
+
+        select:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(128, 189, 255, 0.5);
+        }
     </style>
 </head>
 
@@ -224,14 +269,13 @@ $conn->close();
             <h4>Select Course</h4>
             <select name="course" required>
                 <option value="">Select a Course</option>
-                <?php foreach ($courses as $course):
-                    $selected = (isset($_SESSION['form_data']['course']) && $_SESSION['form_data']['course'] == $course['course']) ? 'selected' : ''; ?>
-                    <option value="<?php echo htmlspecialchars($course['course']); ?>" <?php echo $selected; ?>>
+                <?php foreach ($courses as $course): ?>
+                    <option value="<?php echo htmlspecialchars($course['course_id']); ?>" <?php echo (isset($_SESSION['form_data']['course']) && $_SESSION['form_data']['course'] == $course['course_id']) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($course['course']); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-
+            <br><br>
             <!-- Section Field -->
             <label for="section">Section:</label>
             <input type="text" name="section" value="<?php echo $_SESSION['form_data']['section'] ?? ''; ?>" required>
@@ -244,12 +288,12 @@ $conn->close();
                 <option value="3" <?php echo (isset($_SESSION['form_data']['year_level']) && $_SESSION['form_data']['year_level'] == '3') ? 'selected' : ''; ?>>3rd Year</option>
                 <option value="4" <?php echo (isset($_SESSION['form_data']['year_level']) && $_SESSION['form_data']['year_level'] == '4') ? 'selected' : ''; ?>>4th Year</option>
             </select>
-
-            <button type="submit" name="create_student">Create Student</button>
+                    <br>
+            <button type="submit" name="create_student" style="margin: 0 auto; display: block;">Create Student</button>
         </form>
     </div>
-
 </body>
+
 <script>
     // Notification handling logic (similar to the original script)
     document.addEventListener('DOMContentLoaded', function() {

@@ -101,17 +101,18 @@ function fetchCompetencies(subjectCode) {
       if (response.length > 0) {
         response.forEach(function (competency) {
           const row = document.createElement("tr");
+
+          // Adding padding and spacing directly into the HTML structure
           row.innerHTML = `
-<td>${competency.competency_description}</td>
-<td class="inputCheck">
-    <label>
-        <input type="checkbox" disabled ${
-          competency.remarks === "IMPLEMENTED" ? "checked" : ""
-        } />
-        <span>Implemented</span>
-    </label>
-</td>
-                    `;
+            <td style="padding: 10px 15px; text-align: left;">${competency.competency_description}</td>
+            <td style="padding: 10px 15px; text-align: center;">
+                <label>
+                    <input type="checkbox" disabled ${
+                      competency.remarks === "IMPLEMENTED" ? "checked" : ""
+                    } style="transform: scale(2.3); margin-right: 10px; overflow-y: auto;" />
+                </label>
+            </td>
+          `;
           tableBody.appendChild(row);
         });
       } else {

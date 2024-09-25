@@ -55,10 +55,12 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="select.css">
+    <link rel="stylesheet" href="insert_student.css">
     <title>Create New Subject</title>
     <style>
         /* Style for success and error messages */
@@ -77,12 +79,6 @@ $conn->close();
         }
 
         /* General styling for form */
-        .containerOfAll {
-            width: 50%;
-            margin: 0 auto;
-            font-family: Arial, sans-serif;
-        }
-
         h3 {
             text-align: center;
             margin-top: 20px;
@@ -103,7 +99,8 @@ $conn->close();
             font-weight: bold;
         }
 
-        input[type="text"], select {
+        input[type="text"],
+        select {
             width: 100%;
             padding: 10px;
             margin-bottom: 15px;
@@ -136,6 +133,7 @@ $conn->close();
                 padding: 0 15px;
             }
         }
+
         .back-button {
             background-color: #f44336;
             color: white;
@@ -154,67 +152,69 @@ $conn->close();
         }
     </style>
 </head>
+
 <body>
 
-<div class="containerOfAll">
-    <!-- Success/Error Messages -->
-    <?php if (isset($_SESSION['success_message'])): ?>
-        <div class="success-message">
-            <?php
-            echo $_SESSION['success_message'];
-            unset($_SESSION['success_message']);
-            ?>
-        </div>
-    <?php elseif (isset($_SESSION['error_message'])): ?>
-        <div class="error-message">
-            <?php
-            echo $_SESSION['error_message'];
-            unset($_SESSION['error_message']);
-            ?>
-        </div>
-    <?php endif; ?>
+    <div class="containerOfAll">
+        <!-- Success/Error Messages -->
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="success-message">
+                <?php
+                echo $_SESSION['success_message'];
+                unset($_SESSION['success_message']);
+                ?>
+            </div>
+        <?php elseif (isset($_SESSION['error_message'])): ?>
+            <div class="error-message">
+                <?php
+                echo $_SESSION['error_message'];
+                unset($_SESSION['error_message']);
+                ?>
+            </div>
+        <?php endif; ?>
 
-    <h3>Create a New Subject</h3>
-    <button class="back-button" onclick="window.location.href='index.php';">Back</button>
-    <!-- Form for Creating New Subject -->
-    <form method="post" action="" onsubmit="return validateNewSubjectForm()">
-        <input type="hidden" name="create_subject" value="1">
+        <h3>Create a New Subject</h3>
+        <button class="back-button" onclick="window.location.href='index.php';">Back</button>
+        <!-- Form for Creating New Subject -->
+        <form method="post" action="" onsubmit="return validateNewSubjectForm()">
+            <input type="hidden" name="create_subject" value="1">
 
-        <label for="subject_code">Subject Code:</label>
-        <input type="text" name="subject_code" id="subject_code" required>
+            <label for="subject_code">Subject Code:</label>
+            <input type="text" name="subject_code" id="subject_code" required>
 
-        <label for="subject_name">Subject Name:</label>
-        <input type="text" name="subject_name" id="subject_name" required>
+            <label for="subject_name">Subject Name:</label>
+            <input type="text" name="subject_name" id="subject_name" required>
 
-        <label for="instructor_id">Assign Instructor (Optional):</label>
-        <select id="instructorSelectCreate" name="instructor_id">
-            <option value="">Select an Instructor</option>
-            <?php foreach ($instructors as $instructor): ?>
-                <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>">
-                    <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+            <label for="instructor_id">Assign Instructor (Optional):</label>
+            <select id="instructorSelectCreate" name="instructor_id">
+                <option value="">Select an Instructor</option>
+                <?php foreach ($instructors as $instructor): ?>
+                    <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>">
+                        <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-        <button type="submit">Create Subject</button>
+            <button type="submit">Create Subject</button>
 
-    </form>
-    
-</div>
+        </form>
 
-<script>
-    function validateNewSubjectForm() {
-        const subjectCode = document.getElementById("subject_code").value;
-        const subjectName = document.getElementById("subject_name").value;
+    </div>
 
-        if (subjectCode === "" || subjectName === "") {
-            alert("Please fill all fields for creating a new subject.");
-            return false;
+    <script>
+        function validateNewSubjectForm() {
+            const subjectCode = document.getElementById("subject_code").value;
+            const subjectName = document.getElementById("subject_name").value;
+
+            if (subjectCode === "" || subjectName === "") {
+                alert("Please fill all fields for creating a new subject.");
+                return false;
+            }
+
+            return true;
         }
-
-        return true;
-    }
-</script>
+    </script>
 
 </body>
+
 </html>

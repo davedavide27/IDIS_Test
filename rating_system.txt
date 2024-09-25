@@ -1,0 +1,38 @@
+Rating System:
+Student Ratings are on a scale from 1 to 5, where:
+Rate 5 = 70%
+Rate 4 = 55%
+Rate 3 = 40%
+Rate 2 = 25%
+Rate 1 = 10%
+Teacher’s Remark has two options:
+Implemented = 30%
+Not Implemented = 0%
+System's Interpretation:
+If students rate 5 (70%) and the teacher marks "Implemented" (30%), it equals 100%, and the system interprets this as "Implemented."
+If students rate 1 (10%) and the teacher marks "Implemented" (30%), it equals 40%, and the system interprets this as "Not Implemented."
+If students rate 2 (25%) and the teacher marks "Implemented" (30%), it equals 55%, and the system interprets this as "Not Implemented."
+Formulas:
+To calculate the overall rating of all students:
+Total Rate / Total Students = Student Ratings
+To calculate the system’s interpretation:
+Student Ratings + Teacher’s Remark = System’s Interpretation
+Example Calculation:
+If five students provide ratings:
+
+Student 1: 10% (Rate 1)
+Student 2: 25% (Rate 2)
+Student 3: 40% (Rate 3)
+Student 4: 55% (Rate 4)
+Student 5: 70% (Rate 5)
+The total rating is 200%. Divided by 5 students:
+
+200% / 5 = 40% (Overall Student Rating)
+Add the teacher's remark of 30% (Implemented):
+40% + 30% = 70%
+Interpretation:
+The final system interpretation is 71%, which means "Implemented."
+Thresholds:
+56% or above = Implemented
+55% or below = Not Implemented
+This framework allows for a combined evaluation based on both student feedback and teacher input.
