@@ -31,6 +31,7 @@ body{
 }
 .navSubject{
     background-color: #324A5F;
+    height: auto;
 }
 .implementContainer{
     background-color: #0C1821;
@@ -49,7 +50,7 @@ body{
 }
 main{
     background-color: burlywood;
-    width: 97.8%;
+    width: 100%;
     border-bottom-right-radius: 10pt;
     box-shadow: 10px 10px 20px;
 }
@@ -164,7 +165,8 @@ header{
 .tabcontent{
   display: none;
   text-align: center;
-  height: 25    0pt;
+  height: 500px;
+  overflow-y: auto;
 }
 
 .tablinks{
@@ -264,7 +266,7 @@ a{
 .logout_btn{
     display: block;
     margin: auto;
-    margin-top: 240px;
+    margin-top: 223px;
     padding: 7px 20px;
     border-radius: 5px;
     border-style: none;
