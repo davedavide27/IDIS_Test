@@ -142,8 +142,8 @@ $conn->close();
                 </div>
                 <h4 style="text-align: center;">File Upload Assigning</h4>
                 <div class="selectIns">
-                    <button onclick="window.location.href='#'">Upload File For Instructor</button>
-                    <button onclick="window.location.href='#'">Upload File For Student</button>
+                    <button onclick="window.location.href='insert_student.php'">Create Student Account</button>
+                    <button onclick="window.location.href='insert_instructor.php'">Create Instructor Account</button>
                 </div>
                 <!-- <h4 style="text-align: center;">System Modification</h4> -->
                 <div class="selectIns">

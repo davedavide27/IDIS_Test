@@ -1,0 +1,176 @@
+/* General container styling */
+.containerOfAll {
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form titles and subtitles */
+h3, h4 {
+    text-align: center;
+    font-size: 1.75rem; /* Slightly larger title */
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: 600; /* Make titles bold */
+}
+
+/* Input fields and select dropdown styling */
+.search-container input,
+.search-container select,
+input[type="checkbox"],
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px; /* Slightly larger padding */
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-container input:focus,
+.search-container select:focus,
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Dropdown styling */
+.search-container select {
+    background-color: #f9f9f9;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140"><polygon fill="gray" points="70,98 30,42 110,42"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px;
+}
+
+.search-container select:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+input[type="checkbox"] {
+    width: auto;
+    margin-right: 10px;
+}
+
+/* Button styling */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Back button styling */
+.back-button {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: 100px;
+}
+
+.back-button:hover {
+    background-color: #d32f2f;
+}
+
+/* Notification styles */
+.notification {
+    background-color: #444;
+    color: white;
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+    display: flex;
+    justify-content: space-between;
+    font-size: 1rem;
+}
+
+.notification.success {
+    background-color: #28a745;
+}
+
+.notification.error {
+    background-color: #dc3545;
+}
+
+/* Subject list styling */
+.subject-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.subject-list div {
+    flex: 1 1 45%;
+    display: flex;
+    align-items: center;
+}
+
+.subject-list label {
+    margin-left: 10px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.subject-list input[type="checkbox"] {
+    margin-left: 0;
+}
+
+/* Select/Deselect all checkbox */
+.check-all {
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.check-all input {
+    margin-right: 10px;
+}
+
+/* Adjust the layout for mobile screens */
+@media (max-width: 768px) {
+    .subject-list div {
+        flex: 1 1 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .back-button {
+        width: 100%;
+    }
+}
