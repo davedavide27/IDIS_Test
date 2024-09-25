@@ -171,55 +171,65 @@ if (isset($_POST['save_edits'])) {
         }
         $stmtContext->close();
 
-        // Loop through the competencies arrays
-        foreach ($_POST['competencies'] as $index => $competency_description) {
-            $remarks = $_POST['remarks'][$index];
-            $competency_id = $_POST['competency_id'][$index];
-
-            if (!empty($competency_id)) {
-                // Update existing competency
-                $stmtUpdate->bind_param("ssi", $competency_description, $remarks, $competency_id);
-                $stmtUpdate->execute();
-                $competency_ids_from_db[] = $competency_id;
-            } else {
-                // Insert new competency
-                $stmtInsert->bind_param(
-                    "sssssiissssssiiiiiiisss",
-                    $_POST['subject_code'],
-                    $_POST['subject_name'],
-                    $competency_description,
-                    $remarks,
-                    $_POST['units'],
-                    $_POST['hours'],
-                    $_POST['department'],
-                    $_POST['school_year_start'],
-                    $_POST['school_year_end'],
-                    $_POST['grading_period'],
-                    $_POST['grading_quarter_start'],
-                    $_POST['grading_quarter_end'],
-                    $_POST['total_competencies_deped_tesda_ched'],
-                    $_POST['total_competencies_smcc'],
-                    $_POST['total_institutional_competencies'],
-                    $_POST['total_competencies_b_and_c'],
-                    $_POST['total_competencies_implemented'],
-                    $_POST['total_competencies_not_implemented'],
-                    $_POST['percentage_competencies_implemented'],
-                    $_POST['prepared_by'],
-                    $_POST['checked_by'],
-                    $_POST['noted_by'],
-                    $instructor_ID
-                );
-                $stmtInsert->execute();
-                $competency_ids_from_db[] = $stmtInsert->insert_id;
+        // Handle the case only when inserting new competencies
+        if (empty($sectionsTopics)) {
+            // Only handle this if it's a new competency (not during updates)
+            if (empty($_POST['competency_id'])) {
+                die("Error: No sections or topics found for the subject when inserting a new competency.");
             }
+        } else {
+            $totalSections = count($sectionsTopics);
 
-            // Assign each competency to a corresponding topic (e.g., topic 1 gets competency 1, etc.)
-            $currentTopic = $sectionsTopics[$index % count($sectionsTopics)]; // Cycle through topics
-            $section = $currentTopic['section'];
-            $topic = $currentTopic['topics'];
+            // Loop through the competencies arrays
+            foreach ($_POST['competencies'] as $index => $competency_description) {
+                $remarks = $_POST['remarks'][$index];
+                $competency_id = $_POST['competency_id'][$index];
 
-            // Update the course_outline_ratings for each section and topic
-            updateCourseOutlineRatings($conn, $studentIds, $competency_description, $remarks, $_POST['subject_code'], $section, $topic);
+                if (!empty($competency_id)) {
+                    // Update existing competency
+                    $stmtUpdate->bind_param("ssi", $competency_description, $remarks, $competency_id);
+                    $stmtUpdate->execute();
+                    $competency_ids_from_db[] = $competency_id;
+                } else {
+                    // Insert new competency
+                    $stmtInsert->bind_param(
+                        "sssssiissssssiiiiiiisss",
+                        $_POST['subject_code'],
+                        $_POST['subject_name'],
+                        $competency_description,
+                        $remarks,
+                        $_POST['units'],
+                        $_POST['hours'],
+                        $_POST['department'],
+                        $_POST['school_year_start'],
+                        $_POST['school_year_end'],
+                        $_POST['grading_period'],
+                        $_POST['grading_quarter_start'],
+                        $_POST['grading_quarter_end'],
+                        $_POST['total_competencies_deped_tesda_ched'],
+                        $_POST['total_competencies_smcc'],
+                        $_POST['total_institutional_competencies'],
+                        $_POST['total_competencies_b_and_c'],
+                        $_POST['total_competencies_implemented'],
+                        $_POST['total_competencies_not_implemented'],
+                        $_POST['percentage_competencies_implemented'],
+                        $_POST['prepared_by'],
+                        $_POST['checked_by'],
+                        $_POST['noted_by'],
+                        $instructor_ID
+                    );
+                    $stmtInsert->execute();
+                    $competency_ids_from_db[] = $stmtInsert->insert_id;
+                }
+
+                // Assign each competency to a corresponding topic (e.g., topic 1 gets competency 1, etc.)
+                $currentTopic = $sectionsTopics[$index % $totalSections]; // Cycle through topics
+                $section = $currentTopic['section'];
+                $topic = $currentTopic['topics'];
+
+                // Update the course_outline_ratings for each section and topic
+                updateCourseOutlineRatings($conn, $studentIds, $competency_description, $remarks, $_POST['subject_code'], $section, $topic);
+            }
         }
 
         // Delete competencies that are not in the POST request (removed by the user)
