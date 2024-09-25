@@ -1,0 +1,97 @@
+Subject Code: CS101
+Ratings: Array
+(
+    [asdas_PRELIM] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [asdas_PRELIM] => 4
+    [das_PRELIM] => 3
+    [das_MIDTERM] => 2
+    [asd_MIDTERM] => 2
+    [sdasd_SEMIFINAL] => 2
+    [as_SEMIFINAL] => 2
+    [sdasd_FINAL] => 1
+    [asda_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [asdas_PRELIM] => 4
+    [das_PRELIM] => 3
+    [das_MIDTERM] => 2
+    [asd_MIDTERM] => 2
+    [sdasd_SEMIFINAL] => 2
+    [as_SEMIFINAL] => 2
+    [sdasd_FINAL] => 1
+    [asda_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [asdas_PRELIM] => 4
+    [das_PRELIM] => 3
+    [das_MIDTERM] => 2
+    [asd_MIDTERM] => 2
+    [sdasd_SEMIFINAL] => 2
+    [as_SEMIFINAL] => 2
+    [sdasd_FINAL] => 1
+    [asda_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [TOPIC 1_PRELIM] => 1
+    [TOPIC 2_PRELIM] => 2
+    [TOPIC 3_MIDTERM] => 3
+    [TOPIC 4_MIDTERM] => 2
+    [TOPIC 5_SEMIFINAL] => 3
+    [TOPIC 6_SEMIFINAL] => 3
+    [TOPIC 7_FINAL] => 2
+    [TOPIC 8_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [TOPIC 1_PRELIM] => 1
+    [TOPIC 2_PRELIM] => 2
+    [TOPIC 3_MIDTERM] => 3
+    [TOPIC 4_MIDTERM] => 2
+    [TOPIC 5_SEMIFINAL] => 3
+    [TOPIC 6_SEMIFINAL] => 3
+    [TOPIC 7_FINAL] => 2
+    [TOPIC 8_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [TOPIC 1_PRELIM] => 1
+    [TOPIC 2_PRELIM] => 2
+    [TOPIC 3_MIDTERM] => 3
+    [TOPIC 4_MIDTERM] => 2
+    [TOPIC 5_SEMIFINAL] => 3
+    [TOPIC 6_SEMIFINAL] => 3
+    [TOPIC 7_FINAL] => 2
+    [TOPIC 8_FINAL] => 1
+)
+
+Subject Code: CS101
+Ratings: Array
+(
+    [TOPIC 1_PRELIM] => 1
+    [TOPIC 2_PRELIM] => 2
+    [TOPIC 3_MIDTERM] => 3
+    [TOPIC 4_MIDTERM] => 2
+    [TOPIC 5_SEMIFINAL] => 3
+    [TOPIC 6_SEMIFINAL] => 3
+    [TOPIC 7_FINAL] => 2
+    [TOPIC 8_FINAL] => 1
+)
+

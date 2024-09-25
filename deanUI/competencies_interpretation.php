@@ -34,43 +34,17 @@ $response = [
     'competencies' => []
 ];
 
-// Fetch competencies and teacher's remarks for the selected subject
-$sqlCompetencies = "SELECT competency_description, remarks FROM competencies WHERE subject_code = ?";
+// Fetch competencies and remarks directly from the course_outline_ratings table
+$sqlCompetencies = "SELECT competency_description, remarks 
+                    FROM course_outline_ratings 
+                    WHERE subject_code = ? 
+                    GROUP BY competency_description, remarks";
 $stmt = $conn->prepare($sqlCompetencies);
 $stmt->bind_param("s", $subject_code);
 $stmt->execute();
 $result = $stmt->get_result();
 
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        // Initialize competencies with student rating fields set to 0
-        $response['competencies'][] = [
-            'competency_description' => htmlspecialchars($row['competency_description']),
-            'remarks' => htmlspecialchars($row['remarks']),
-            'total_rate' => 0,
-            'rating_count' => 0,
-            'average_student_rating' => 0,
-            'interpretation' => 'Not Implemented (0%)'
-        ];
-    }
-} else {
-    echo json_encode(['error' => 'No competencies data found for the selected subject.']);
-    exit();
-}
-$stmt->close();
-
-// Fetch student ratings with proper alignment to competencies
-$sqlRatings = "SELECT r.topic, r.rating, c.competency_description 
-               FROM course_outline_ratings r 
-               JOIN competencies c 
-               ON r.subject_code = c.subject_code AND r.topic = c.competency_description 
-               WHERE r.subject_code = ?";
-
-$stmt = $conn->prepare($sqlRatings);
-$stmt->bind_param("s", $subject_code);
-$stmt->execute();
-$result = $stmt->get_result();
-
+// Rating conversion for the system
 $ratingConversion = [
     5 => 70, // Rate 5 = 70%
     4 => 55,
@@ -79,43 +53,66 @@ $ratingConversion = [
     1 => 10
 ];
 
-// Process ratings and map them to corresponding competencies
-while ($row = $result->fetch_assoc()) {
-    foreach ($response['competencies'] as &$competency) {
-        if ($competency['competency_description'] === htmlspecialchars($row['competency_description'])) {
-            // Convert rating and update totals
-            if (isset($ratingConversion[$row['rating']])) {
-                $competency['total_rate'] += $ratingConversion[$row['rating']];
-                $competency['rating_count']++;
+// Process competencies and calculate system interpretation
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $competencyDescription = htmlspecialchars($row['competency_description']);
+        $teacherRemark = htmlspecialchars($row['remarks']);
+
+        // Initialize total student rating and count for each competency
+        $totalStudentRating = 0;
+        $ratingCount = 0;
+
+        // Fetch student ratings for each competency from course_outline_ratings
+        $sqlRatings = "SELECT rating FROM course_outline_ratings 
+                       WHERE subject_code = ? AND competency_description = ?";
+        $stmtRatings = $conn->prepare($sqlRatings);
+        $stmtRatings->bind_param("ss", $subject_code, $competencyDescription);
+        $stmtRatings->execute();
+        $resultRatings = $stmtRatings->get_result();
+
+        // Process ratings and calculate the total student rating
+        while ($ratingRow = $resultRatings->fetch_assoc()) {
+            $rating = intval($ratingRow['rating']);
+            if (isset($ratingConversion[$rating])) {
+                $totalStudentRating += $ratingConversion[$rating];
+                $ratingCount++;
             }
         }
+
+        // Close the ratings statement
+        $stmtRatings->close();
+
+        // Calculate the average student rating if there are ratings
+        $averageStudentRating = 0;
+        if ($ratingCount > 0) {
+            $averageStudentRating = $totalStudentRating / $ratingCount;
+        }
+
+        // Add teacher's remark to calculate the final system interpretation
+        $teacherRemarkValue = ($teacherRemark === 'IMPLEMENTED') ? 30 : 0;
+        $finalInterpretation = $averageStudentRating + $teacherRemarkValue;
+
+        // Set interpretation based on the threshold (56%)
+        $interpretation = ($finalInterpretation >= 56)
+            ? 'Implemented (' . number_format($finalInterpretation, 2) . '%)'
+            : 'Not Implemented (' . number_format($finalInterpretation, 2) . '%)';
+
+        // Prepare the response for this competency
+        $response['competencies'][] = [
+            'competency_description' => $competencyDescription,
+            'remarks' => $teacherRemark,
+            'average_student_rating' => $ratingCount > 0 ? number_format($averageStudentRating, 2) . '%' : 'No ratings available',
+            'interpretation' => $interpretation
+        ];
     }
+} else {
+    echo json_encode(['error' => 'No competencies data found for the selected subject.']);
+    exit();
 }
 
+// Close the database connection
 $stmt->close();
-
-// Calculate average rating and interpretation for each competency
-foreach ($response['competencies'] as &$competency) {
-    if ($competency['rating_count'] > 0) {
-        // Calculate average student rating
-        $averageStudentRating = $competency['total_rate'] / $competency['rating_count'];
-        $competency['average_student_rating'] = number_format($averageStudentRating, 2) . '%';
-
-        // Add teacher's remark to calculate final interpretation
-        $teacherRemark = $competency['remarks'] === 'IMPLEMENTED' ? 30 : 0;
-        $systemInterpretation = $averageStudentRating + $teacherRemark;
-
-        // Handle the system interpretation based on 56% threshold
-        $competency['interpretation'] = ($systemInterpretation >= 56) 
-            ? 'Implemented (' . number_format($systemInterpretation, 2) . '%)' 
-            : 'Not Implemented (' . number_format($systemInterpretation, 2) . '%)';
-    } else {
-        // No ratings for this competency
-        $competency['average_student_rating'] = 'No ratings available';
-        $competency['interpretation'] = 'Not Implemented (0%)';
-    }
-}
-
 $conn->close();
 
 // Return the data as JSON

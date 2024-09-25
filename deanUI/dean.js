@@ -112,7 +112,7 @@ function fetchAndDisplayInterpretation(subjectCode) {
                           row.innerHTML = `
                               <td>${competency.competency_description}</td>
                               <td>${competency.remarks === 'IMPLEMENTED' ? 'IMPLEMENTED' : 'NOT IMPLEMENTED'}</td>
-                              <td>${competency.average_student_rating}</td> <!-- Correct field -->
+                              <td>${competency.average_student_rating || 'No ratings available'}</td>
                               <td>${competency.interpretation}</td>
                           `;
                           tableBody.appendChild(row);
@@ -142,7 +142,6 @@ function fetchAndDisplayInterpretation(subjectCode) {
   // Send the request with the subject_code as a POST parameter
   request.send(`subject_code=${encodeURIComponent(subjectCode)}`);
 }
-
 
 
 

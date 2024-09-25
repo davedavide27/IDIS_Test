@@ -122,65 +122,76 @@ if (isset($_POST['save_edits'])) {
 
     $competency_ids_from_db = [];
 
-    // Ensure there are competencies to process
-    if (!empty($_POST['competencies'])) {
-        // Loop through the competencies arrays
-        foreach ($_POST['competencies'] as $index => $competency_description) {
-            $remarks = $_POST['remarks'][$index];
-            $competency_id = $_POST['competency_id'][$index];
+    // Fetch all students from the students table
+    $sqlStudents = "SELECT student_id FROM student";
+    $resultStudents = $conn->query($sqlStudents);
+    $studentIds = [];
+    while ($row = $resultStudents->fetch_assoc()) {
+        $studentIds[] = $row['student_id'];
+    }
 
-            if (!empty($competency_id)) {
-                // Update existing competency
-                $stmtUpdate->bind_param("ssi", $competency_description, $remarks, $competency_id);
-                $stmtUpdate->execute();
-                $competency_ids_from_db[] = $competency_id;
-            } else {
-                // Insert new competency
-                $stmtInsert->bind_param(
-                    "sssssiissssssiiiiiiisss",
-                    $_POST['subject_code'],
-                    $_POST['subject_name'],
-                    $competency_description,
-                    $remarks,
-                    $_POST['units'],
-                    $_POST['hours'],
-                    $_POST['department'],
-                    $_POST['school_year_start'],
-                    $_POST['school_year_end'],
-                    $_POST['grading_period'],
-                    $_POST['grading_quarter_start'],
-                    $_POST['grading_quarter_end'],
-                    $_POST['total_competencies_deped_tesda_ched'],
-                    $_POST['total_competencies_smcc'],
-                    $_POST['total_institutional_competencies'],
-                    $_POST['total_competencies_b_and_c'],
-                    $_POST['total_competencies_implemented'],
-                    $_POST['total_competencies_not_implemented'],
-                    $_POST['percentage_competencies_implemented'],
-                    $_POST['prepared_by'],
-                    $_POST['checked_by'],
-                    $_POST['noted_by'],
-                    $instructor_ID
-                );
-                $stmtInsert->execute();
-                $competency_ids_from_db[] = $stmtInsert->insert_id;
+    // Fetch the sections and topics from the context table for the subject
+    $sqlContext = "SELECT section, topics FROM context WHERE subject_code = ?";
+    $stmtContext = $conn->prepare($sqlContext);
+    $stmtContext->bind_param("s", $_POST['subject_code']);
+    $stmtContext->execute();
+    $resultContext = $stmtContext->get_result();
+    $sectionsTopics = [];
+    while ($row = $resultContext->fetch_assoc()) {
+        $sectionsTopics[] = $row;  // Each row has 'section' and 'topics'
+    }
+    $stmtContext->close();
+
+    // Map topics to competency descriptions and remarks to avoid repetition
+    $competencyDescriptions = array_combine($_POST['competencies'], $_POST['remarks']);
+
+    // Ensure there are competencies to process
+    if (!empty($competencyDescriptions)) {
+        $competencyIndex = 0;
+
+        // Loop through topics and students to assign competency descriptions and remarks
+        foreach ($sectionsTopics as $context) {
+            $section = $context['section'];
+            $topic = $context['topics'];
+            $competency_description = array_keys($competencyDescriptions)[$competencyIndex];
+            $remarks = $competencyDescriptions[$competency_description];
+
+            // Only process if a valid competency exists
+            if (!empty($competency_description)) {
+                // After inserting or updating, insert into course_outline_ratings for all students and topics/sections
+                foreach ($studentIds as $studentId) {
+                    // Check for duplicates
+                    $stmtCheck = $conn->prepare("SELECT id FROM course_outline_ratings WHERE student_id = ? AND subject_code = ? AND section = ? AND topic = ?");
+                    $stmtCheck->bind_param("isss", $studentId, $_POST['subject_code'], $section, $topic);
+                    $stmtCheck->execute();
+                    $resultCheck = $stmtCheck->get_result();
+
+                    if ($resultCheck->num_rows == 0) {
+                        // Set the default rating value to 1
+                        $defaultRating = 1;
+
+                        // Insert into course_outline_rating with remarks and default rating
+                        $stmtInsertRating = $conn->prepare("INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, competency_description, remarks, rating) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                        $stmtInsertRating->bind_param("isssssi", $studentId, $_POST['subject_code'], $section, $topic, $competency_description, $remarks, $defaultRating);
+                        $stmtInsertRating->execute();
+                        $stmtInsertRating->close();
+                    }
+                    $stmtCheck->close();
+                }
             }
 
-            // After inserting or updating, insert into course_outline_rating
-            $stmtInsertRating = $conn->prepare("INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, rating, competency_description) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmtInsertRating->bind_param("isssis", $studentId, $_POST['subject_code'], $section, $topic, $rating, $competency_description);
-            $stmtInsertRating->execute();
-            $stmtInsertRating->close();
+            // Move to the next competency description in the list
+            $competencyIndex++;
         }
+    }
 
-        // Delete competencies that are not in the POST request (removed by the user)
-        if (!empty($competency_ids_from_db)) {
-            $competency_ids_from_db = implode(",", $competency_ids_from_db);
-            $stmtDelete = $conn->prepare("DELETE FROM competencies WHERE subject_code = ? AND competency_id NOT IN ($competency_ids_from_db)");
-            $stmtDelete->bind_param("s", $_POST['subject_code']);
-            $stmtDelete->execute();
-            $stmtDelete->close();
-        }
+    // Delete competencies that are not in the POST request (removed by the user)
+    if (!empty($competency_ids_from_db)) {
+        $competency_ids_from_db = implode(",", $competency_ids_from_db);
+        $stmtDelete = $conn->prepare("DELETE FROM competencies WHERE subject_code = ? AND competency_id NOT IN ($competency_ids_from_db)");
+        $stmtDelete->bind_param("s", $_POST['subject_code']);
+        $stmtDelete->execute();
+        $stmtDelete->close();
     }
 
     $stmtUpdate->close();
@@ -193,6 +204,9 @@ if (isset($_POST['save_edits'])) {
 // Close the connection
 $conn->close();
 ?>
+
+
+
 
 
 
