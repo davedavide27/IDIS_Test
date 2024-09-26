@@ -145,11 +145,9 @@ $conn->close();
                     <button onclick="window.location.href='insert_student.php'">Create Student Account</button>
                     <button onclick="window.location.href='insert_instructor.php'">Create Instructor Account</button>
                 </div>
-                <!-- <h4 style="text-align: center;">System Modification</h4> -->
+                <h4 style="text-align: center;">Account reset</h4>
                 <div class="selectIns">
-                    <!-- Edit syllabus format redirects to edit_syllabi.php
-                    <button onclick="window.location.href='edit_syllabi.php'">Edit Syllabi Format</button>
-                    -->
+                    <button onclick="window.location.href='reset_password.php'">Reset Instructor/Student Account</button>
                 </div>
             </main>
         </div>
