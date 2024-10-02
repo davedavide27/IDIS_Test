@@ -46,7 +46,7 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
         'instructor' => 'instructor_ID',
         'vp' => 'vp_ID',
         'edp' => 'edp_ID',
-        'program_chair' => 'chair_ID' // Corrected column name for program chair
+        'program_chair' => 'chair_ID'
     ];
 
     // Validate user type
@@ -83,4 +83,4 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
 }
 
 $conn->close();
-?>
+
