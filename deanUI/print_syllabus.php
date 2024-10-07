@@ -53,7 +53,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
             $status = htmlspecialchars($row['status']);  // Get the syllabus status
         } else {
-            echo '<script>alert("localhost says: No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
+            echo '<script>alert("No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
         }
         $stmt->close();
     } else {

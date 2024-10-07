@@ -144,7 +144,7 @@ $conn->close();
                             <h6><br>Implement</h6>
                             <div id="container_plans">
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#" id="syllabusLink" onclick="printSyllabus()">
+                                    <a href="print_syllabus" id="syllabusLink">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>

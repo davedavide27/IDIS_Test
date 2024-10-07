@@ -75,7 +75,7 @@ if (isset($_POST['approve'])) {
 
     if ($stmtUpdate->execute()) {
         // Trigger JavaScript alert after successful approval
-        echo "<script>alert('localhost says: Subject code $subjectCode is approved');</script>";
+        echo "<script>alert('Subject code $subjectCode is approved');</script>";
         // Refresh the page to reflect the updated status
         echo "<script>window.location.href = '?subject_code=$subjectCode&subject_name=$subjectName';</script>";
     } else {
