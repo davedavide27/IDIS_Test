@@ -39,6 +39,7 @@ body{
 }
 .implementContainer h5, p{
     color: white;
+    font-size: 1rem;
 }
 .navtab button{
     background-color: goldenrod;
@@ -71,6 +72,7 @@ main{
     border-style: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     margin-top: 10px;
+    padding: 10px;
 }
 
 
@@ -93,10 +95,11 @@ main{
 }
 .navSubject .selectIns select{
     /*display: none;*/
+    justify-self: center;
     text-align: center;
     border-radius: 10pt;
-    width: 70%;
-    margin-left: 15%;
+    width: 82%;
+    margin-left: 10%;
     padding: 10px 20px;
 }
 .selectSub button{
@@ -171,6 +174,7 @@ header{
 
 .tablinks{
     font-weight: 800;
+    font-size: 1rem;
 }
 .navtab button:hover {
     cursor: pointer;
@@ -259,7 +263,6 @@ a{
     height: 280pt;
     margin: 20pt;
     border-radius: 10pt;
-    border-radius: 10pt;
     box-shadow: 1pt 1pt 15pt 1pt;
 }
 
@@ -295,6 +298,9 @@ ul{
 }
 /* Highlight the selected subject button */
 .selected-subject {
-    background-color: #FF0000;
-    border-color: #badbcc;
+    background-color: #1e90ff;
+}
+
+.intructor_Name{
+    align-items: center;
 }
