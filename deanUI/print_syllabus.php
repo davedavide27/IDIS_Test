@@ -190,6 +190,13 @@ $conn->close();
     <link rel="stylesheet" href="../syllabus.css">
     <link rel="stylesheet" href="custom_table.css">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+        }
+
         /* Hide buttons and status during print */
         @media print {
 
