@@ -135,6 +135,30 @@ $conn->close();
             cursor: pointer;
             align-items: left;
         }
+
+        .no-print {
+            border-style: none;
+            padding: 9px;
+            border-radius: 10px;
+            margin-top: 8px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .no-print:hover {
+            background: #58abff;
+        }
+
+        .back_btn {
+            border-style: none;
+            padding: 9px;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+
+        .back_btn:hover {
+            background: rgb(255, 76, 76);
+        }
     </style>
 </head>
 

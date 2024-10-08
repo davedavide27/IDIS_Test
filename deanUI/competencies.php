@@ -139,7 +139,7 @@ $conn->close();
 
 <body>
     <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
-    <button class="back_btn" onclick="window.location.href='index.php';">Back</button>
+    <button class="no-print" onclick="window.location.href='index.php';">Back</button>
 
     <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
 
@@ -268,10 +268,6 @@ $conn->close();
         function hidePrintHeaders() {
             // Trigger print without headers
             window.print();
-        }
-
-        function confirmApprove() {
-            return confirm('Approve subject?');
         }
     </script>
 </body>

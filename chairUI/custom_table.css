@@ -67,8 +67,6 @@
     font-size: 12px;
 }
 
-
-
 /* Specific Print Adjustments */
 @media print {
     .custom-table th, .custom-table td {
