@@ -1,4 +1,4 @@
-// clickalbe tabs
+// Clickable tabs
 function openTab(evt, tabName) {
   var i, tabcontent, tablinks;
   tabcontent = document.getElementsByClassName("tabcontent");
@@ -78,7 +78,7 @@ function clearTable(tableSelector) {
 }
 
 // Function to append the ILOs to the existing table without overriding
-function appendILOsToTable(data, subjectCode) {
+async function appendILOsToTable(data, subjectCode) {
   const tableBody = document.querySelector("#ILOs .remarksTable tbody");
 
   // Clear existing content
@@ -88,35 +88,89 @@ function appendILOsToTable(data, subjectCode) {
     // If there's a message (e.g., no approved ILOs), display it
     const noDataRow = `<tr><td colspan="2" class="no-data-message">${data.message}</td></tr>`;
     tableBody.innerHTML = noDataRow;
-  } else {
-    // Iterate over each section and append the ILOs
-    let hasData = false;
+    disableSubmitButton(); // Disable submit buttons when there's no data
+    return; // Stop further processing
+  }
 
-    ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"].forEach((section) => {
-      if (data[section] && data[section].length > 0) {
+  // Iterate over each section and append the ILOs
+// Iterate over each section and append the ILOs
+// Iterate over each section and append the ILOs
+let hasData = false;
+
+for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
+    if (data[section] && data[section].length > 0) {
         hasData = true;
 
-        data[section].forEach((ilo) => {
-          const row = `
-                    <tr data-ilo="${ilo}_${section}">
-                        <td>${ilo} (${section})</td>
-                        <td>
-                            <input type="text" placeholder="Enter comments..." class="ilo-comment">
-                            <button onclick="submitComment('${subjectCode}', '${ilo}', this)">Submit</button>
-                        </td>
-                    </tr>`;
-          tableBody.innerHTML += row; // Append row without clearing the table
-        });
-      }
-    });
+        for (const ilo of data[section]) {
+            const commentExists = await checkCommentExists(subjectCode, ilo); // Check if a comment exists
 
-    // If there's no ILO data, display a "No data" message
-    if (!hasData) {
-      const noDataRow = `<tr><td colspan="2" class="no-data-message">No ILOs available for the selected subject.</td></tr>`;
-      tableBody.innerHTML = noDataRow;
+            // Create row with input and button
+            const row = `
+            <tr data-ilo="${ilo}_${section}">
+                <td>${ilo} (${section})</td>
+                <td>
+                    <input type="text" 
+                           placeholder="${commentExists ? 'Comments already Submitted' : 'Enter comments...'}" 
+                           class="ilo-comment" 
+                           style="width: 200px;" 
+                           ${commentExists ? "disabled" : ""}><!-- Disable input if comment exists -->
+                    <button style="${commentExists ? 'pointer-events: none; opacity: 0.5;' : ''}" 
+                            onclick="submitComment('${subjectCode}', '${ilo}', this)" 
+                            ${commentExists ? "disabled" : ""}>Submit</button>
+                </td>
+            </tr>`;
+            tableBody.innerHTML += row; // Append row without clearing the table
+        }
     }
+}
+
+
+  // If there's no ILO data, display a "No data" message
+  if (!hasData) {
+    const noDataRow = `<tr><td colspan="2" class="no-data-message">No ILOs available for the selected subject.</td></tr>`;
+    tableBody.innerHTML = noDataRow;
+    disableSubmitButton(); // Disable submit buttons when there's no ILO data
+  } else {
+    enableSubmitButtons(); // Ensure buttons are enabled if data exists
   }
 }
+
+// Function to check if a comment exists for a specific ILO
+async function checkCommentExists(subjectCode, ilo) {
+  console.log("Checking comment existence for:", {
+    subject_code: subjectCode,
+    ilo: ilo,
+  }); // Debug log
+
+  const response = await fetch("check_comments.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ subject_code: subjectCode, ilo: ilo }),
+  });
+
+  const data = await response.json();
+  console.log("Response from check_comments.php:", data); // Debug log
+  return data.exists; // Returns true or false based on comment existence
+}
+
+// Function to disable all submit buttons
+function disableSubmitButton() {
+  const submitButtons = document.querySelectorAll(".remarksTable button");
+  submitButtons.forEach((button) => {
+    button.disabled = true; // Disable all buttons
+  });
+}
+
+// Function to enable all submit buttons
+function enableSubmitButtons() {
+  const submitButtons = document.querySelectorAll(".remarksTable button");
+  submitButtons.forEach((button) => {
+    button.disabled = false; // Enable all buttons
+  });
+}
+
 // Embed CSS styles directly into the JavaScript
 const style = document.createElement("style");
 style.innerHTML = `
@@ -128,7 +182,7 @@ style.innerHTML = `
         background-color: #f9f9f9;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
-
+  
     /* Styling for the table headers */
     .remarksTable thead th {
         background-color: black;
@@ -145,12 +199,6 @@ style.innerHTML = `
         border: 1px solid #ddd;
         font-size: 20px;
         text-align: center;
-    }
-
-    /* Styling for radio inputs */
-    .remarksTable tbody input[type="radio"] {
-        margin-left: 5px;
-        margin-right: 5px;
     }
 
     /* Submit button styling */
@@ -228,8 +276,6 @@ function appendTopicsToTable(data, subjectCode) {
   }
 }
 
-
-
 // Function to submit a comment for an ILO
 function submitComment(subjectCode, ilo, buttonElement) {
   const commentInput = buttonElement.previousElementSibling; // Get the comment input
@@ -252,60 +298,51 @@ function submitComment(subjectCode, ilo, buttonElement) {
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Comment submitted successfully.");
-        commentInput.value = ""; // Clear the comment field
+        alert("Comment submitted successfully!");
+        buttonElement.disabled = true; // Disable the submit button after submission
+        commentInput.disabled = true; // Disable the comment input after submission
+        commentInput.value = ""; // Clear the comment input
       } else {
-        alert("Failed to submit comment.");
+        alert("Error submitting comment: " + data.message);
       }
     })
     .catch((error) => console.error("Error submitting comment:", error));
 }
 
-// Function to submit all ratings for the topics in a single submission
+// Function to submit all ratings for the selected subject
 function submitAllRatings(subjectCode) {
-    // Create an object to store the ratings for each topic
-    const ratings = {};
+  const ratings = {};
+  const ratingInputs = document.querySelectorAll(
+    `#Topics .remarksTable input[type="radio"]:checked`
+  );
+  ratingInputs.forEach((input) => {
+    const topic = input.name; // Get the name of the input (topic)
+    const rating = input.value; // Get the selected rating value
+    ratings[topic] = rating; // Store the topic and rating
+  });
 
-    // Select all topic rating inputs
-    const topicRows = document.querySelectorAll('.remarksTable tbody tr');
+  // AJAX call to submit all ratings at once
+  const formData = new FormData();
+  formData.append("subject_code", subjectCode);
+  formData.append("ratings", JSON.stringify(ratings));
 
-    // Loop through each row and get the selected rating for each topic
-    topicRows.forEach(row => {
-        const topic = row.getAttribute('data-topic'); // Get the topic from the row
-        const selectedRating = row.querySelector(`input[name="${topic}_rating"]:checked`); // Get the selected rating
-
-        if (selectedRating) {
-            ratings[topic] = selectedRating.value; // Store the selected rating for each topic
-        }
-    });
-
-    // Check if at least one rating is selected
-    if (Object.keys(ratings).length === 0) {
-        alert("Please select at least one rating before submitting.");
-        return;
-    }
-
-    // Prepare the form data
-    const formData = new FormData();
-    formData.append('subject_code', subjectCode);
-    formData.append('ratings', JSON.stringify(ratings)); // Send ratings as JSON
-
-    // Submit all ratings at once via fetch
-    fetch('submit_rating.php', {
-        method: 'POST',
-        body: formData
+  fetch("submit_ratings.php", {
+    method: "POST",
+    body: formData,
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.success) {
+        alert("Ratings submitted successfully!");
+        document
+          .querySelectorAll(`#Topics .remarksTable input[type="radio"]`)
+          .forEach((input) => {
+            input.disabled = true; // Disable all rating inputs after submission
+          });
+        document.getElementById("submitRatingsButton").disabled = true; // Disable the submit all button
+      } else {
+        alert("Error submitting ratings: " + data.message);
+      }
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert(`${data.message}`);
-            // Optionally reset or uncheck all ratings after successful submission
-            document.querySelectorAll('input[type="radio"]:checked').forEach(input => {
-                input.checked = false;
-            });
-        } else {
-            alert('Failed to submit some or all ratings.');
-        }
-    })
-    .catch(error => console.error('Error submitting ratings:', error));
+    .catch((error) => console.error("Error submitting ratings:", error));
 }
