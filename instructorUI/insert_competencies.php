@@ -102,7 +102,7 @@ function updateCourseOutlineRatings($conn, $studentIds, $competency_description,
             $stmtUpdateRating->close();
         } else {
             // Insert new ratings
-            $defaultRating = 1;
+            $defaultRating = 0;
             $stmtInsertRating = $conn->prepare("INSERT INTO course_outline_ratings (student_id, subject_code, section, topic, competency_description, remarks, rating) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmtInsertRating->bind_param("isssssi", $studentId, $subject_code, $section, $topic, $competency_description, $remarks, $defaultRating);
             $stmtInsertRating->execute();

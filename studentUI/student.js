@@ -12,6 +12,57 @@ function openTab(evt, tabName) {
   document.getElementById(tabName).style.display = "block";
   evt.currentTarget.className += " active";
 }
+// Embed CSS styles directly into the JavaScript
+const style = document.createElement("style");
+style.innerHTML = `
+    /* General styling for the table */
+    .remarksTable {
+        width: 100%; /* Adjust the table width */
+        margin: 20px auto;
+        border-collapse: collapse;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+  
+    /* Styling for the table headers */
+    .remarksTable thead th {
+        background-color: black;
+        color: white;
+        padding: 12px;
+        font-size: 16px;
+        text-align: center;
+        border: 1px solid white;
+    }
+
+    /* Styling for table rows and cells */
+    .remarksTable tbody td {
+        padding: 5px;
+        border: 1px solid #ddd;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    /* Submit button styling */
+    #submitRatingsButton {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        text-align: center;
+        
+    }
+
+    #submitRatingsButton:hover {
+        background-color: #45a049;
+    }
+`;
+document.head.appendChild(style);
 
 // Function to handle subject selection and highlighting the selected button
 function selectSubject(buttonElement, instructorName) {
@@ -93,37 +144,42 @@ async function appendILOsToTable(data, subjectCode) {
   }
 
   // Iterate over each section and append the ILOs
-// Iterate over each section and append the ILOs
-// Iterate over each section and append the ILOs
-let hasData = false;
+  let hasData = false;
 
-for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
+  for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
     if (data[section] && data[section].length > 0) {
-        hasData = true;
+      hasData = true;
 
-        for (const ilo of data[section]) {
-            const commentExists = await checkCommentExists(subjectCode, ilo); // Check if a comment exists
+      for (const ilo of data[section]) {
+        const commentExists = await checkCommentExists(subjectCode, ilo); // Check if a comment exists
 
-            // Create row with input and button
-            const row = `
+        // Create row with input and button
+        const row = `
             <tr data-ilo="${ilo}_${section}">
                 <td>${ilo} (${section})</td>
                 <td>
                     <input type="text" 
-                           placeholder="${commentExists ? 'Comments already Submitted' : 'Enter comments...'}" 
+                           placeholder="${
+                             commentExists
+                               ? "Comments already Submitted"
+                               : "Enter comments..."
+                           }" 
                            class="ilo-comment" 
                            style="width: 200px;" 
-                           ${commentExists ? "disabled" : ""}><!-- Disable input if comment exists -->
-                    <button style="${commentExists ? 'pointer-events: none; opacity: 0.5;' : ''}" 
+                           ${
+                             commentExists ? "disabled" : ""
+                           }><!-- Disable input if comment exists -->
+                    <button style="${
+                      commentExists ? "pointer-events: none; opacity: 0.5;" : ""
+                    }" 
                             onclick="submitComment('${subjectCode}', '${ilo}', this)" 
                             ${commentExists ? "disabled" : ""}>Submit</button>
                 </td>
             </tr>`;
-            tableBody.innerHTML += row; // Append row without clearing the table
-        }
+        tableBody.innerHTML += row; // Append row without clearing the table
+      }
     }
-}
-
+  }
 
   // If there's no ILO data, display a "No data" message
   if (!hasData) {
@@ -137,10 +193,10 @@ for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
 
 // Function to check if a comment exists for a specific ILO
 async function checkCommentExists(subjectCode, ilo) {
-  console.log("Checking comment existence for:", {
-    subject_code: subjectCode,
-    ilo: ilo,
-  }); // Debug log
+  //console.log("Checking comment existence for:", {
+  //subject_code: subjectCode,
+  //ilo: ilo,
+  // }); // Debug log
 
   const response = await fetch("check_comments.php", {
     method: "POST",
@@ -151,7 +207,7 @@ async function checkCommentExists(subjectCode, ilo) {
   });
 
   const data = await response.json();
-  console.log("Response from check_comments.php:", data); // Debug log
+  //console.log("Response from check_comments.php:", data); // Debug log
   return data.exists; // Returns true or false based on comment existence
 }
 
@@ -170,112 +226,6 @@ function enableSubmitButtons() {
     button.disabled = false; // Enable all buttons
   });
 }
-
-// Embed CSS styles directly into the JavaScript
-const style = document.createElement("style");
-style.innerHTML = `
-    /* General styling for the table */
-    .remarksTable {
-        width: 100%; /* Adjust the table width */
-        margin: 20px auto;
-        border-collapse: collapse;
-        background-color: #f9f9f9;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-  
-    /* Styling for the table headers */
-    .remarksTable thead th {
-        background-color: black;
-        color: white;
-        padding: 12px;
-        font-size: 16px;
-        text-align: center;
-        border: 1px solid white;
-    }
-
-    /* Styling for table rows and cells */
-    .remarksTable tbody td {
-        padding: 5px;
-        border: 1px solid #ddd;
-        font-size: 20px;
-        text-align: center;
-    }
-
-    /* Submit button styling */
-    #submitRatingsButton {
-        display: block;
-        margin: 20px auto;
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 5px;
-        transition: background-color 0.3s;
-        text-align: center;
-        
-    }
-
-    #submitRatingsButton:hover {
-        background-color: #45a049;
-    }
-`;
-document.head.appendChild(style);
-
-// Function to append the Topics to the existing table without overriding
-function appendTopicsToTable(data, subjectCode) {
-  const tableBody = document.querySelector("#Topics .remarksTable tbody");
-
-  // Clear existing content
-  tableBody.innerHTML = "";
-
-  if (data.message) {
-    // If there's a message (e.g., no approved topics), display it
-    const noDataRow = `<tr><td colspan="2" class="no-data-message">${data.message}</td></tr>`;
-    tableBody.innerHTML = noDataRow;
-  } else {
-    // Iterate over each section and append the topics
-    let hasData = false;
-
-    ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"].forEach((section) => {
-      if (data[section] && data[section].length > 0) {
-        hasData = true;
-
-        data[section].forEach((topic) => {
-          const row = `
-                <tr data-topic="${topic}_${section}">
-                    <td>${topic} (${section})</td>
-                    <td>
-                        <input type="radio" name="${topic}_${section}_rating" value="1">1
-                        <input type="radio" name="${topic}_${section}_rating" value="2">2
-                        <input type="radio" name="${topic}_${section}_rating" value="3">3
-                        <input type="radio" name="${topic}_${section}_rating" value="4">4
-                        <input type="radio" name="${topic}_${section}_rating" value="5">5
-                    </td>
-                </tr>`;
-          tableBody.innerHTML += row; // Append row without clearing the table
-        });
-      }
-    });
-
-    // If there's no topic data, display a "No data" message
-    if (!hasData) {
-      const noDataRow = `<tr><td colspan="2" class="no-data-message">No topics available for the selected subject.</td></tr>`;
-      tableBody.innerHTML = noDataRow;
-    }
-
-    // Append the submit button after the table rows
-    const submitButtonRow = `
-        <tr>
-            <td colspan="2">
-                <button id="submitRatingsButton" onclick="submitAllRatings('${subjectCode}')">Submit All Ratings</button>
-            </td>
-        </tr>`;
-    tableBody.innerHTML += submitButtonRow;
-  }
-}
-
 // Function to submit a comment for an ILO
 function submitComment(subjectCode, ilo, buttonElement) {
   const commentInput = buttonElement.previousElementSibling; // Get the comment input
@@ -309,39 +259,235 @@ function submitComment(subjectCode, ilo, buttonElement) {
     .catch((error) => console.error("Error submitting comment:", error));
 }
 
-// Function to submit all ratings for the selected subject
-function submitAllRatings(subjectCode) {
-  const ratings = {};
-  const ratingInputs = document.querySelectorAll(
-    `#Topics .remarksTable input[type="radio"]:checked`
-  );
-  ratingInputs.forEach((input) => {
-    const topic = input.name; // Get the name of the input (topic)
-    const rating = input.value; // Get the selected rating value
-    ratings[topic] = rating; // Store the topic and rating
+async function checkRatingExists(subjectCode, topic) {
+  const response = await fetch("check_rating.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ subject_code: subjectCode }),
   });
 
-  // AJAX call to submit all ratings at once
+  const data = await response.json();
+  //console.log(
+  //  `Rating existence response for subject: ${subjectCode}, topic: ${topic}`,
+  //  data
+ // );
+
+  return data.success && data.ratings && topic in data.ratings;
+}
+
+async function fetchExistingRatings(subjectCode, topics) {
+  const ratings = {};
+
+ // console.log(
+//    `Fetching existing ratings for subject: ${subjectCode} and topics: ${topics}`
+//  );
+
+  for (const topic of topics) {
+    const exists = await checkRatingExists(subjectCode, topic);
+   // console.log(`Rating existence for topic '${topic}': ${exists}`);
+
+    if (exists) {
+      const ratingResponse = await fetch("check_rating.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ subject_code: subjectCode }),
+      });
+
+      const ratingData = await ratingResponse.json();
+    //  console.log(`Fetched rating data for topic '${topic}':`, ratingData);
+      ratings[topic.trim()] = ratingData.ratings[topic.trim()] || 0;
+    } else {
+      ratings[topic.trim()] = 0;
+    }
+  }
+
+// console.log("Existing ratings collected:", ratings);
+  return ratings;
+}
+
+async function appendTopicsToTable(data, subjectCode) {
+  const tableBody = document.querySelector("#Topics .remarksTable tbody");
+  const submitButton = document.querySelector("#submitRatingsButton");
+
+  tableBody.innerHTML = ""; // Clear existing rows
+
+  // Check for no data message
+  if (data.message) {
+    const noDataRow = `<tr><td colspan="2" class="no-data-message">${data.message}</td></tr>`;
+    tableBody.innerHTML = noDataRow;
+    // Disable the submit button
+    if (submitButton) {
+      submitButton.disabled = true; // Disable the submit button
+      submitButton.classList.add("disabled"); // Add disabled class
+    }
+    return; // Exit the function
+  }
+
+  let hasData = false;
+  const topics = [];
+
+  for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
+    if (data[section] && data[section].length > 0) {
+      hasData = true;
+      topics.push(...data[section]);
+    }
+  }
+
+  const existingRatings = await fetchExistingRatings(subjectCode, topics);
+//  console.log("Existing ratings after fetching:", existingRatings);
+
+  // Render topic rows
+  for (const section of ["PRELIM", "MIDTERM", "SEMIFINAL", "FINAL"]) {
+    if (data[section] && data[section].length > 0) {
+      for (const topic of data[section]) {
+        const topicKey = `${topic}_${section}`;
+        const rating = existingRatings[topic.trim()] || 0;
+
+        const shouldDisable = rating > 0;
+
+        const row = `
+          <tr data-topic="${topicKey}">
+            <td>${topic} (${section})</td>
+            <td>
+              <input type="radio" name="${topicKey}_rating" value="1" ${
+          shouldDisable ? "disabled" : ""
+        } ${rating == 1 ? "checked" : ""}>1
+              <input type="radio" name="${topicKey}_rating" value="2" ${
+          shouldDisable ? "disabled" : ""
+        } ${rating == 2 ? "checked" : ""}>2
+              <input type="radio" name="${topicKey}_rating" value="3" ${
+          shouldDisable ? "disabled" : ""
+        } ${rating == 3 ? "checked" : ""}>3
+              <input type="radio" name="${topicKey}_rating" value="4" ${
+          shouldDisable ? "disabled" : ""
+        } ${rating == 4 ? "checked" : ""}>4
+              <input type="radio" name="${topicKey}_rating" value="5" ${
+          shouldDisable ? "disabled" : ""
+        } ${rating == 5 ? "checked" : ""}>5
+            </td>
+          </tr>`;
+        tableBody.innerHTML += row;
+      }
+    }
+  }
+
+  // Manage submit button state
+  const allRadioButtons = tableBody.querySelectorAll('input[type="radio"]');
+  const allDisabled = Array.from(allRadioButtons).every(
+    (input) => input.disabled
+  );
+  const hasZeroRatings = Array.from(allRadioButtons).some(
+    (input) => !input.checked && !input.disabled
+  ); // Check if any radio button is zero
+
+  if (!hasData) {
+    const noDataRow = `<tr><td colspan="2" class="no-data-message">No topics available for the selected subject.</td></tr>`;
+    tableBody.innerHTML = noDataRow;
+    if (submitButton) {
+      submitButton.disabled = true; // Disable the submit button
+      submitButton.classList.add("disabled"); // Add disabled class
+    }
+  } else {
+    if (submitButton) {
+      // Disable submit button if all radio buttons are disabled or if there's no topic with a rating of zero
+      const shouldDisableButton = allDisabled || !hasZeroRatings;
+      submitButton.disabled = shouldDisableButton;
+
+      if (shouldDisableButton) {
+        submitButton.classList.add("disabled"); // Add disabled class
+        submitButton.setAttribute("aria-disabled", "true"); // Set aria attribute for accessibility
+      } else {
+        submitButton.classList.remove("disabled"); // Remove disabled class
+        submitButton.removeAttribute("aria-disabled"); // Remove aria attribute
+      }
+    } else {
+      // Append the submit button if it wasn't already added
+
+      const newSubmitButtonRow = `
+  <tr>
+    <td colspan="2">
+      <button id="submitRatingsButton" 
+              ${!hasData || allDisabled || !hasZeroRatings ? "disabled" : ""} 
+              onclick="submitAllRatings('${subjectCode}')" 
+              class="${
+                !hasData || allDisabled || !hasZeroRatings ? "disabled" : ""
+              }">
+        Submit All Ratings
+      </button>
+    </td>
+  </tr>`;
+      tableBody.innerHTML += newSubmitButtonRow;
+    }
+  }
+
+  // Add CSS for the disabled button
+  if (!document.getElementById("disabled-button-styles")) {
+    const style = document.createElement("style");
+    style.id = "disabled-button-styles";
+    style.textContent = `
+      .disabled {
+        background-color: gray; /* Change this color as desired */
+        color: white; /* Change text color if needed */
+        opacity: 0.6; /* Optional: make the button appear faded */
+      }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+// Function to submit all ratings for the topics in a single submission
+function submitAllRatings(subjectCode) {
+  const ratings = {};
+  const topicRows = document.querySelectorAll(".remarksTable tbody tr");
+
+  topicRows.forEach((row) => {
+    const topic = row.getAttribute("data-topic");
+    const selectedRating = row.querySelector(
+      `input[name="${topic}_rating"]:checked`
+    );
+
+    if (selectedRating) {
+      ratings[topic] = selectedRating.value;
+    }
+  });
+
+  if (Object.keys(ratings).length === 0) {
+    alert("Please select at least one rating before submitting.");
+    return;
+  }
+
   const formData = new FormData();
   formData.append("subject_code", subjectCode);
   formData.append("ratings", JSON.stringify(ratings));
 
-  fetch("submit_ratings.php", {
+  fetch("submit_rating.php", {
     method: "POST",
     body: formData,
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.success) {
-        alert("Ratings submitted successfully!");
+        alert(`${data.message}`);
         document
-          .querySelectorAll(`#Topics .remarksTable input[type="radio"]`)
+          .querySelectorAll('input[type="radio"]:checked')
           .forEach((input) => {
-            input.disabled = true; // Disable all rating inputs after submission
+            input.checked = false;
           });
-        document.getElementById("submitRatingsButton").disabled = true; // Disable the submit all button
+        // Disable all radio buttons
+        document
+          .querySelectorAll('.remarksTable input[type="radio"]')
+          .forEach((input) => {
+            input.disabled = true;
+          });
+        // Disable the submit button
+        const submitButton = document.querySelector("#submitRatingsButton");
+        submitButton.disabled = true;
       } else {
-        alert("Error submitting ratings: " + data.message);
+        alert("Failed to submit some or all ratings.");
       }
     })
     .catch((error) => console.error("Error submitting ratings:", error));

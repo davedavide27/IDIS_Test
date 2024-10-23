@@ -75,7 +75,7 @@ $conn->close();
 
 // Send the response with success and fail counts
 if ($successCount > 0) {
-    echo json_encode(['success' => true, 'message' => "$successCount ratings submitted successfully", 'failures' => $failCount]);
+    echo json_encode(['success' => true, 'message' => "Ratings submitted successfully", 'failures' => $failCount]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to submit ratings', 'failures' => $failCount]);
 }
