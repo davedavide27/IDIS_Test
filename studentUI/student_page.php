@@ -74,6 +74,14 @@ $conn->close();
     <link rel="stylesheet" href="style.css">
     <script src="student.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
         .logout-message {
             display: none;
             color: green;
@@ -82,7 +90,7 @@ $conn->close();
 
         /* Highlighted subject button */
         .selected-subject {
-            background-color: #FF0000;
+            background-color: #1e90ff;
             color: white;
         }
 
@@ -101,6 +109,69 @@ $conn->close();
             padding: 10px;
             margin-bottom: 20px;
         }
+
+        .logout_btn {
+            display: block;
+            margin: auto;
+            margin-top: 240px;
+            padding: 7px 20px;
+            border-radius: 5px;
+            border-style: none;
+            background: #1e90ff;
+            color: fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            -webkit-transform-duration: 0.3s;
+            transition-duration: 0.3s;
+        }
+
+        .logout_btn:hover,
+        .logout_btn:focus,
+        .logout_btn:active {
+            box-shadow: 0 0 20px rgba (0, 0, 0, 0.5);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        .subjects button {
+            text-align: center;
+            margin-bottom: 15px;
+            width: 100pt;
+            border-radius: 5px;
+            padding: 8px;
+            border-style: none;
+        }
+
+        ul {
+            font-weight: 900;
+            text-align: left;
+        }
+
+        main {
+            background-color: burlywood;
+            width: 100%;
+            border-bottom-right-radius: 10pt;
+            box-shadow: 10px 20px 20px;
+        }
+
+        h6 {
+            font-size: 1rem;
+        }
+
+        h4 {
+            margin-bottom: 10px;
+        }
+
+        .navtab button {
+            background-color: goldenrod;
+            border: none;
+            margin-right: 1pt;
+            margin-top: 30pt;
+            height: 20pt;
+            box-shadow: -1pt -1pt 15pt 1pt;
+            font-weight: 800;
+            font-size: 1rem;
+        }
     </style>
 </head>
 
@@ -118,10 +189,6 @@ $conn->close();
 
                     <!-- Instructor Assigned will initially be empty -->
                     <ul id="assignedInstructor">Instructor Assigned: <span id="instructorName">N/A</span></ul>
-                </div>
-                <div>
-                    <button onclick="location.href='../logout.php';" class="logout-button">Logout</button>
-                    <p id="logoutMessage" class="logout-message"></p>
                 </div>
                 <div class="subsContainer">
                     <div class="subjects">
@@ -145,6 +212,9 @@ $conn->close();
 
                     </div>
                 </div>
+                <form action="../logout.php" method="post">
+                    <button class="logout_btn" type="submit">Logout</button>
+                </form>
             </nav>
             <div class="implementContainer">
                 <header>

@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 *{
     margin: 0%;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    
 }
 .containerOfAll{
     display: grid;
@@ -43,11 +46,13 @@ body{
     margin-right: 1pt;
     margin-top: 30pt;
     height: 20pt;
-    box-shadow: -1pt -1pt 15pt 1pt
+    box-shadow: -1pt -1pt 15pt 1pt;
+    font-weight: 800;
+     font-size: 1rem;
 }
 main{
     background-color: burlywood;
-    width: 97.8%;
+    width: 100%;
     border-bottom-right-radius: 10pt;
     box-shadow: 10px 20px 20px;
 }
@@ -135,12 +140,16 @@ main{
 
 .navtab {
     display: grid;
-    grid-template-columns: 49% 49%;
+    grid-template-columns: 50% 50%;
 }
 .navtab button{
     border-top-left-radius: 5pt;
     border-top-right-radius: 5pt;
 }
+.navtab button:hover {
+    cursor: pointer;
+    background-color: burlywood;
+    }
 
 /*FONT STYLES*/
 li{
@@ -158,10 +167,6 @@ header{
   height: 530pt;
 }
 
-.navtab button:hover {
-    cursor: pointer;
-    background-color: burlywood;
-    }
 
 /*MAIN nani dire dapit*/
 
@@ -208,4 +213,29 @@ table{
     .selectSub button{
         width: 20%;
     }
+}
+
+.logout_btn{
+    display: block;
+    margin: auto;
+    margin-top: 240px;
+    padding: 7px 20px;
+    border-radius: 5px;
+    border-style: none;
+    background: #1e90ff;
+    color: fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    -webkit-transform-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+.logout_btn:hover, logout_btn:focus, logout_btn:active{
+    box-shadow: 0 0 20px rgba (0,0,0,0.5);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+ul{
+    font-weight: 900;
+    text-align: left;
 }
