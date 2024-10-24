@@ -69,6 +69,7 @@ main{
     width: 100pt;
     border-radius: 5px;
     padding: 8px;
+    border-style: none;
 
 }
 
@@ -148,6 +149,10 @@ main{
     border-top-left-radius: 5pt;
     border-top-right-radius: 5pt;
 }
+.navtab button:hover {
+    cursor: pointer;
+    background-color: burlywood;
+    }
 
 /*FONT STYLES*/
 li{
@@ -167,11 +172,9 @@ header{
 
 .tablinks{
     font-weight: 900;
+    font-size: 1rem;
 }
-.navtab button:hover {
-    cursor: pointer;
-    background-color: burlywood;
-    }
+
 
 /*MAIN nani dire dapit*/
 
@@ -247,8 +250,7 @@ a{
     width: 300pt;
     height: 300pt;
     margin: 20pt;
-    border-top-right-radius: 10pt;
-    border-bottom-left-radius: 10pt;
+    border-radius: 10pt;
     box-shadow: 1pt 1pt 15pt 1pt;
 }
 
