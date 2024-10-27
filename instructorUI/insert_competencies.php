@@ -87,7 +87,8 @@ if (isset($_POST['subject_code'])) {
 }
 
 // Insert/Update the course_outline_ratings table
-function updateCourseOutlineRatings($conn, $studentIds, $competency_description, $remarks, $subject_code, $section, $topic) {
+function updateCourseOutlineRatings($conn, $studentIds, $competency_description, $remarks, $subject_code, $section, $topic)
+{
     foreach ($studentIds as $studentId) {
         $stmtCheck = $conn->prepare("SELECT id FROM course_outline_ratings WHERE student_id = ? AND subject_code = ? AND section = ? AND topic = ?");
         $stmtCheck->bind_param("isss", $studentId, $subject_code, $section, $topic);
@@ -262,7 +263,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../competencies.css">
-    <script src="../main.js"></script>
+    <script src="main.js"></script>
     <title>Edit Competencies</title>
     <style>
         @media print {
@@ -271,17 +272,32 @@ $conn->close();
             .no-print * {
                 display: none !important;
             }
+        }
 
-            input,
-            select {
-                border: none;
-                background: transparent;
-                -webkit-appearance: none;
-                -moz-appearance: none;
-                appearance: none;
-                outline: none;
-                font-weight: bold;
-            }
+        input,
+        select {
+            border: none;
+            background: transparent;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: none;
+            font-weight: bold;
+        }
+
+        .back-button button {
+            margin: 0;
+            height: 25pt;
+            width: 45pt;
+            border-style: none;
+        }
+
+        .back-button button:hover {
+            background-color: #6ab2ff;
+        }
+
+        button {
+            border-radius: 8px;
         }
     </style>
 </head>
@@ -292,7 +308,7 @@ $conn->close();
     <?php if (isset($_SESSION['success_message'])): ?>
         <script>
             alert('<?php echo $_SESSION['success_message']; ?>');
-            window.location.href = "index.php"; // Redirect to index.php after alert
+            window.location.href = "index.php"; // Redire   ct to index.php after alert
         </script>
         <?php unset($_SESSION['success_message']); // Clear the message after displaying 
         ?>
@@ -411,8 +427,10 @@ $conn->close();
         </div>
 
         <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
-        <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
 
+        <div class="back-button">
+            <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
+        </div>
     </form>
 
     <script>
