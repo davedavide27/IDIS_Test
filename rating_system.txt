@@ -31,7 +31,7 @@ The total rating is 200%. Divided by 5 students:
 Add the teacher's remark of 30% (Implemented):
 40% + 30% = 70%
 Interpretation:
-The final system interpretation is 71%, which means "Implemented."
+The final system interpretation is 70%, which means "Implemented."
 Thresholds:
 56% or above = Implemented
 55% or below = Not Implemented
