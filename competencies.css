@@ -1,99 +1,223 @@
+/* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 40px;
-}
-@media print {
-
-    .no-print,
-    .no-print * {
-        display: none !important;
-    }
-
-    input,
-    select {
-        border: none;
-        background: transparent;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        appearance: none;
-        outline: none;
-        font-weight: bold;
-    }
+    background-color: #f9f9f9; /* Light background for better contrast */
+    color: #444; /* Darker text color for readability */
 }
 h3 {
     text-align: center;
     text-transform: uppercase;
+    color: #333; /* Darker color for headings */
+    margin-bottom: 20px; /* Spacing below heading */
 }
-.competency-table, .competency-table th, .competency-table td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    padding: 8px;
-    text-align: left;
+.input-container {
+    margin: 20px 0; /* Add some margin for spacing */
+    padding: 15px;  /* Add padding */
+    border: 1px solid #ccc; /* Optional border */
+    border-radius: 5px; /* Optional rounded corners */
+    background-color: #f9f9f9; /* Light background for contrast */
 }
-.competency-table th {
-    background-color: #f2f2f2;
-}
+
+/* Table Styles */
+.info-table,
 .competency-table {
     width: 100%;
-    margin-bottom: 20px;
+    border-collapse: collapse; /* Combine borders */
+    margin-bottom: 20px; /* Spacing below tables */
+    background-color: #fff; /* White background for tables */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    border-radius: 8px; /* Rounded corners for tables */
 }
-.info-table, .info-table td {
-    border: none;
-    padding: 4px;
+
+/* Table Cell Styles */
+.info-table td,
+.competency-table td {
+    border: none; /* No borders for info table */
+    padding: 8px; /* Padding for info table cells */
 }
-.info-table {
-    width: 100%;
-    margin-bottom: 20px;
+
+/* Competency List Styles */
+.competency-list {
+    list-style: none; /* Remove default list styling */
+    padding: 0; /* Remove padding */
+    margin: 20px 0; /* Spacing above and below the list */
 }
-.info-table td:first-child {
-    width: 25%;
+
+/* List Item Styles */
+.competency-list li {
+    margin-bottom: 10px; /* Spacing between list items */
 }
+
+/* Aligning Text and Input Fields to the Left */
+.competency-list label {
+    display: inline-flex; /* Ensure labels are inline */
+    width: 20%;
+}
+
+/* Input Field Styles in Competency List */
+.competency-list input[type="number"] {
+    width: 25%; /* Adjust width for input fields */
+    padding: 10px; /* Padding for input fields */
+    margin-right: 10px; /* Space between label and input field */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Box sizing for padding */
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+.competency-list input[type="number"]:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none; /* Remove outline */
+}
+
+
+/* Input Field Styles */
+input[type="text"],
+input[type="number"],
+select {
+    width: 70%; /* Full width input fields */
+    padding: 12px; /* Padding for input fields */
+    margin: 0; /* Margin adjusted to bring fields closer */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners for input fields */
+    box-sizing: border-box; /* Box sizing for padding */
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none; /* Remove outline */
+}
+
+/* Flexbox for School Year and Grading Period */
+.school-year-section,
+.grading-period-section {
+    display: flex; /* Flexbox for alignment */
+    align-items: center; /* Center align inputs */
+    gap: 5px; /* Space between input fields */
+    width: 45%;
+}
+
+/* Signature Section Styles */
 .signatures {
     margin-top: 40px;
+    display: flex; /* Flexbox for signature alignment */
+    justify-content: space-between; /* Space between signature sections */
 }
+
 .signatures p {
     margin-bottom: 60px;
     display: inline-block;
-    width: 30%;
+    width: 30%; /* Consistent width for signatures */
     text-align: center;
 }
+
 .signatures p:after {
     content: '';
     display: block;
     margin-top: 5px;
-    border-top: 1px solid black;
+    border-top: 1px solid #ddd; /* Light grey underline for signature */
 }
-.signature-label {
-    font-weight: bold;
-}
-.print-button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
+
+/* Button Styles */
+.print-button,
+.add-competency-btn,
+.remove-competency-btn,
+.cancel-button {
+    display: inline-block; /* Inline-block for buttons */
+    margin: 10px 0;
+    padding: 12px 20px; /* Uniform padding for all buttons */
     border: none;
-    cursor: pointer;
+    border-radius: 5px; /* Rounded corners for buttons */
     font-size: 16px;
+    color: white; /* White text for buttons */
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
 }
+
+/* Button Colors */
+.print-button {
+    background-color: #4CAF50; /* Green for print button */
+}
+
 .print-button:hover {
     background-color: #45a049;
 }
 .add-competency-btn, .remove-competency-btn {
     margin: 10px 0;
-    padding: 15px 10px;
-    background-color: #3595fb;
+    padding: 5px 10px;
+    background-color: #007BFF;
     color: white;
     border: none;
     cursor: pointer;
     font-size: 14px;
 }
-.add-competency-btn:hover, .remove-competency-btn:hover {
-    background-color: #0056b3;
+
+.add-competency-btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
 }
+
 .remove-competency-btn {
-    background-color: #dc3545;
+    background-color: #dc3545; /* Red for remove button */
 }
+
 .remove-competency-btn:hover {
-    background-color: #c82333;
+    background-color: #c82333; /* Darker red on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+.cancel-button {
+    background-color: #dc3545; /* Red for remove button */
+}
+
+.cancel-button:hover {
+    background-color: #8b222c; /* Darker red on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
+}
+
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .signatures {
+        flex-direction: column; /* Stack signatures on small screens */
+        align-items: center; /* Center align items */
+    }
+
+    .signatures p {
+        width: 100%; /* Full width on small screens */
+        margin-bottom: 30px; /* Adjust bottom margin */
+    }
+}
+
+/* Competency Table Specific Styles */
+.competency-table th {
+    background-color: #007BFF; /* Blue header */
+    color: white; /* White text for header */
+    padding: 12px; /* Padding for header cells */
+    text-align: left; /* Align text to the left */
+}
+
+.competency-table td {
+    border: 1px solid #ddd; /* Light grey border for competency table cells */
+}
+
+/* Competency Input Styles */
+.competency-input,
+.remarks-select {
+    width: 100%; /* Full width for input fields */
+    padding: 10px; /* Padding for input fields */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners */
+    box-sizing: border-box; /* Box sizing for padding */
+    transition: border-color 0.3s; /* Smooth transition for focus */
+}
+
+.competency-input:focus,
+.remarks-select:focus {
+    border-color: #007BFF; /* Blue border on focus */
+    outline: none; /* Remove outline */
 }
