@@ -59,9 +59,27 @@ $conn->close();
     <link rel="stylesheet" href="style.css">
     <script src="chair.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
+        ul {
+            font-weight: 800;
+        }
+
+        h4 {
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+
+
         /* Highlight selected subject */
         .selected-subject {
-            background-color: #3498db;
+            background-color: #1e90ff;
             color: white;
             font-weight: bold;
         }
@@ -75,6 +93,7 @@ $conn->close();
             border: none;
             background-color: #f1f1f1;
             cursor: pointer;
+            border-radius: 10px;
         }
 
         /* On hover, change button background */
@@ -85,9 +104,45 @@ $conn->close();
 
         /* On selected, highlight the button */
         .subjectButton.selected-subject {
-            background-color: red;
+            background-color: #1e90ff;
             color: white;
             font-weight: bold;
+            border-radius: 10px;
+        }
+
+        .logout_btn {
+            display: block;
+            margin: auto;
+            margin-top: 240px;
+            padding: 7px 20px;
+            border-radius: 5px;
+            border-style: none;
+            background: #1e90ff;
+            color: fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            -webkit-transform-duration: 0.3s;
+            transition-duration: 0.3s;
+        }
+
+        .logout_btn:hover,
+        .logout_btn:focus,
+        .logout_btn:active {
+            box-shadow: 0 0 20px rgba (0, 0, 0, 0.5);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        main {
+            background-color: burlywood;
+            width: 100%;
+            height: 50%;
+            border-bottom-right-radius: 10pt;
+            box-shadow: 10px 20px 20px;
+        }
+
+        h6 {
+            font-size: 1rem;
         }
     </style>
 </head>
@@ -121,7 +176,7 @@ $conn->close();
                 <br><br>
                 <h4 style="text-align: center;">PENDING SUBJECTS</h4>
                 <div class="subsContainer">
-                    <div id="subjectsList" class="subjects">    
+                    <div id="subjectsList" class="subjects">
                         <!-- Subjects will be loaded here based on the selected instructor -->
                     </div>
                 </div>

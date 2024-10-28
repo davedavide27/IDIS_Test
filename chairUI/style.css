@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
 *{
     margin: 0%;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-family: 'Montserrat', sans-serif;
+    
 }
 .containerOfAll{
     display: grid;
@@ -47,7 +50,8 @@ body{
 }
 main{
     background-color: burlywood;
-    width: 98.8%;
+    width: 100%;
+    height: 50%;
     border-bottom-right-radius: 10pt;
     box-shadow: 10px 20px 20px;
 }
@@ -58,6 +62,7 @@ main{
 }
 .subsContainer{
     text-align: center;
+    padding: 20px;
 }
 
 .subjects button{
@@ -231,11 +236,10 @@ a{
 }
 .planCard{
     background-color: whitesmoke;
-    width: 170pt;
-    height: 180pt;
+    width: 300pt;
+    height: 300pt;
     margin: 20pt;
-    border-top-right-radius: 10pt;
-    border-bottom-left-radius: 10pt;
+    border-radius: 10pt;
     box-shadow: 1pt 1pt 15pt 1pt;
 }
 
@@ -258,3 +262,24 @@ a{
     border-bottom-right-radius: 5pt;
     border-bottom-left-radius: 5pt;
 }
+
+.logout_btn{
+    display: block;
+    margin: auto;
+    margin-top: 240px;
+    padding: 7px 20px;
+    border-radius: 5px;
+    border-style: none;
+    background: #1e90ff;
+    color: fff;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    -webkit-transform-duration: 0.3s;
+    transition-duration: 0.3s;
+}
+
+.logout_btn:hover, logout_btn:focus, logout_btn:active{
+    box-shadow: 0 0 20px rgba (0,0,0,0.5);
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}   

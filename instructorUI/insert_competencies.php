@@ -172,19 +172,19 @@ if (isset($_POST['save_edits'])) {
         }
         $stmtContext->close();
 
-// Handle the case only when inserting new competencies
-if (empty($sectionsTopics)) {
-    // Only handle this if it's a new competency (not during updates)
-    if (empty($_POST['competency_id'])) {
-        echo "<script>
+        // Handle the case only when inserting new competencies
+        if (empty($sectionsTopics)) {
+            // Only handle this if it's a new competency (not during updates)
+            if (empty($_POST['competency_id'])) {
+                echo "<script>
                 alert('Error: No sections or topics found for the subject when inserting a new competency.');
                 window.location.href = 'index.php';
               </script>";
-        exit; // Stop further script execution to prevent the insert
-    }
-} else {
-    $totalSections = count($sectionsTopics);
-    // Proceed with saving the competency
+                exit; // Stop further script execution to prevent the insert
+            }
+        } else {
+            $totalSections = count($sectionsTopics);
+            // Proceed with saving the competency
 
             // Loop through the competencies arrays
             foreach ($_POST['competencies'] as $index => $competency_description) {
@@ -270,7 +270,6 @@ $conn->close();
     <link rel="stylesheet" href="../competencies.css">
     <script src="main.js"></script>
     <title>Edit Competencies</title>
-<<<<<<< HEAD
     <style>
         @media print {
 
@@ -282,7 +281,7 @@ $conn->close();
 
         input,
         select {
-            border: none;
+            border: 1px;
             background: transparent;
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -306,8 +305,6 @@ $conn->close();
             border-radius: 8px;
         }
     </style>
-=======
->>>>>>> 3cc10778cac73ef49e0f18745924a93ae4f1940b
 </head>
 
 <body>
@@ -391,51 +388,51 @@ $conn->close();
 
 
     <table class="competency-table" id="competencyTable">
-    <thead>
-        <tr>
-            <th>SMCC Competencies</th>
-            <th>Remarks On Class</th>
-            <th class="no-print">Action</th>
-        </tr>
-    </thead>
-    
-    <tbody>
-        <?php if (!empty($competencies)): ?>
-            <?php foreach ($competencies as $competency): ?>
+        <thead>
+            <tr>
+                <th>SMCC Competencies</th>
+                <th>Remarks On Class</th>
+                <th class="no-print">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <?php if (!empty($competencies)): ?>
+                <?php foreach ($competencies as $competency): ?>
+                    <tr>
+                        <td>
+                            <input type="hidden" name="competency_id[]" value="<?php echo $competency['competency_id']; ?>">
+                            <input type="text" name="competencies[]" value="<?php echo htmlspecialchars($competency['competency_description']); ?>" required class="competency-input">
+                        </td>
+                        <td>
+                            <select name="remarks[]" required class="remarks-select">
+                                <option value="IMPLEMENTED" <?php echo $competency['remarks'] === 'IMPLEMENTED' ? 'selected' : ''; ?>>IMPLEMENTED</option>
+                                <option value="NOT IMPLEMENTED" <?php echo $competency['remarks'] === 'NOT IMPLEMENTED' ? 'selected' : ''; ?>>NOT IMPLEMENTED</option>
+                            </select>
+                        </td>
+                        <td class="no-print">
+                            <button type="button" class="remove-competency-btn" onclick="removeCompetency(this)">Remove</button>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
                 <tr>
-                    <td>
-                        <input type="hidden" name="competency_id[]" value="<?php echo $competency['competency_id']; ?>">
-                        <input type="text" name="competencies[]" value="<?php echo htmlspecialchars($competency['competency_description']); ?>" required class="competency-input">
-                    </td>
+                    <td><input type="text" name="competencies[]" required class="competency-input"></td>
                     <td>
                         <select name="remarks[]" required class="remarks-select">
-                            <option value="IMPLEMENTED" <?php echo $competency['remarks'] === 'IMPLEMENTED' ? 'selected' : ''; ?>>IMPLEMENTED</option>
-                            <option value="NOT IMPLEMENTED" <?php echo $competency['remarks'] === 'NOT IMPLEMENTED' ? 'selected' : ''; ?>>NOT IMPLEMENTED</option>
+                            <option value="IMPLEMENTED">IMPLEMENTED</option>
+                            <option value="NOT IMPLEMENTED">NOT IMPLEMENTED</option>
                         </select>
                     </td>
                     <td class="no-print">
                         <button type="button" class="remove-competency-btn" onclick="removeCompetency(this)">Remove</button>
                     </td>
                 </tr>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <tr>
-                <td><input type="text" name="competencies[]" required class="competency-input"></td>
-                <td>
-                    <select name="remarks[]" required class="remarks-select">
-                        <option value="IMPLEMENTED">IMPLEMENTED</option>
-                        <option value="NOT IMPLEMENTED">NOT IMPLEMENTED</option>
-                    </select>
-                </td>
-                <td class="no-print">
-                    <button type="button" class="remove-competency-btn" onclick="removeCompetency(this)">Remove</button>
-                </td>
-            </tr>
-        <?php endif; ?>
-    </tbody>
-</table>
+            <?php endif; ?>
+        </tbody>
+    </table>
 
-<button type="button" class="add-competency-btn no-print" onclick="addCompetency()">Add Competency</button>
+    <button type="button" class="add-competency-btn no-print" onclick="addCompetency()">Add Competency</button>
 
 
     <div class="input-container">
@@ -477,17 +474,14 @@ $conn->close();
         </div>
     </div>
 
-<<<<<<< HEAD
-        <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
+    <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
 
-        <div class="back-button">
-            <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
-        </div>
-=======
+    <div class="back-button">
+        <button class="no-print" type="button" onclick="window.location.href='index.php'">Back</button>
+    </div>
 
     <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Changes' : 'Save New Competency'; ?></button>
     <button class="cancel-button no-print" type="button" onclick="window.location.href='index.php'">Cancel</button>
->>>>>>> 3cc10778cac73ef49e0f18745924a93ae4f1940b
     </form>
     </div>
     <script>
