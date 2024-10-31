@@ -113,7 +113,7 @@ $conn->close();
         .logout_btn {
             display: block;
             margin: auto;
-            margin-top: 240px;
+            margin-top: 140px;
             padding: 7px 20px;
             border-radius: 5px;
             border-style: none;
@@ -158,7 +158,7 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($chairFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($chairId); ?></ul>
                 </div>
-                <br><br>
+                <br>
                 <h4 style="text-align: center;">Select Instructor</h4>
                 <div class="selectIns">
                     <form method="get" action="index.php" id="instructorForm">
@@ -173,7 +173,7 @@ $conn->close();
                     </form>
                 </div>
 
-                <br><br>
+                <br>
                 <h4 style="text-align: center;">PENDING SUBJECTS</h4>
                 <div class="subsContainer">
                     <div id="subjectsList" class="subjects">

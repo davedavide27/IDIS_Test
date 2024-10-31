@@ -74,7 +74,7 @@ main{
 /*DISPLAYS*/
 .navSubject ul{
     margin: 10pt;
-    padding: 5pt;
+    padding: 5px;
     text-align: center;
 }
 .selectSub{
@@ -94,6 +94,7 @@ main{
     border-radius: 10pt;
     width: 70%;
     margin-left: 15%;
+    padding: 10px ;
 }
 .selectSub button{
     display: none;
@@ -168,6 +169,10 @@ header{
     background-color: burlywood;
     }
 
+    .tablinks{
+        font-weight: 800;
+        font-size: 1rem;
+    }
 /*MAIN nani dire dapit*/
 
 
