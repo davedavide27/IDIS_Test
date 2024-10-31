@@ -191,20 +191,65 @@ textarea {
         }
 
 /* Back Button */
-.print-button {
-    background-color: #343efb;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    display: inline-block;
-}
 
 
-.print-button:hover {
-    background-color: #272fbc;
-}
+        .submit-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #50b94d;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .submit-button:hover {
+            background-color: #236a21;
+            transform: translateY(-2px);
+        }
+
+        .submit-button:active {
+            background-color: #1c471a;
+            transform: translateY(1px);
+        }
+
+/* Submit Syllabus Button */
+
+        /* Adjust back button styling to match the approve button */
+        .print-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color:  #343efb;
+            /* Red background */
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .print-button:hover {
+            background-color: #272fbc;
+            transform: translateY(-2px);
+        }
+
+        .print-button:active {
+            background-color: #272fbc;
+            transform: translateY(1px);
+        }
+
+/* Print Button */
+
 
 /* Table content */
 td {
@@ -240,18 +285,20 @@ td {
     overflow: hidden;
 }
 
+/*
 .section-prelim {
-    background-color: #f0f8ff; /* Light Blue */
+    background-color: #f0f8ff;  Light Blue 
 }
 
 .section-midterm {
-    background-color: #fafad2; /* Light Yellow */
+    background-color: #fafad2;  Light Yellow 
 }
 
 .section-semifinal {
-    background-color: #e6e6fa; /* Lavender */
+    background-color: #e6e6fa;  Lavender 
 }
 
 .section-final {
-    background-color: #ffe4e1; /* Light Coral */
+    background-color: #ffe4e1; Light Coral 
 }
+*/

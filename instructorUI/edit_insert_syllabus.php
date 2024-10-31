@@ -1185,7 +1185,7 @@ $conn->close();
 
 
             <!-- Submit Button -->
-            <button class="button" type="submit" name="save_syllabus">Submit Syllabus</button>
+            <button class="submit-button" type="submit" name="save_syllabus">Submit Syllabus</button>
 
             <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
