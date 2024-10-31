@@ -190,13 +190,6 @@ $conn->close();
     <link rel="stylesheet" href="../syllabus.css">
     <link rel="stylesheet" href="custom_table.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
-
-        * {
-            margin: 0%;
-            font-family: 'Montserrat', sans-serif;
-        }
-
         /* Hide buttons and status during print */
         @media print {
 
@@ -205,74 +198,84 @@ $conn->close();
             .status-container,
             .status-button {
                 display: none;
+                /* Hide specific elements during print */
+            }
 
+            .container {
+                max-width: 1500px;
+                /* Set the width to fit A4 for printing */
+                margin: 40px auto;
+                padding: 20px;
+                background-color: rgba(255, 255, 255, 0.9);
+                /* Transparent white */
+                border-radius: 8px;
+                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Adjust body and table for print margins */
+            body,
+            html {
+                width: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            table {
+                width: 100%;
+                margin: 0 auto;
+                /* Center the table */
+                border-collapse: collapse;
+                /* Ensure no double borders */
+            }
+
+            th,
+            td {
+                border: 1px solid black;
+                /* Ensure visible borders in print */
+                padding: 6px;
+                text-align: left;
+                overflow-wrap: break-word;
+                word-wrap: break-word;
+                white-space: normal;
+            }
+
+            th {
+                background-color: #3498db;
+                /* Keep the header background in print */
+                color: white;
+            }
+
+            tr {
+                page-break-inside: avoid;
+                /* Prevent rows from splitting across pages */
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                /* Ensure exact colors in print */
+                print-color-adjust: exact;
+            }
+
+            @page {
+                size: A4;
+                /* Set the print size */
+                margin: 10mm;
+            }
+
+            .context-styled-table {
+                page-break-inside: avoid;
+                table-layout: auto;
+                /* Auto layout to fit printing width */
+            }
+
+            .context-styled-table th,
+            .context-styled-table td {
+                font-size: 12pt;
+                /* Ensures text fits when printed */
+                padding: 5px;
             }
 
         }
-
-        /* Adjust body and table for print margins */
-        body,
-        html {
-            width: 100%;
-            margin: 0;
-            padding: 0;
-        }
-
-        table {
-            width: 100%;
-            margin: 0 auto;
-            /* Center the table */
-            border-collapse: collapse;
-            /* Ensure no double borders */
-        }
-
-        th,
-        td {
-            border: 1px solid black;
-            /* Ensure visible borders in print */
-            padding: 6px;
-            text-align: left;
-            overflow-wrap: break-word;
-            word-wrap: break-word;
-            white-space: normal;
-        }
-
-        th {
-            background-color: #3498db;
-            /* Keep the header background in print */
-            color: white;
-        }
-
-        tr {
-            page-break-inside: avoid;
-            /* Prevent rows from splitting across pages */
-        }
-
-        body {
-            -webkit-print-color-adjust: exact;
-            /* Ensure exact colors in print */
-            print-color-adjust: exact;
-        }
-
-        @page {
-            size: A4;
-            /* Set the print size */
-            margin: 10mm;
-        }
-
-        .context-styled-table {
-            page-break-inside: avoid;
-            table-layout: auto;
-            /* Auto layout to fit printing width */
-        }
-
-        .context-styled-table th,
-        .context-styled-table td {
-            font-size: 10pt;
-            /* Ensures text fits when printed */
-            padding: 5px;
-        }
-
 
         /* Default table styling for the screen */
         th,
@@ -320,17 +323,6 @@ $conn->close();
             background-color: green;
         }
 
-        /* Approve button styling */
-        .approve-button {
-            padding: 5px;
-            background-color: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
-            align-items: left;
-        }
-
-        /* Context Table Specific Styling */
         /* Context Table Specific Styling */
         .context-styled-table {
             width: 100%;
@@ -354,9 +346,11 @@ $conn->close();
         .context-styled-table th {
             background-color: #3498db;
             color: white;
+            font-size: 10pt;
         }
 
         .context-styled-table td {
+            font-size: 10pt;
             background-color: white;
         }
 
@@ -369,7 +363,6 @@ $conn->close();
             /* Reduced bottom margin */
             margin-top: 4px;
             /* Reduced top margin to balance section spacing */
-            text-align: justify;
         }
 
         .context-styled-table td {
@@ -426,6 +419,7 @@ $conn->close();
                 </div>
             </div>
         </div>
+        
         <h2>Syllabus Information</h2>
 
         <!-- Display Course Information -->

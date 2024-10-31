@@ -285,6 +285,8 @@ td {
     overflow: hidden;
 }
 
+
+
 /*
 .section-prelim {
     background-color: #f0f8ff;  Light Blue 
@@ -302,3 +304,78 @@ td {
     background-color: #ffe4e1; Light Coral 
 }
 */
+
+/* General Print Styling */
+@media print {
+    @page {
+        size: A4; /* Set the page size to A4 */
+        margin: 20mm; /* Set margins to avoid cutting off content */
+    }
+
+    body {
+        margin: 0;
+        font-size: 12pt; /* Increased font size for better readability */
+    }
+
+    .container {
+        padding: 0;
+        box-shadow: none;
+        background-color: transparent;
+        display: flex;
+        flex-direction: column; /* Ensure content is laid out in a column */
+        height: auto; /* Change to auto to avoid stretching */
+        position: relative; /* Make container relative for child positioning */
+    }
+
+    /* Fixed Header and Footer */
+    .divHeader,
+    .divFooter {
+        position: fixed; /* Fix position to ensure they appear on each page */
+        width: 100%;
+        background-color: white;
+        color: black;
+        z-index: 1000;
+        padding: 10px; /* Padding for spacing */
+    }
+
+    /* Header */
+    .divHeader {
+        top: 0; /* Position at the top */
+        border-bottom: 1px solid #000; /* Border for clarity */
+    }
+
+    /* Footer */
+    .divFooter {
+        bottom: 0; /* Position at the bottom */
+        border-top: none; /* Remove line if not needed */
+    }
+
+    /* Content adjustments */
+    .content {
+        margin: 0;
+        padding: 80px 0 80px; /* Space for header and footer */
+        margin-top: 60px; /* Adjusted margin to avoid overlap with header */
+        margin-bottom: 60px; /* Adjusted margin to avoid overlap with footer */
+    }
+
+    /* Prevent content being cut off */
+    .content > * {
+        page-break-inside: avoid; /* Avoid page breaks inside content */
+    }
+
+    /* Ensure the content does not overlap with header and footer */
+    h2, h3, p, table {
+        margin: 10px; /* Adjusted margins for better spacing on A4 */
+        page-break-inside: avoid; /* Prevent headers and paragraphs from breaking */
+    }
+
+    /* Hide non-print elements */
+    .button,
+    .add-row-button,
+    .remove-row-button,
+    .back-button,
+    .submit-button,
+    .print-button {
+        display: none !important; /* Hide buttons in print */
+    }
+}

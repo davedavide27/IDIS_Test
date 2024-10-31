@@ -5,6 +5,8 @@ body {
     background-color: #f9f9f9; /* Light background for better contrast */
     color: #444; /* Darker text color for readability */
 }
+
+/* Heading Styles */
 h3 {
     text-align: center;
     text-transform: uppercase;
@@ -144,16 +146,12 @@ select:focus {
 }
 
 .print-button:hover {
-    background-color: #45a049;
+    background-color: #45a049; /* Darker green on hover */
+    transform: translateY(-2px); /* Slight lift effect on hover */
 }
-.add-competency-btn, .remove-competency-btn {
-    margin: 10px 0;
-    padding: 5px 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
+
+.add-competency-btn {
+    background-color: #007BFF; /* Blue for add button */
 }
 
 .add-competency-btn:hover {

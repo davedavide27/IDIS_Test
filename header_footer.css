@@ -1,0 +1,98 @@
+/* General styling for the header */
+.divHeader {
+    width: 100%;
+    padding: 10px 0;
+
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Left section for the logo */
+.header-left img {
+    max-width: 150px; /* Adjust based on your logo size */
+    height: auto;
+}
+
+/* Center section for the college name and details */
+.header-center {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.college-name {
+    font-size: 24px;
+    color: rgba(28, 6, 80, 0.877);
+    font-family: Calambria, serif;
+}
+
+.college-details {
+    font-size: 14px;
+    font-family: 'Bookman Old Style', serif;
+}
+
+.college-details a {
+    color: blue;
+    text-decoration: none;
+}
+
+/* Right section for the accreditation logos */
+.header-right img {
+    max-width: 150px; /* Adjust based on the logo size */
+    height: auto;
+}
+
+
+/* Updated Footer Styling */
+.member-logos {
+    width: 100%;
+    background-color: white;
+    padding: 15px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* Logo styling */
+.headContents img {
+    max-width: 100px;
+    height: auto;
+}
+
+/* Print-specific styling */
+@media print {
+    body {
+        margin: 0;
+        padding-top: 120px; /* Offset for fixed header */
+        padding-bottom: 60px; /* Offset for fixed footer */
+    }
+
+    /* Ensure header and footer print on every page */
+    .divHeader,
+    .member-logos {
+        position: fixed;
+        width: 100%;
+    }
+
+    .divHeader {
+        top: 0;
+
+    }
+
+    .member-logos {
+        bottom: 0;
+    }
+
+    /* Page breaks for content between header and footer */
+    .page-content {
+        page-break-inside: avoid;
+        margin-top: 120px; /* To avoid overlapping with header */
+        margin-bottom: 60px; /* To avoid overlapping with footer */
+    }
+}

@@ -1,0 +1,75 @@
+/* General styling for the header */
+.divHeader {
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #000;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+    margin: 0 auto;
+}
+
+/* Left section for the logo */
+.header-left img {
+    max-width: 150px; /* Adjust based on your logo size */
+    height: auto;
+}
+
+/* Center section for the college name and details */
+.header-center {
+    text-align: center;
+    flex-grow: 1;
+}
+
+.college-name {
+    font-size: 24px;
+    color: rgba(28, 6, 80, 0.877);
+    font-family: Calambria, serif;
+}
+
+.college-details {
+    font-size: 14px;
+    font-family: 'Bookman Old Style', serif;
+}
+
+.college-details a {
+    color: blue;
+    text-decoration: none;
+}
+
+/* Right section for the accreditation logos */
+.header-right img {
+    max-width: 150px; /* Adjust based on the logo size */
+    height: auto;
+}
+
+/* Updated Footer Styling */
+.member-logos {
+    width: 100%;
+    background-color: white;
+    padding: 15px 0;
+    display: flex;
+    justify-content: center; /* Center the logos */
+    align-items: center;
+}
+
+/* Logo styling */
+.headContents img {
+    max-width: 100px;
+    height: auto;
+}
+
+@media print {
+
+    .print-button,
+    .no-print,
+    .back-button,
+    .status-container,
+    .status-button {
+        display: none;
+    }
+}
