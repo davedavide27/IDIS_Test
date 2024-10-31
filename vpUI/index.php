@@ -92,6 +92,14 @@ $conn->close();
     <link rel="stylesheet" href="vp.css">
     <script src="vp.js"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
         .logout-message {
             display: none;
             color: green;
@@ -99,8 +107,81 @@ $conn->close();
         }
 
         .selected-subject {
-            background-color: #FF0000;
+            background-color: #1e90ff;
             border-color: #badbcc;
+        }
+
+        .logout_btn {
+            display: block;
+            margin: auto;
+            margin-top: 240px;
+            padding: 7px 20px;
+            border-radius: 5px;
+            border-style: none;
+            background: #1e90ff;
+            color: fff;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            -webkit-transform-duration: 0.3s;
+            transition-duration: 0.3s;
+        }
+
+        .logout_btn:hover,
+        .logout_btn:focus,
+        .logout_btn:active {
+            box-shadow: 0 0 20px rgba (0, 0, 0, 0.5);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+        }
+
+        .subjects button {
+            text-align: center;
+            margin-bottom: 10pt;
+            width: 100pt;
+            border-radius: 5px;
+            padding: 8px;
+            border-style: none;
+
+        }
+
+        .planCard {
+            background-color: whitesmoke;
+            width: 300pt;
+            height: 300pt;
+            margin: 20pt;
+            border-radius: 10pt;
+            box-shadow: 1pt 1pt 15pt 1pt;
+        }
+
+        h4 {
+            margin-bottom: 10px;
+        }
+
+        h6 {
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .tablinks {
+            font-weight: 900;
+            font-size: 1rem;
+        }
+
+        ul {
+            font-weight: 900;
+            text-align: left;
+        }
+
+        .navSubject select {
+            padding: 10px;
+        }
+
+        main {
+            background-color: burlywood;
+            width: 100%;
+            height: 87.4%;
+            border-bottom-right-radius: 10pt;
+            box-shadow: 10px 20px 20px;
         }
 
         /* Add more styling if needed */
@@ -118,7 +199,7 @@ $conn->close();
                     <ul>Name: <?php echo htmlspecialchars($vpFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($vpId); ?></ul>
                 </div>
-
+                <br>
                 <!-- Static display of competencies count -->
                 <h4 style="text-align: center;">
                     Competencies:
@@ -152,10 +233,9 @@ $conn->close();
                         <?php endif; ?>
                     </div>
                 </div>
-                <div>
-                    <button onclick="location.href='../logout.php';" class="logout-button">Logout</button>
-                    <p id="logoutMessage" class="logout-message"></p>
-                </div>
+                <form action="../logout.php" method="post">
+                    <button class="logout_btn" type="submit">Logout</button>
+                </form>
             </nav>
             <div class="implementContainer">
                 <header>
