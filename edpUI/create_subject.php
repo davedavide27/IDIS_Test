@@ -63,6 +63,14 @@ $conn->close();
     <link rel="stylesheet" href="insert_student.css">
     <title>Create New Subject</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
         /* Style for success and error messages */
         .success-message {
             color: green;
@@ -107,6 +115,7 @@ $conn->close();
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            background-color: #f9f9f9;
         }
 
         button {
@@ -144,7 +153,7 @@ $conn->close();
             cursor: pointer;
             top: 10px;
             left: 20px;
-            width: 10%;
+            width: 80px;
         }
 
         .back-button:hover {

@@ -1,4 +1,10 @@
-/* General Styles */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+*{
+    margin: 0%;
+    font-family: 'Montserrat', sans-serif;
+    
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
@@ -112,4 +118,23 @@ button:hover {
 .remarksTable th {
     background-color: #67b9fc;
     color: white;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.search-container select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
 }

@@ -116,9 +116,17 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="select.css">
-    
+
     <title>Assign Subjects to Students</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * {
+            margin: 0%;
+            font-family: 'Montserrat', sans-serif;
+
+        }
+
         .containerOfAll {
             margin: 20px auto;
             padding: 20px;
@@ -141,7 +149,9 @@ $conn->close();
             box-sizing: border-box;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #f9f9f9;
         }
+
 
         .search-container select {
             width: 100%;
@@ -149,6 +159,7 @@ $conn->close();
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+            background-color: #f9f9f9;
         }
 
         .subject-list div {
@@ -223,7 +234,7 @@ $conn->close();
             cursor: pointer;
             top: 10px;
             left: 20px;
-            width: 15%;
+            width: 80px;
         }
 
         .back-button:hover {
@@ -252,7 +263,7 @@ $conn->close();
         <!-- Error Messages Container -->
         <div class="notification-container" id="error-container">
             <?php if (isset($_SESSION['error_message'])): ?>
-                <?php 
+                <?php
                 $errors = explode("<br>", $_SESSION['error_message']);
                 foreach ($errors as $error): ?>
                     <div class="notification error">
@@ -359,7 +370,7 @@ $conn->close();
                     if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
                     if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
                 }
-            }, 500); 
+            }, 500);
         } else {
             notification.classList.add('fade-out');
             setTimeout(() => {
@@ -372,7 +383,7 @@ $conn->close();
                     if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
                     if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
                 }
-            }, 500); 
+            }, 500);
         }
     }
 
@@ -392,25 +403,25 @@ $conn->close();
     const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
     const clearAllErrorButton = document.getElementById('clearAllErrorButton');
 
-    if (clearAllSuccessButton) { 
+    if (clearAllSuccessButton) {
         clearAllSuccessButton.addEventListener('click', function() {
             const notifications = document.querySelectorAll('.notification.success');
             notifications.forEach((notification, index) => {
                 setTimeout(() => {
                     removeNotification(notification, true);
-                }, index * 100); 
+                }, index * 100);
             });
             clearAllSuccessButton.style.display = 'none';
         });
     }
 
-    if (clearAllErrorButton) { 
+    if (clearAllErrorButton) {
         clearAllErrorButton.addEventListener('click', function() {
             const notifications = document.querySelectorAll('.notification.error');
             notifications.forEach((notification, index) => {
                 setTimeout(() => {
                     removeNotification(notification, true);
-                }, index * 100); 
+                }, index * 100);
             });
             clearAllErrorButton.style.display = 'none';
         });
