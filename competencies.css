@@ -94,14 +94,88 @@ select:focus {
     outline: none; /* Remove outline */
 }
 
-/* Flexbox for School Year and Grading Period */
-.school-year-section,
-.grading-period-section {
-    display: flex; /* Flexbox for alignment */
-    align-items: center; /* Center align inputs */
-    gap: 5px; /* Space between input fields */
-    width: 45%;
+/* School Year Styles */
+.school-year-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: 20%;
 }
+
+.school-year-input {
+    width: 10%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+}
+
+.school-year-input:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+/* Grading Period Styles */
+.grading-period-section {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+}
+
+.grading-period-select,
+.grading-quarter-select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s;
+    width: 17%;
+}
+
+.grading-period-select:focus,
+.grading-quarter-select:focus {
+    border-color: #007BFF;
+    outline: none;
+}
+
+
+.competency-list {
+    list-style-type: none; /* Removes default bullet points */
+    padding: 0; /* Removes default padding */
+    margin: 20px 0; /* Adds space around the list */
+}
+
+.competency-item {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Align items vertically in the center */
+    margin-bottom: 10px; /* Reduces space between list items */
+    font-size: 16px; /* Sets font size */
+}
+
+.competency-item label {
+    margin-right: 5px; /* Reduces space between label and input */
+    text-align: left; /* Align label text to the left */
+    width: 50%; /* Set width for labels to maintain spacing */
+    flex-shrink: 0; /* Prevents the label from shrinking */
+    line-break: auto;
+}
+
+.competency-input {
+    width: 40%; /* Adjusts width of input fields */
+    padding: 8px; /* Adds padding inside the input */
+    border: 2px solid #007BFF; /* Sets border color */
+    border-radius: 5px; /* Rounds corners of the input */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Adds transition effect */
+}
+
+.competency-input:focus {
+    outline: none; /* Removes default outline on focus */
+    border-color: #0056b3; /* Changes border color on focus */
+    box-shadow: 0 0 5px rgba(0, 91, 227, 0.5); /* Adds shadow effect on focus */
+}
+
+
+
 
 /* Signature Section Styles */
 .signatures {

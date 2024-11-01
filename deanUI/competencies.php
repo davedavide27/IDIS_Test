@@ -95,20 +95,86 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean UI - View Competencies</title>
-    <link rel="stylesheet" href="view_competencies.css">
+    <link rel="stylesheet" href="../view_competencies.css">
     <link rel="stylesheet" href="../header_footer_competency.css">
     <style>
         @media print {
 
+            /* Hide buttons during print */
             .print-button,
             .back-button,
             .status-container,
-            .status-button {
+            .status-button,
+            .no-print {
                 display: none;
             }
+
+            /* Fixed header for print */
+            .print-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 100px;
+                /* Adjust height as needed */
+                background-color: white;
+                /* Background color */
+                z-index: 1000;
+                /* Ensure it appears above content */
+                padding: 10px;
+                /* Padding for aesthetics */
+            }
+
+            /* Footer styles */
+            .divFooter {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 70px;
+                /* Adjust height for footer */
+                background-color: white;
+                /* Optional background */
+                z-index: 1000;
+                /* Ensure it appears above content */
+                padding: 10px;
+                /* Padding for aesthetics */
+            }
+
+            /* Ensure main content is not hidden behind the fixed header */
+            .container {
+                padding: 20px;
+                /* Add padding to the content */
+                margin-top: 120px;
+                /* Adjust based on header height + extra space */
+                margin-bottom: 90px;
+                /* Adjust based on footer height + extra space */
+            }
+
+            /* Ensure content doesn't overlap with footer */
+            .summary-table,
+            .sign-section {
+                margin-bottom: 30px;
+                /* Adjust to ensure space above footer */
+            }
+
+            /* Additional styles can be added here */
         }
 
-        /* Style for the status button */
+
+        .no-print {
+            border-style: none;
+            padding: 9px;
+            border-radius: 10px;
+            margin-top: 8px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .no-print:hover {
+            background: #58abff;
+        }
+
         .status-button {
             padding: 5px;
             font-size: 12px;
@@ -127,52 +193,59 @@ $conn->close();
             background-color: green;
         }
 
-        /* Approve button */
-        .approve-button {
+        /* Additional styles for the regular view */
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             padding: 10px;
-            background-color: blue;
-            color: white;
-            border: none;
-            cursor: pointer;
         }
+
+        .college-name {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .logo {
+            max-width: 100px;
+            /* Adjust logo size */
+        }
+
+        /* Additional styles for other elements */
     </style>
 </head>
 
 <body>
 
-
-    <div class="container">
-        <!-- Header Section -->
-        <div class="divHeader">
-            <div class="header-container">
-                <!-- Left Section (Logo) -->
-                <div class="headContents header-left">
-                    <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
-                </div>
-                <!-- Center Section (Text) -->
-                <div class="headContents header-center">
-                    <div class="college-name">Saint Michael College of Caraga</div>
-                    <div class="college-details">
-                        <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
-                        <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
-                        <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
-                    </div>
-                </div>
-                <!-- Right Section (Accreditation Logos) -->
-                <div class="headContents header-right">
-                    <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
+    <div class="print-header">
+        <div class="header-container">
+            <div class="headContents header-left">
+                <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
+            </div>
+            <div class="headContents header-center">
+                <div class="college-name">Saint Michael College of Caraga</div>
+                <div class="college-details">
+                    <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
+                    <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
+                    <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
                 </div>
             </div>
+            <div class="headContents header-right">
+                <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
+            </div>
         </div>
+    </div>
+
+    <div class="container">
         <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
-
-
         <table class="header-info">
             <tr>
                 <th class="status-container">Status</th>
-                <td> <button class="status-button <?php echo strtolower($status); ?>">
+                <td>
+                    <button class="status-button <?php echo strtolower($status); ?>">
                         <?php echo htmlspecialchars($status); ?>
-                    </button></td>
+                    </button>
+                </td>
             </tr>
             <tr>
                 <th>I. Subject code:</th>
@@ -290,19 +363,23 @@ $conn->close();
                     </td>
                 </tr>
             </table>
+        </div>
+    </div>
 
-            <div class="divFooter">
-                <img src="../footer.png" alt="Membership Logos" class="member-logos">
-            </div>
-            <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
-            <button class="no-print" onclick="window.location.href='index.php';">Back</button>
+    <div class="divFooter">
+        <div style="text-align: center;">
+            <img src="../footer.png" alt="Membership Logos" class="member-logos">
+        </div>
+    </div>
 
-            <script>
-                function hidePrintHeaders() {
-                    // Trigger print without headers
-                    window.print();
-                }
-            </script>
+    <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
+    <button class="no-print" onclick="window.history.back()">Back</button>
+
+    <script>
+        function hidePrintHeaders() {
+            window.print();
+        }
+    </script>
 </body>
 
 </html>

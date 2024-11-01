@@ -101,7 +101,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VICE PRESIDENT UI - View Competencies</title>
-    <link rel="stylesheet" href="view_competencies.css">
+    <link rel="stylesheet" href="../view_competencies.css">
     <link rel="stylesheet" href="../header_footer_competency.css">
     <style>
         @media print {
@@ -143,6 +143,19 @@ $conn->close();
             border: none;
             cursor: pointer;
         }
+
+        .no-print {
+            border-style: none;
+            padding: 9px;
+            border-radius: 10px;
+            margin-top: 8px;
+            margin-left: 8px;
+            cursor: pointer;
+        }
+
+        .no-print:hover {
+            background: #58abff;
+        }
     </style>
 </head>
 
@@ -169,147 +182,147 @@ $conn->close();
                     <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
                 </div>
             </div>
-</div>
+        </div>
 
-            <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
+        <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
 
-            <table class="header-info">
+        <table class="header-info">
+            <tr>
+                <th class="status-container">Status</th>
+                <td> <button class="status-button <?php echo strtolower($status); ?>">
+                        <?php echo htmlspecialchars($status); ?>
+                    </button></td>
+            </tr>
+            <tr>
+                <th>I. Subject code:</th>
+                <td><?php echo htmlspecialchars($subjectCode); ?></td>
+            </tr>
+            <tr>
+                <th>II. Subject title:</th>
+                <td><?php echo htmlspecialchars($subjectName); ?></td>
+            </tr>
+            <tr>
+                <th>III. Units:</th>
+                <td><?php echo htmlspecialchars($units); ?> Units</td>
+            </tr>
+            <tr>
+                <th>IV. Hours:</th>
+                <td><?php echo htmlspecialchars($hours); ?> Hours</td>
+            </tr>
+            <tr>
+                <th>V. Department:</th>
+                <td><?php echo htmlspecialchars($department); ?></td>
+            </tr>
+            <tr>
+                <th>VI. School year:</th>
+                <td><?php echo htmlspecialchars($schoolYearStart . ' - ' . $schoolYearEnd); ?></td>
+            </tr>
+            <tr>
+                <th>VII. Grading period/quarter:</th>
+                <td>
+                    <?php
+                    echo htmlspecialchars(string: $gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
+                    ?>
+                </td>
+            </tr>
+        </table>
+
+        <table class="competency-table">
+            <thead>
                 <tr>
-                    <th class="status-container">Status</th>
-                    <td> <button class="status-button <?php echo strtolower($status); ?>">
-                            <?php echo htmlspecialchars($status); ?>
-                        </button></td>
+                    <th>SMCC Competencies</th>
+                    <th>Remarks On Class</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($competencies)): ?>
+                    <?php foreach ($competencies as $competency): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
+                            <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="2">No competencies found for this subject.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <table class="summary-table">
+            <tr>
+                <td>Total Competencies DepEd/TESDA/CHED:</td>
+                <td><?php echo htmlspecialchars($totalCompetenciesDepEd); ?></td>
+            </tr>
+            <tr>
+                <td>Total Competencies SMCC:</td>
+                <td><?php echo htmlspecialchars($totalCompetenciesSMCC); ?></td>
+            </tr>
+            <tr>
+                <td>Total Institutional Competencies:</td>
+                <td><?php echo htmlspecialchars($totalInstitutionalCompetencies); ?></td>
+            </tr>
+            <tr>
+                <td>Total B and C Competencies:</td>
+                <td><?php echo htmlspecialchars($totalCompetenciesBAndC); ?></td>
+            </tr>
+            <tr>
+                <td>Total Competencies Implemented:</td>
+                <td><?php echo htmlspecialchars($totalCompetenciesImplemented); ?></td>
+            </tr>
+            <tr>
+                <td>Total Competencies NOT Implemented:</td>
+                <td><?php echo htmlspecialchars($totalCompetenciesNotImplemented); ?></td>
+            </tr>
+            <tr>
+                <td>% Competencies Implemented:</td>
+                <td><?php echo htmlspecialchars($percentageCompetenciesImplemented); ?>%</td>
+            </tr>
+        </table>
+
+        <div class="sign-section">
+            <table style="width: 100%; text-align: center; border-spacing: 40px 0;">
+                <tr>
+                    <td><strong>Prepared by:</strong></td>
+                    <td><strong>Checked by:</strong></td>
+                    <td><strong>Noted by:</strong></td>
                 </tr>
                 <tr>
-                    <th>I. Subject code:</th>
-                    <td><?php echo htmlspecialchars($subjectCode); ?></td>
+                    <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($preparedBy); ?></td>
+                    <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($checkedBy); ?></td>
+                    <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($notedBy); ?></td>
                 </tr>
                 <tr>
-                    <th>II. Subject title:</th>
-                    <td><?php echo htmlspecialchars($subjectName); ?></td>
-                </tr>
-                <tr>
-                    <th>III. Units:</th>
-                    <td><?php echo htmlspecialchars($units); ?> Units</td>
-                </tr>
-                <tr>
-                    <th>IV. Hours:</th>
-                    <td><?php echo htmlspecialchars($hours); ?> Hours</td>
-                </tr>
-                <tr>
-                    <th>V. Department:</th>
-                    <td><?php echo htmlspecialchars($department); ?></td>
-                </tr>
-                <tr>
-                    <th>VI. School year:</th>
-                    <td><?php echo htmlspecialchars($schoolYearStart . ' - ' . $schoolYearEnd); ?></td>
-                </tr>
-                <tr>
-                    <th>VII. Grading period/quarter:</th>
                     <td>
-                        <?php
-                        echo htmlspecialchars(string: $gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
-                        ?>
+                        <h4>Subject Teacher</h4>
+                    </td>
+                    <td>
+                        <h4>Subject Coordinator</h4>
+                    </td>
+                    <td>
+                        <h4>Dean</h4>
                     </td>
                 </tr>
+                <br>
             </table>
 
-            <table class="competency-table">
-                <thead>
-                    <tr>
-                        <th>SMCC Competencies</th>
-                        <th>Remarks On Class</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (!empty($competencies)): ?>
-                        <?php foreach ($competencies as $competency): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($competency['competency_description']); ?></td>
-                                <td><?php echo htmlspecialchars($competency['remarks']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <tr>
-                            <td colspan="2">No competencies found for this subject.</td>
-                        </tr>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-
-            <table class="summary-table">
-                <tr>
-                    <td>Total Competencies DepEd/TESDA/CHED:</td>
-                    <td><?php echo htmlspecialchars($totalCompetenciesDepEd); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Competencies SMCC:</td>
-                    <td><?php echo htmlspecialchars($totalCompetenciesSMCC); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Institutional Competencies:</td>
-                    <td><?php echo htmlspecialchars($totalInstitutionalCompetencies); ?></td>
-                </tr>
-                <tr>
-                    <td>Total B and C Competencies:</td>
-                    <td><?php echo htmlspecialchars($totalCompetenciesBAndC); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Competencies Implemented:</td>
-                    <td><?php echo htmlspecialchars($totalCompetenciesImplemented); ?></td>
-                </tr>
-                <tr>
-                    <td>Total Competencies NOT Implemented:</td>
-                    <td><?php echo htmlspecialchars($totalCompetenciesNotImplemented); ?></td>
-                </tr>
-                <tr>
-                    <td>% Competencies Implemented:</td>
-                    <td><?php echo htmlspecialchars($percentageCompetenciesImplemented); ?>%</td>
-                </tr>
-            </table>
-
-            <div class="sign-section">
-                <table style="width: 100%; text-align: center; border-spacing: 40px 0;">
-                    <tr>
-                        <td><strong>Prepared by:</strong></td>
-                        <td><strong>Checked by:</strong></td>
-                        <td><strong>Noted by:</strong></td>
-                    </tr>
-                    <tr>
-                        <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($preparedBy); ?></td>
-                        <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($checkedBy); ?></td>
-                        <td style="border-bottom: 1px solid black;"><?php echo htmlspecialchars($notedBy); ?></td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h4>Subject Teacher</h4>
-                        </td>
-                        <td>
-                            <h4>Subject Coordinator</h4>
-                        </td>
-                        <td>
-                            <h4>Dean</h4>
-                        </td>
-                    </tr>
-                    <br>
-                </table>
-
-                <div class="divFooter">
-                        <img src="../footer.png" alt="Membership Logos" class="member-logos">
-                    </div>
+            <div class="divFooter">
+                <img src="../footer.png" alt="Membership Logos" class="member-logos">
             </div>
-            <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
-            <button class="no-print" onclick="window.location.href='index.php';">Back</button>
-            <script>
-                function hidePrintHeaders() {
-                    // Trigger print without headers
-                    window.print();
-                }
+        </div>
+        <button class="no-print" onclick="hidePrintHeaders()">Print this page</button>
+        <button class="no-print" onclick="window.location.href='index.php';">Back</button>
+        <script>
+            function hidePrintHeaders() {
+                // Trigger print without headers
+                window.print();
+            }
 
-                function confirmApprove() {
-                    return confirm('Approve Competency?');
-                }
-            </script>
+            function confirmApprove() {
+                return confirm('Approve Competency?');
+            }
+        </script>
 </body>
 
 </html>

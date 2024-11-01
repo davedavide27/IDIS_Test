@@ -95,7 +95,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dean UI - View Competencies</title>
-    <link rel="stylesheet" href="view_competencies.css">
+    <link rel="stylesheet" href="../view_competencies.css">
     <link rel="stylesheet" href="../header_footer.css">
     <style>
         @media print {
