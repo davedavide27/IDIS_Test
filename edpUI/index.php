@@ -72,6 +72,7 @@
                      background-color: #f9f9f9;
                      border-radius: 10px;
                      margin-top: 20px;
+                     justify-content: center;
                  }
 
                  .navSubject {
@@ -139,27 +140,30 @@
                          <h5>Instructional Delivery Implementation System (IDIS)</h5>
                          <p>Saint Michael College of Caraga (SMCC)</p>
                      </header>
-                     <main>
-                         <h4 style="text-align: center;">Manual User Assigning</h4>
-                         <div class="selectIns">
-                             <button onclick="window.location.href='create_subject.php'">Create New Subject</button>
-                             <!-- Select teacher option redirects to select_teacher.php -->
-                             <button onclick="window.location.href='assign_subjects.php'">Assign Instructor</button>
-                             <!-- Select student option redirects to select_student.php -->
-                             <button onclick="window.location.href='select_student.php'">Assign Student</button>
-                         </div>
-                         <h4 style="text-align: center;">File Upload Assigning</h4>
-                         <div class="selectIns">
-                             <button onclick="window.location.href='insert_student.php'">Create Student Account</button>
-                             <button onclick="window.location.href='insert_instructor.php'">Create Instructor Account</button>
-                         </div>
-                         <h4 style="text-align: center;">Account reset</h4>
-                         <div class="selectIns">
-                             <button onclick="window.location.href='reset_password.php'">Reset Instructor/Student Account</button>
-                         </div>
-                     </main>
                  </div>
-             </div>
+                 <div class="subjectsContainer">
+                     <h4 style="text-align: center;">Manual User Assigning</h4>
+                     <div class="selectIns">
+                         <button onclick="window.location.href='create_subject.php'">Create New Subject</button>
+                         <!-- Select teacher option redirects to select_teacher.php -->
+                         <button onclick="window.location.href='assign_subjects.php'">Assign Instructor</button>
+                         <!-- Select student option redirects to select_student.php -->
+                         <button onclick="window.location.href='select_student.php'">Assign Student</button>
+                     </div>
+                 </div>
+                 <div class="subjectsContainer">
+                     <h4 style="text-align: center;">File Upload Assigning</h4>
+                     <div class="selectIns">
+                         <button onclick="window.location.href='insert_student.php'">Create Student Account</button>
+                         <button onclick="window.location.href='insert_instructor.php'">Create Instructor Account</button>
+                     </div>
+                     <h4 style="text-align: center;">Account reset</h4>
+                     <div class="selectIns">
+                         <button onclick="window.location.href='reset_password.php'">Reset Instructor/Student Account</button>
+                     </div>
+
+
+
          </body>
 
          </html>

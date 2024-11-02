@@ -206,7 +206,7 @@ $conn->close();
 
             <button type="submit">Create Subject</button>
 
-        </form>
+
 
     </div>
 
