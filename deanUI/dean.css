@@ -257,14 +257,14 @@ a{
     justify-content: center;
     color: black;
 }
-.planCard{
-    background-color: whitesmoke;
-    width: 270pt;
-    height: 280pt;
-    margin: 20pt;
-    border-radius: 10pt;
-    box-shadow: 1pt 1pt 15pt 1pt;
-}
+    .planCard {
+        background-color: whitesmoke;
+        width: 300pt;
+        height: 300pt;
+        margin: 20pt;
+        border-radius: 10pt;
+        box-shadow: 1pt 1pt 15pt 1pt;
+    }
 
 .logout_btn{
     display: block;

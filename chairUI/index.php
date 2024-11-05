@@ -198,15 +198,26 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
                             <div id="containerPlan">
-                                <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#" id="syllabusLink">
-                                        <p>Syllabus</p>
+                                <div class="planCard" data-subject-code="">
+                                    <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
+                                        <div style="text-align: center; padding: 20px;">
+                                            <p style="margin: 0;">Syllabus</p>
+                                        </div>
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 100px;">
+                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                        </div>
                                     </a>
                                 </div>
 
-                                <div class="planCard" id="competenciesCard" style="display: none;">
-                                    <a href="competencies.php" id="competenciesLink">
-                                        <p>Competencies</p>
+                                <!-- Competencies Plan Card -->
+                                <div class="planCard" data-subject-code="">
+                                    <a href="insert_competencies.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
+                                        <div style="text-align: center; padding: 20px;">
+                                            <p style="margin: 0;">Competencies</p>
+                                        </div>
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 100px;">
+                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                        </div>
                                     </a>
                                 </div>
                             </div>
