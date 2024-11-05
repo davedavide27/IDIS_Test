@@ -179,7 +179,7 @@ $conn->close();
         main {
             background-color: burlywood;
             width: 100%;
-            height: 87.4%;
+            height: 83.3%;
             border-bottom-right-radius: 10pt;
             box-shadow: 10px 20px 20px;
         }

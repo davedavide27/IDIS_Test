@@ -133,7 +133,7 @@ $conn->close();
             transform: scale(1.1);
         }
 
-        main {
+        .main {
             background-color: burlywood;
             width: 100%;
             height: 50%;
