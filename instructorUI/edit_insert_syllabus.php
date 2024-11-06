@@ -493,6 +493,10 @@ $conn->close();
             text-align: center;
             font-size: 10pt;
         }
+
+        .prepared-signiture p {
+            width: 250px;
+        }
     </style>
     <script>
         // Auto resize textarea
@@ -1273,6 +1277,10 @@ $conn->close();
                     }
                 }
             </script>
+
+            <div class="prepared-signiture">
+                <p>Prepared by: <input type="text" name="prepared_by" value="" required></p>
+            </div>
 
             <h4>XII. Grading System</h4>
             <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
