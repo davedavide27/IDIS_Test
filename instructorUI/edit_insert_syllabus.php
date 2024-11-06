@@ -1277,10 +1277,10 @@ $conn->close();
                     }
                 }
             </script>
+            <h4>Performance Tasks</h4>
+            <textarea name="performance_tasks" class="autoResizeTextarea" placeholder="Enter Performance Tasks"><?php echo htmlspecialchars($performance_tasks); ?></textarea>
 
-            <div class="prepared-signiture">
-                <p>Prepared by: <input type="text" name="prepared_by" value="" required></p>
-            </div>
+
 
             <h4>XII. Grading System</h4>
             <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
@@ -1386,17 +1386,16 @@ $conn->close();
             </table>
 
             <!-- Performance Tasks Section -->
-            <h4>Performance Tasks</h4>
-            <textarea name="performance_tasks" class="autoResizeTextarea" placeholder="Enter Performance Tasks"><?php echo htmlspecialchars($performance_tasks); ?></textarea>
 
-
+            <div class="prepared-signiture">
+                <p>Prepared by: <input type="text" name="prepared_by" value="" required></p>
+            </div>
             <!-- Submit Button -->
             <button class="submit-button" type="submit" name="save_syllabus">Submit Syllabus</button>
 
             <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
-            <div class="signature-line">Prepared by:__________________<br>
-            </div>
+
             <div class="divFooter">
                 <img src="../footer.png" alt="Membership Logos" class="member-logos">
             </div>

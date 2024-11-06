@@ -99,7 +99,7 @@ $conn->close();
             font-family: 'Montserrat', sans-serif;
 
         }
-        
+
 
         .logout-message {
             display: none;
@@ -186,6 +186,13 @@ $conn->close();
             box-shadow: 10px 20px 20px;
         }
 
+        .planCard p {
+            padding: 5px;
+            background-color: #f2bb30;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
         /* Add more styling if needed */
     </style>
 </head>
@@ -255,14 +262,18 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>View for Signatures</h6>
                             <div id="container">
+
                                 <!-- Syllabus Plan Card -->
-<<<<<<< HEAD
                                 <div class="planCard" data-subject-code="">
                                     <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
-                                        <div style="text-align: center; padding: 20px;">
-                                            <p style="margin: 0;">Syllabus</p>
-                                        </div>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 100px;">
+                                        <form action="edit_insert_syllabus.php" method="post" style="display: block; width: 100%; height: 100%;">
+                                            <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
+                                            <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
+                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
+                                                <p style="text-align: center; margin: 0;">Syllabus</p>
+                                            </button>
+                                        </form>
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
                                             <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
                                         </div>
                                     </a>
@@ -270,24 +281,17 @@ $conn->close();
 
                                 <!-- Competencies Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="insert_competencies.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
-                                        <div style="text-align: center; padding: 20px;">
-                                            <p style="margin: 0;">Competencies</p>
-                                        </div>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 100px;">
+                                    <a href="insert_competencies.php">
+                                        <form action="insert_competencies.php" method="post" style="display: block; width: 100%; height: 100%;">
+                                            <input type="hidden" name="subject_code" id="selected_subject_code">
+                                            <input type="hidden" name="subject_name" id="selected_subject_name">
+                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
+                                                <p style="text-align: center; margin: 0;">Competencies</p>
+                                            </button>
+                                        </form>
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
                                             <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
                                         </div>
-=======
-                                <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#" id="syllabusLink" onclick="printSyllabus()" style="display: block; width: 100%; height: 100%; text-decoration: none;">
-                                        <p>Syllabus</p>
-                                    </a>
-                                </div>
-                                <!-- Competencies Plan Card -->
-                                <div class="planCard" id="competenciesCard" style="display: none;">
-                                    <a href="view_competencies.php?subject_code=" id="competenciesLink" style="display: block; width: 100%; height: 100%; text-decoration: none;">
-                                        <p>Competencies</p>
->>>>>>> a5b25735809e6dab49e2d9feef61726bd80a7b38
                                     </a>
                                 </div>
                             </div>
