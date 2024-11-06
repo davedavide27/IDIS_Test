@@ -64,6 +64,12 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         }
     }
     $stmt->close();
+} else {
+    echo "<script>
+            alert('Subject code or name not provided.');
+            window.location.href = 'index.php';
+          </script>";
+    exit();
 }
 
 // Handle "Approve" button click
@@ -115,6 +121,7 @@ $conn->close();
             color: white;
             border: none;
             cursor: default;
+            
         }
 
         /* Red for PENDING */
@@ -138,10 +145,13 @@ $conn->close();
             cursor: pointer;
             text-align: left;
             /* Changed to text-align */
+            margin-bottom: 13px; /* Adds spacing above the button */
+            
         }
 
         .approve-button:hover {
             background-color: #1B3F6F;
+            transition: background-color 0.3s ease; /* Smooth color transition */
         }
 
 
@@ -201,6 +211,7 @@ $conn->close();
 
 
             <table class="header-info">
+                <div>
                 <tr>
                     <th class="status-container">Action</th>
                     <td> <?php if ($status === 'PENDING'): ?>
@@ -210,6 +221,8 @@ $conn->close();
                         <?php endif; ?>
                     </td>
                 </tr>
+                </div>
+                
                 <tr>
                     <th class="status-container">Status</th>
                     <td> <button class="status-button <?php echo strtolower($status); ?>">

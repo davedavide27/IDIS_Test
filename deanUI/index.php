@@ -73,9 +73,12 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDIS</title>
+    <title>IDIS - Dean</title>
     <link rel="stylesheet" href="dean.css">
     <script src="dean.js"></script>
+    <style>
+        
+    </style>
 </head>
 
 <body>
@@ -143,41 +146,48 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
                             <div id="container_plans">
-                                <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="print_syllabus" id="syllabusLink">
-                                        <p>Syllabus</p>
+                                <!-- Syllabus Plan Card -->
+                                <div class="planCard" id="syllabusCard" style="display: none; cursor: pointer;">
+                                    <a href="print_syllabus" id="syllabusLink" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
+                                        <div style="text-align: center; font-size: 16px; padding: 20px;">
+                                            <p style="margin: 0;">Syllabus</p>
+                                        </div>
                                     </a>
                                 </div>
 
-                                <div class="planCard" id="competenciesCard" style="display: none;">
-                                    <a href="competencies.php" id="competenciesLink">
-                                        <p>Competencies</p>
+                                <!-- Competencies Plan Card -->
+                                <div class="planCard" id="competenciesCard" style="display: none; cursor: pointer;">
+                                    <a href="competencies.php" id="competenciesLink" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
+                                        <div style="text-align: center; font-size: 16px; padding: 20px;">
+                                            <p style="margin: 0;">Competencies</p>
+                                        </div>
                                     </a>
                                 </div>
                             </div>
                         </div>
-                        <div id="Topics" class="tabcontent">
-                            <h6><br>The table below concludes all inputs.</h6>
-                            <div id="container_ompe">
-                                <table class="remarksTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Competencies</th>
-                                            <th>Teacher's Remarks</th>
-                                            <th>Average Student Rating</th>
-                                            <th>Interpretation</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="interpretationTableBody">
-                                        <!-- Dynamic rows will be inserted here by JavaScript -->
-                                    </tbody>
-                                </table>
-                            </div>
+                    </div>
+                    <div id="Topics" class="tabcontent">
+                        <h6><br>The table below concludes all inputs.</h6>
+                        <div id="container_ompe">
+                            <table class="remarksTable">
+                                <thead>
+                                    <tr>
+                                        <th>Competencies</th>
+                                        <th>Teacher's Remarks</th>
+                                        <th>Average Student Rating</th>
+                                        <th>Interpretation</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="interpretationTableBody">
+                                    <!-- Dynamic rows will be inserted here by JavaScript -->
+                                </tbody>
+                            </table>
                         </div>
                     </div>
             </div>
         </div>
-        </main>
+    </div>
+    </main>
     </div>
     </div>
     </div>

@@ -129,7 +129,11 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         $stmt->close();
     }
 } else {
-    $_SESSION['error_message'] = "Subject code or name not provided.";
+    echo "<script>
+            alert('Subject code or name not provided.');
+            window.location.href = 'index.php';
+          </script>";
+    exit();
 }
 
 // Handle "Approve" button click
@@ -141,7 +145,7 @@ if (isset($_POST['approve'])) {
 
     // Update the status in the related tables (cilo_gilo_map, pilo_gilo_map, context)
     $sqlUpdateCiloGilo = "UPDATE cilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
-    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
+    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?"; 
     $sqlUpdateContext = "UPDATE context SET status = 'APPROVED' WHERE subject_code = ?";
 
     // Prepare and execute the queries
