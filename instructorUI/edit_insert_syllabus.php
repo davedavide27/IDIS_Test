@@ -489,7 +489,7 @@ $conn->close();
 
         .signature-line {
             margin-left: 75%;
-            margin-top: -20px;
+            margin-top: -19px;
             text-align: center;
             font-size: 10pt;
         }
