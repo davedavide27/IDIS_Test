@@ -60,6 +60,65 @@ if (!empty($subject_code)) {
     }
 }
 
+// Initialize grading data
+$written_task = "";
+$quizzes = "";
+$attendance = "";
+$behavior = "";
+$performance_product = "";
+$quarterly_assessment = "";
+
+// Fetch written tasks data
+if (!empty($subject_code)) {
+    $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
+    if ($stmtWrittenTasks = $conn->prepare($sqlWrittenTasks)) {
+        $stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
+        if ($stmtWrittenTasks->execute()) {
+            $resultWrittenTasks = $stmtWrittenTasks->get_result();
+            if ($resultWrittenTasks->num_rows > 0) {
+                $row = $resultWrittenTasks->fetch_assoc();
+                $written_task = htmlspecialchars($row['written_task']);
+                $quizzes = htmlspecialchars($row['quizzes']);
+            }
+            $resultWrittenTasks->free();
+        }
+        $stmtWrittenTasks->close();
+    }
+}
+
+// Fetch performance tasks data
+$sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
+if ($stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks)) {
+    $stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
+    if ($stmtPerformanceTasks->execute()) {
+        $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
+        if ($resultPerformanceTasks->num_rows > 0) {
+            $row = $resultPerformanceTasks->fetch_assoc();
+            $attendance = htmlspecialchars($row['attendance']);
+            $behavior = htmlspecialchars($row['behavior']);
+            $performance_product = htmlspecialchars($row['performance_product']);
+        }
+        $resultPerformanceTasks->free();
+    }
+    $stmtPerformanceTasks->close();
+}
+
+// Fetch quarterly assessment data
+$sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
+if ($stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment)) {
+    $stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
+    if ($stmtQuarterlyAssessment->execute()) {
+        $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
+        if ($resultQuarterlyAssessment->num_rows > 0) {
+            $row = $resultQuarterlyAssessment->fetch_assoc();
+            $quarterly_assessment = htmlspecialchars($row['quarterly_assessment']);
+        }
+        $resultQuarterlyAssessment->free();
+    }
+    $stmtQuarterlyAssessment->close();
+}
+
+
 // Handle the form submission for saving or updating the syllabus
 if (isset($_POST['save_syllabus'])) {
     $conn->begin_transaction(); // Begin transaction for atomicity
@@ -108,6 +167,125 @@ if (isset($_POST['save_syllabus'])) {
             );
             $stmtInsertSyllabus->execute();
         }
+// Save Written Tasks Data
+$sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
+$stmtWrittenTasks = $conn->prepare($sqlWrittenTasks);
+$stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
+$stmtWrittenTasks->execute();
+$resultWrittenTasks = $stmtWrittenTasks->get_result();
+
+if ($resultWrittenTasks->num_rows > 0) {
+    // Update existing written tasks data
+    $sqlUpdateWrittenTasks = "
+        UPDATE written_tasks 
+        SET written_task = ?, quizzes = ? 
+        WHERE subject_code = ? AND instructor_id = ?";
+    $stmtUpdateWrittenTasks = $conn->prepare($sqlUpdateWrittenTasks);
+    $stmtUpdateWrittenTasks->bind_param(
+        "ddsi",
+        $_POST['written_task'],
+        $_POST['quizzes'],
+        $subject_code,
+        $instructor_ID
+    );
+    $stmtUpdateWrittenTasks->execute();
+} else {
+    // Insert new written tasks entry
+    $sqlInsertWrittenTasks = "
+        INSERT INTO written_tasks (subject_code, instructor_id, written_task, quizzes)
+        VALUES (?, ?, ?, ?)";
+    $stmtInsertWrittenTasks = $conn->prepare($sqlInsertWrittenTasks);
+    $stmtInsertWrittenTasks->bind_param(
+        "sidd",
+        $subject_code,
+        $instructor_ID,
+        $_POST['written_task'],
+        $_POST['quizzes']
+    );
+    $stmtInsertWrittenTasks->execute();
+}
+
+// Save Performance Tasks Data
+$sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
+$stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks);
+$stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
+$stmtPerformanceTasks->execute();
+$resultPerformanceTasks = $stmtPerformanceTasks->get_result();
+
+if ($resultPerformanceTasks->num_rows > 0) {
+    // Update existing performance tasks data
+    $sqlUpdatePerformanceTasks = "
+        UPDATE performance_tasks 
+        SET attendance = ?, behavior = ?, performance_product = ? 
+        WHERE subject_code = ? AND instructor_id = ?";
+    $stmtUpdatePerformanceTasks = $conn->prepare($sqlUpdatePerformanceTasks);
+    $stmtUpdatePerformanceTasks->bind_param(
+        "ddsii",
+        $_POST['attendance'],
+        $_POST['behavior'],
+        $_POST['performance_product'],
+        $subject_code,
+        $instructor_ID
+    );
+    $stmtUpdatePerformanceTasks->execute();
+} else {
+    // Insert new performance tasks entry
+    $sqlInsertPerformanceTasks = "
+        INSERT INTO performance_tasks (subject_code, instructor_id, attendance, behavior, performance_product)
+        VALUES (?, ?, ?, ?, ?)";
+    $stmtInsertPerformanceTasks = $conn->prepare($sqlInsertPerformanceTasks);
+    $stmtInsertPerformanceTasks->bind_param(
+        "siddi",
+        $subject_code,
+        $instructor_ID,
+        $_POST['attendance'],
+        $_POST['behavior'],
+        $_POST['performance_product']
+    );
+    $stmtInsertPerformanceTasks->execute();
+}
+
+// Save Quarterly Assessment Data
+$sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
+$stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment);
+$stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
+$stmtQuarterlyAssessment->execute();
+$resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
+
+if ($resultQuarterlyAssessment->num_rows > 0) {
+    // Update existing quarterly assessment data
+    $sqlUpdateQuarterlyAssessment = "
+        UPDATE quarterly_assessment 
+        SET quarterly_assessment = ? 
+        WHERE subject_code = ? AND instructor_id = ?";
+    $stmtUpdateQuarterlyAssessment = $conn->prepare($sqlUpdateQuarterlyAssessment);
+    $stmtUpdateQuarterlyAssessment->bind_param(
+        "dsi",
+        $_POST['quarterly_assessment'],
+        $subject_code,
+        $instructor_ID
+    );
+    $stmtUpdateQuarterlyAssessment->execute();
+} else {
+    // Insert new quarterly assessment entry
+    $sqlInsertQuarterlyAssessment = "
+        INSERT INTO quarterly_assessment (subject_code, instructor_id, quarterly_assessment)
+        VALUES (?, ?, ?)";
+    $stmtInsertQuarterlyAssessment = $conn->prepare($sqlInsertQuarterlyAssessment);
+    $stmtInsertQuarterlyAssessment->bind_param(
+        "sid",
+        $subject_code,
+        $instructor_ID,
+        $_POST['quarterly_assessment']
+    );
+    $stmtInsertQuarterlyAssessment->execute();
+}
+
+// Close the statements
+$stmtWrittenTasks->close();
+$stmtPerformanceTasks->close();
+$stmtQuarterlyAssessment->close();
+
 
         // Clear existing context data
         $stmtClearContext = $conn->prepare("DELETE FROM context WHERE subject_code = ? AND instructor_ID = ?");
@@ -1089,95 +1267,108 @@ $conn->close();
                 }
             </script>
 
-<h4>XII. Grading System</h4>
-        <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
-            <thead>
-                <tr>
-                    <th>Criteria</th>
-                    <th>Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><span class="red-text">Written Task</span><br>
-                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
-                        &nbsp;&nbsp;&nbsp;- Written Task
-                    </td>
-                    <td><span class="red-text">30%</span><br>
-                        &nbsp;&nbsp;&nbsp;15%<br>
-                        &nbsp;&nbsp;&nbsp;15%
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="red-text">Performance Tasks</span><br>
-                        &nbsp;&nbsp;&nbsp;- Attendance<br>
-                        &nbsp;&nbsp;&nbsp;- Behavior<br>
-                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
-                    </td>
-                    <td><span class="red-text">40%</span><br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;30%
-                    </td>
-                </tr>
-                <tr>
-                    <td><span class="red-text">Quarterly Assessment</span></td>
-                    <td><span class="red-text">30%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>TOTAL Grade Percentage</strong></td>
-                    <td><strong>100%</strong></td>
-                </tr>
-            </tbody>
-        </table>
+            <h4>XII. Grading System</h4>
+            <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="red-text">Written Task</span><br>
+                            &nbsp;&nbsp;&nbsp;- Quizzes<br>
+                            &nbsp;&nbsp;&nbsp;- Written Task
+                        </td>
+                        <td>
+                            <span class="red-text">30%</span><br>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="number" name="quizzes" value="<?php echo (int)$quizzes; ?>" style="width: 60px;" min="0" max="100" />%<br>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="number" name="written_task" value="<?php echo (int)$written_task; ?>" style="width: 60px;" min="0" max="100" />%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="red-text">Performance Tasks</span><br>
+                            &nbsp;&nbsp;&nbsp;- Attendance<br>
+                            &nbsp;&nbsp;&nbsp;- Behavior<br>
+                            &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                        </td>
+                        <td>
+                            <span class="red-text">40%</span><br>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="number" name="attendance" value="<?php echo (int)$attendance; ?>" style="width: 60px;" min="0" max="100" />%<br>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="number" name="behavior" value="<?php echo (int)$behavior; ?>" style="width: 60px;" min="0" max="100" />%<br>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="number" name="performance_product" value="<?php echo (int)$performance_product; ?>" style="width: 60px;" min="0" max="100" />%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="red-text">Quarterly Assessment</span></td>
+                        <td>
+                            <input type="number" name="quarterly_assessment" value="<?php echo (int)$quarterly_assessment; ?>" style="width: 60px;" min="0" max="100" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>TOTAL Grade Percentage</strong></td>
+                        <td><strong>100%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
 
-        <!-- Signature Section -->
-        <table id="signatureTable" class="custom-table">
-            <tbody>
-                <tr>
-                    <td rowspan="4" class="logo-cell">
-                        <img src="../image.png" alt="Logo"><br>
-                        <span class="red-text">Curriculum 2022</span>
-                    </td>
-                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Prepared by:</span><br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
-                        Subject Teacher
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Resources Checked & Verified by:</span><br>
-                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
-                        College Librarian
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Reviewed by:</span><br>
-                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
-                        BSIT Program Chair<br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
-                        Dean
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="info-cell-approved">
-                        <span class="red-text">Approved by:</span><br>
-                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
-                        Vice President for Academic Affairs and Research
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-            </tbody>
-        </table>
+
+
+
+
+            <!-- Signature Section -->
+            <table id="signatureTable" class="custom-table">
+                <tbody>
+                    <tr>
+                        <td rowspan="4" class="logo-cell">
+                            <img src="../image.png" alt="Logo"><br>
+                            <span class="red-text">Curriculum 2022</span>
+                        </td>
+                        <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Prepared by:</span><br>
+                            <strong>DAISA O. GUPIT, MIT</strong><br>
+                            Subject Teacher
+                        </td>
+                        <td class="signature-cell">_____________<br>Date</td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Resources Checked & Verified by:</span><br>
+                            <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                            College Librarian
+                        </td>
+                        <td class="signature-cell">_____________<br>Date</td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Reviewed by:</span><br>
+                            <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                            BSIT Program Chair<br>
+                            <strong>DAISA O. GUPIT, MIT</strong><br>
+                            Dean
+                        </td>
+                        <td class="signature-cell">_____________<br>Date</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="info-cell-approved">
+                            <span class="red-text">Approved by:</span><br>
+                            <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                            Vice President for Academic Affairs and Research
+                        </td>
+                        <td class="signature-cell">_____________<br>Date</td>
+                    </tr>
+                </tbody>
+            </table>
 
             <!-- Performance Tasks Section -->
             <h4>Performance Tasks</h4>
@@ -1197,17 +1388,17 @@ $conn->close();
 
 </body>
 <script>
-    function checkFormValues() {
-        const subjectCode = document.getElementById('syllabus_subject_code').value;
-        const subjectName = document.getElementById('syllabus_subject_name').value;
+//    function checkFormValues() {
+ //       const subjectCode = document.getElementById('syllabus_subject_code').value;
+ //       const subjectName = document.getElementById('syllabus_subject_name').value;
 
         // Log the values to verify if they are correct
-        console.log("Form Submitted - Subject Code:", subjectCode);
-        console.log("Form Submitted - Subject Name:", subjectName);
+  //      console.log("Form Submitted - Subject Code:", subjectCode);
+  //      console.log("Form Submitted - Subject Name:", subjectName);
 
         // Returning true to allow form submission to continue
-        return true;
-    }
+  //      return true;
+  //  }
 </script>
 
 </div>

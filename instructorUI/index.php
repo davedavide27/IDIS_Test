@@ -212,6 +212,7 @@ $conn->close();
                 </form>
 
             </nav>
+
             <div class="implementContainer">
                 <header>
                     <h5>Instructional Delivery Implementation System (IDIS)</h5>
@@ -226,6 +227,7 @@ $conn->close();
                     </div>
                 </header>
                 <main>
+
                     <div class="filesContainer">
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
@@ -233,15 +235,15 @@ $conn->close();
 
                                 <!-- Syllabus Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 10%; text-decoration: none; color: inherit;">
+                                    <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
                                         <form action="edit_insert_syllabus.php" method="post" style="display: block; width: 100%; height: 100%;">
                                             <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
                                             <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%; height: 100%;">
+                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%; height: 12%;">
                                                 <p style="text-align: center; margin: 0;">Syllabus</p>
                                             </button>
                                         </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 150px;">
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -220px;">
                                             <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
                                         </div>
                                     </a>
@@ -249,15 +251,15 @@ $conn->close();
 
                                 <!-- Competencies Plan Card -->
                                 <div class="planCard" data-subject-code="">
-                                    <a href="insert_competencies.php" style="display: block; width: 100%; height: 10%; text-decoration: none; color: inherit;">
+                                    <a href="insert_competencies.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
                                         <form action="insert_competencies.php" method="post" style="display: block; width: 100%; height: 100%;">
                                             <input type="hidden" name="subject_code" id="selected_subject_code">
                                             <input type="hidden" name="subject_name" id="selected_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%; height: 100%;">
+                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%; height: 12%;">
                                                 <p style="text-align: center; margin: 0;">Competencies</p>
                                             </button>
                                         </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: 150px;">
+                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -220px;">
                                             <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
                                         </div>
                                     </a>

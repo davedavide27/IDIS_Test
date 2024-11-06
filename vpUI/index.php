@@ -99,6 +99,7 @@ $conn->close();
             font-family: 'Montserrat', sans-serif;
 
         }
+        
 
         .logout-message {
             display: none;
@@ -253,13 +254,15 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>View for Signatures</h6>
                             <div id="container">
+                                <!-- Syllabus Plan Card -->
                                 <div class="planCard" id="syllabusCard" style="display: none;">
-                                    <a href="#" id="syllabusLink" onclick="printSyllabus()">
+                                    <a href="#" id="syllabusLink" onclick="printSyllabus()" style="display: block; width: 100%; height: 100%; text-decoration: none;">
                                         <p>Syllabus</p>
                                     </a>
                                 </div>
+                                <!-- Competencies Plan Card -->
                                 <div class="planCard" id="competenciesCard" style="display: none;">
-                                    <a href="view_competencies.php?subject_code=" id="competenciesLink">
+                                    <a href="view_competencies.php?subject_code=" id="competenciesLink" style="display: block; width: 100%; height: 100%; text-decoration: none;">
                                         <p>Competencies</p>
                                     </a>
                                 </div>
@@ -267,84 +270,81 @@ $conn->close();
                         </div>
                     </div>
                 </main>
-            </div>
-        </div>
-    </div>
 
-    <script>
-        // Function to switch between tabs
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
+                <script>
+                    // Function to switch between tabs
+                    function openTab(evt, tabName) {
+                        var i, tabcontent, tablinks;
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                            tabcontent[i].style.display = "none";
+                        }
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                            tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+                        document.getElementById(tabName).style.display = "block";
+                        evt.currentTarget.className += " active";
+                    }
 
-        // Function to select a subject and display syllabus and competencies
-        function selectSubject(subjectCode, subjectName, buttonElement) {
-            // Highlight the selected subject button
-            document.querySelectorAll('.btnSubjects button').forEach(function(button) {
-                button.classList.remove('selected-subject');
-            });
-            buttonElement.classList.add('selected-subject');
+                    // Function to select a subject and display syllabus and competencies
+                    function selectSubject(subjectCode, subjectName, buttonElement) {
+                        // Highlight the selected subject button
+                        document.querySelectorAll('.btnSubjects button').forEach(function(button) {
+                            button.classList.remove('selected-subject');
+                        });
+                        buttonElement.classList.add('selected-subject');
 
-            // Fetch competencies for the selected subject
-            document.getElementById("syllabusCard").style.display = "block";
-            fetchCompetencies(subjectCode);
+                        // Fetch competencies for the selected subject
+                        document.getElementById("syllabusCard").style.display = "block";
+                        fetchCompetencies(subjectCode);
 
-            // Store selected subject in sessionStorage
-            sessionStorage.setItem('selectedSubjectCode', subjectCode);
-            sessionStorage.setItem('selectedSubjectName', subjectName);
+                        // Store selected subject in sessionStorage
+                        sessionStorage.setItem('selectedSubjectCode', subjectCode);
+                        sessionStorage.setItem('selectedSubjectName', subjectName);
 
-            // Display the plan cards for Syllabus and Competencies
-            document.getElementById('syllabusCard').style.display = 'block';
-            document.getElementById('competenciesCard').style.display = 'block';
+                        // Display the plan cards for Syllabus and Competencies
+                        document.getElementById('syllabusCard').style.display = 'block';
+                        document.getElementById('competenciesCard').style.display = 'block';
 
-            // Update the competencies link with the selected subject
-            document.getElementById('competenciesLink').href = 'view_competencies.php?subject_code=' + subjectCode;
-            // Set the subject code and name dynamically in the Competencies link
-            document.getElementById(
-                "syllabusLink"
-            ).href = `display_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+                        // Update the competencies link with the selected subject
+                        document.getElementById('competenciesLink').href = 'view_competencies.php?subject_code=' + subjectCode;
+                        // Set the subject code and name dynamically in the Competencies link
+                        document.getElementById(
+                            "syllabusLink"
+                        ).href = `display_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
 
-        }
+                    }
 
-        // Function to fetch the competencies from PHP
-        function fetchCompetencies(subjectCode) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', 'display_total_comp.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    document.getElementById('competenciesCount').innerText = response.subject_competencies + " out of " + response.total_competencies;
-                }
-            };
-            xhr.send('subject_code=' + subjectCode);
-        }
+                    // Function to fetch the competencies from PHP
+                    function fetchCompetencies(subjectCode) {
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', 'display_total_comp.php', true);
+                        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                var response = JSON.parse(xhr.responseText);
+                                document.getElementById('competenciesCount').innerText = response.subject_competencies + " out of " + response.total_competencies;
+                            }
+                        };
+                        xhr.send('subject_code=' + subjectCode);
+                    }
 
-        // Initialize the page and auto-select the previously selected subject
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if a subject was selected before
-            var selectedSubjectCode = sessionStorage.getItem('selectedSubjectCode');
-            var selectedSubjectName = sessionStorage.getItem('selectedSubjectName');
+                    // Initialize the page and auto-select the previously selected subject
+                    document.addEventListener('DOMContentLoaded', function() {
+                        // Check if a subject was selected before
+                        var selectedSubjectCode = sessionStorage.getItem('selectedSubjectCode');
+                        var selectedSubjectName = sessionStorage.getItem('selectedSubjectName');
 
-            if (selectedSubjectCode && selectedSubjectName) {
-                // Auto-select the subject if previously selected
-                var subjectButton = document.querySelector(`.btnSubjects button[onclick*="${selectedSubjectCode}"]`);
-                if (subjectButton) {
-                    selectSubject(selectedSubjectCode, selectedSubjectName, subjectButton);
-                }
-            }
-        });
-    </script>
+                        if (selectedSubjectCode && selectedSubjectName) {
+                            // Auto-select the subject if previously selected
+                            var subjectButton = document.querySelector(`.btnSubjects button[onclick*="${selectedSubjectCode}"]`);
+                            if (subjectButton) {
+                                selectSubject(selectedSubjectCode, selectedSubjectName, subjectButton);
+                            }
+                        }
+                    });
+                </script>
 
 
 </body>

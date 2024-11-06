@@ -272,3 +272,61 @@ function printSyllabus() {
       alert('Subject code or name not found. Please select a subject first.');
   }
 }
+
+function fetchGradingSystemData() {
+  // Retrieve subject code and name from sessionStorage or another source
+  const subjectCode = sessionStorage.getItem('selectedSubjectCode');
+  const subjectName = sessionStorage.getItem('selectedSubjectName');
+
+  // Check if both subjectCode or subjectName exist
+  if (!subjectCode && !subjectName) {
+      console.error('No subject code or subject name found.');
+      return;
+  }
+
+  // Prepare the data for the POST request
+  const requestData = {
+      subject_code: subjectCode,
+      subject_name: subjectName
+  };
+
+  // Send a POST request to the grading_system.php
+  fetch('grading_system.php', {
+      method: 'POST',
+      body: JSON.stringify(requestData),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+  .then(response => response.json())  // Expect JSON response
+  .then(data => {
+      if (data.error) {
+          console.error(data.error);  // Log error if there's any
+          return;
+      }
+
+      // Ensure grading data exists in the response
+      const gradingData = data.grading_system;
+
+      // Update the written tasks data
+      document.getElementById('written-task-percent').textContent = gradingData.written_tasks?.total || '0%';
+      document.getElementById('quizzes-percent').textContent = gradingData.written_tasks?.quizzes || '0%';
+      document.getElementById('written-task-detail').textContent = gradingData.written_tasks?.written_task || '0%';
+
+      // Update the performance tasks data
+      document.getElementById('performance-task-percent').textContent = gradingData.performance_tasks?.total || '0%';
+      document.getElementById('attendance-percent').textContent = gradingData.performance_tasks?.attendance || '0%';
+      document.getElementById('behavior-percent').textContent = gradingData.performance_tasks?.behavior || '0%';
+      document.getElementById('performance-product-percent').textContent = gradingData.performance_tasks?.performance_product || '0%';
+
+      // Update the quarterly assessment data
+      document.getElementById('quarterly-assessment-percent').textContent = gradingData.quarterly_assessment || '0%';
+  })
+  .catch(error => {
+      console.error('Error fetching grading system data:', error);
+  });
+}
+
+// Call the function to fetch and display the data
+fetchGradingSystemData();
+
