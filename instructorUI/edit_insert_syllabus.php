@@ -167,124 +167,124 @@ if (isset($_POST['save_syllabus'])) {
             );
             $stmtInsertSyllabus->execute();
         }
-// Save Written Tasks Data
-$sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
-$stmtWrittenTasks = $conn->prepare($sqlWrittenTasks);
-$stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
-$stmtWrittenTasks->execute();
-$resultWrittenTasks = $stmtWrittenTasks->get_result();
+        // Save Written Tasks Data
+        $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
+        $stmtWrittenTasks = $conn->prepare($sqlWrittenTasks);
+        $stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
+        $stmtWrittenTasks->execute();
+        $resultWrittenTasks = $stmtWrittenTasks->get_result();
 
-if ($resultWrittenTasks->num_rows > 0) {
-    // Update existing written tasks data
-    $sqlUpdateWrittenTasks = "
+        if ($resultWrittenTasks->num_rows > 0) {
+            // Update existing written tasks data
+            $sqlUpdateWrittenTasks = "
         UPDATE written_tasks 
         SET written_task = ?, quizzes = ? 
         WHERE subject_code = ? AND instructor_id = ?";
-    $stmtUpdateWrittenTasks = $conn->prepare($sqlUpdateWrittenTasks);
-    $stmtUpdateWrittenTasks->bind_param(
-        "ddsi",
-        $_POST['written_task'],
-        $_POST['quizzes'],
-        $subject_code,
-        $instructor_ID
-    );
-    $stmtUpdateWrittenTasks->execute();
-} else {
-    // Insert new written tasks entry
-    $sqlInsertWrittenTasks = "
+            $stmtUpdateWrittenTasks = $conn->prepare($sqlUpdateWrittenTasks);
+            $stmtUpdateWrittenTasks->bind_param(
+                "ddsi",
+                $_POST['written_task'],
+                $_POST['quizzes'],
+                $subject_code,
+                $instructor_ID
+            );
+            $stmtUpdateWrittenTasks->execute();
+        } else {
+            // Insert new written tasks entry
+            $sqlInsertWrittenTasks = "
         INSERT INTO written_tasks (subject_code, instructor_id, written_task, quizzes)
         VALUES (?, ?, ?, ?)";
-    $stmtInsertWrittenTasks = $conn->prepare($sqlInsertWrittenTasks);
-    $stmtInsertWrittenTasks->bind_param(
-        "sidd",
-        $subject_code,
-        $instructor_ID,
-        $_POST['written_task'],
-        $_POST['quizzes']
-    );
-    $stmtInsertWrittenTasks->execute();
-}
+            $stmtInsertWrittenTasks = $conn->prepare($sqlInsertWrittenTasks);
+            $stmtInsertWrittenTasks->bind_param(
+                "sidd",
+                $subject_code,
+                $instructor_ID,
+                $_POST['written_task'],
+                $_POST['quizzes']
+            );
+            $stmtInsertWrittenTasks->execute();
+        }
 
-// Save Performance Tasks Data
-$sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
-$stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks);
-$stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
-$stmtPerformanceTasks->execute();
-$resultPerformanceTasks = $stmtPerformanceTasks->get_result();
+        // Save Performance Tasks Data
+        $sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
+        $stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks);
+        $stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
+        $stmtPerformanceTasks->execute();
+        $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
 
-if ($resultPerformanceTasks->num_rows > 0) {
-    // Update existing performance tasks data
-    $sqlUpdatePerformanceTasks = "
+        if ($resultPerformanceTasks->num_rows > 0) {
+            // Update existing performance tasks data
+            $sqlUpdatePerformanceTasks = "
         UPDATE performance_tasks 
         SET attendance = ?, behavior = ?, performance_product = ? 
         WHERE subject_code = ? AND instructor_id = ?";
-    $stmtUpdatePerformanceTasks = $conn->prepare($sqlUpdatePerformanceTasks);
-    $stmtUpdatePerformanceTasks->bind_param(
-        "ddsii",
-        $_POST['attendance'],
-        $_POST['behavior'],
-        $_POST['performance_product'],
-        $subject_code,
-        $instructor_ID
-    );
-    $stmtUpdatePerformanceTasks->execute();
-} else {
-    // Insert new performance tasks entry
-    $sqlInsertPerformanceTasks = "
+            $stmtUpdatePerformanceTasks = $conn->prepare($sqlUpdatePerformanceTasks);
+            $stmtUpdatePerformanceTasks->bind_param(
+                "ddsii",
+                $_POST['attendance'],
+                $_POST['behavior'],
+                $_POST['performance_product'],
+                $subject_code,
+                $instructor_ID
+            );
+            $stmtUpdatePerformanceTasks->execute();
+        } else {
+            // Insert new performance tasks entry
+            $sqlInsertPerformanceTasks = "
         INSERT INTO performance_tasks (subject_code, instructor_id, attendance, behavior, performance_product)
         VALUES (?, ?, ?, ?, ?)";
-    $stmtInsertPerformanceTasks = $conn->prepare($sqlInsertPerformanceTasks);
-    $stmtInsertPerformanceTasks->bind_param(
-        "siddi",
-        $subject_code,
-        $instructor_ID,
-        $_POST['attendance'],
-        $_POST['behavior'],
-        $_POST['performance_product']
-    );
-    $stmtInsertPerformanceTasks->execute();
-}
+            $stmtInsertPerformanceTasks = $conn->prepare($sqlInsertPerformanceTasks);
+            $stmtInsertPerformanceTasks->bind_param(
+                "siddi",
+                $subject_code,
+                $instructor_ID,
+                $_POST['attendance'],
+                $_POST['behavior'],
+                $_POST['performance_product']
+            );
+            $stmtInsertPerformanceTasks->execute();
+        }
 
-// Save Quarterly Assessment Data
-$sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
-$stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment);
-$stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
-$stmtQuarterlyAssessment->execute();
-$resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
+        // Save Quarterly Assessment Data
+        $sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
+        $stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment);
+        $stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
+        $stmtQuarterlyAssessment->execute();
+        $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
 
-if ($resultQuarterlyAssessment->num_rows > 0) {
-    // Update existing quarterly assessment data
-    $sqlUpdateQuarterlyAssessment = "
+        if ($resultQuarterlyAssessment->num_rows > 0) {
+            // Update existing quarterly assessment data
+            $sqlUpdateQuarterlyAssessment = "
         UPDATE quarterly_assessment 
         SET quarterly_assessment = ? 
         WHERE subject_code = ? AND instructor_id = ?";
-    $stmtUpdateQuarterlyAssessment = $conn->prepare($sqlUpdateQuarterlyAssessment);
-    $stmtUpdateQuarterlyAssessment->bind_param(
-        "dsi",
-        $_POST['quarterly_assessment'],
-        $subject_code,
-        $instructor_ID
-    );
-    $stmtUpdateQuarterlyAssessment->execute();
-} else {
-    // Insert new quarterly assessment entry
-    $sqlInsertQuarterlyAssessment = "
+            $stmtUpdateQuarterlyAssessment = $conn->prepare($sqlUpdateQuarterlyAssessment);
+            $stmtUpdateQuarterlyAssessment->bind_param(
+                "dsi",
+                $_POST['quarterly_assessment'],
+                $subject_code,
+                $instructor_ID
+            );
+            $stmtUpdateQuarterlyAssessment->execute();
+        } else {
+            // Insert new quarterly assessment entry
+            $sqlInsertQuarterlyAssessment = "
         INSERT INTO quarterly_assessment (subject_code, instructor_id, quarterly_assessment)
         VALUES (?, ?, ?)";
-    $stmtInsertQuarterlyAssessment = $conn->prepare($sqlInsertQuarterlyAssessment);
-    $stmtInsertQuarterlyAssessment->bind_param(
-        "sid",
-        $subject_code,
-        $instructor_ID,
-        $_POST['quarterly_assessment']
-    );
-    $stmtInsertQuarterlyAssessment->execute();
-}
+            $stmtInsertQuarterlyAssessment = $conn->prepare($sqlInsertQuarterlyAssessment);
+            $stmtInsertQuarterlyAssessment->bind_param(
+                "sid",
+                $subject_code,
+                $instructor_ID,
+                $_POST['quarterly_assessment']
+            );
+            $stmtInsertQuarterlyAssessment->execute();
+        }
 
-// Close the statements
-$stmtWrittenTasks->close();
-$stmtPerformanceTasks->close();
-$stmtQuarterlyAssessment->close();
+        // Close the statements
+        $stmtWrittenTasks->close();
+        $stmtPerformanceTasks->close();
+        $stmtQuarterlyAssessment->close();
 
 
         // Clear existing context data
@@ -485,6 +485,13 @@ $conn->close();
             /* Ensure the select element uses the full cell width */
             padding: 4px;
             /* Adjust padding for better spacing */
+        }
+
+        .signature-line {
+            margin-left: 75%;
+            margin-top: -20px;
+            text-align: center;
+            font-size: 10pt;
         }
     </style>
     <script>
@@ -1380,6 +1387,8 @@ $conn->close();
 
             <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+            <div class="signature-line">Prepared by:__________________<br>
+            </div>
             <div class="divFooter">
                 <img src="../footer.png" alt="Membership Logos" class="member-logos">
             </div>
@@ -1388,17 +1397,17 @@ $conn->close();
 
 </body>
 <script>
-//    function checkFormValues() {
- //       const subjectCode = document.getElementById('syllabus_subject_code').value;
- //       const subjectName = document.getElementById('syllabus_subject_name').value;
+    //    function checkFormValues() {
+    //       const subjectCode = document.getElementById('syllabus_subject_code').value;
+    //       const subjectName = document.getElementById('syllabus_subject_name').value;
 
-        // Log the values to verify if they are correct
-  //      console.log("Form Submitted - Subject Code:", subjectCode);
-  //      console.log("Form Submitted - Subject Name:", subjectName);
+    // Log the values to verify if they are correct
+    //      console.log("Form Submitted - Subject Code:", subjectCode);
+    //      console.log("Form Submitted - Subject Name:", subjectName);
 
-        // Returning true to allow form submission to continue
-  //      return true;
-  //  }
+    // Returning true to allow form submission to continue
+    //      return true;
+    //  }
 </script>
 
 </div>
