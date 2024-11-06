@@ -28,10 +28,16 @@ $course_description = "";
 $prerequisites_corequisites = "";
 $contact_hours = "";
 $performance_tasks = "";
+$status = "PENDING"; // Default status for syllabus
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
-$status = "PENDING";
+$written_task = "";
+$quizzes = "";
+$attendance = "";
+$behavior = "";
+$performance_product = "";
+$quarterly_assessment = "";
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -128,6 +134,55 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         }
         $stmt->close();
     }
+        // Fetch grading system data: Written Tasks
+        if (!empty($subject_code)) {
+            $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ?";
+            if ($stmtWrittenTasks = $conn->prepare($sqlWrittenTasks)) {
+                $stmtWrittenTasks->bind_param("s", $subject_code);
+                if ($stmtWrittenTasks->execute()) {
+                    $resultWrittenTasks = $stmtWrittenTasks->get_result();
+                    if ($resultWrittenTasks->num_rows > 0) {
+                        $row = $resultWrittenTasks->fetch_assoc();
+                        $written_task = htmlspecialchars($row['written_task']);
+                        $quizzes = htmlspecialchars($row['quizzes']);
+                    }
+                    $resultWrittenTasks->free();
+                }
+                $stmtWrittenTasks->close();
+            }
+        }
+    
+        // Fetch grading system data: Performance Tasks
+        $sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ?";
+        if ($stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks)) {
+            $stmtPerformanceTasks->bind_param("s", $subject_code);
+            if ($stmtPerformanceTasks->execute()) {
+                $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
+                if ($resultPerformanceTasks->num_rows > 0) {
+                    $row = $resultPerformanceTasks->fetch_assoc();
+                    $attendance = htmlspecialchars($row['attendance']);
+                    $behavior = htmlspecialchars($row['behavior']);
+                    $performance_product = htmlspecialchars($row['performance_product']);
+                }
+                $resultPerformanceTasks->free();
+            }
+            $stmtPerformanceTasks->close();
+        }
+    
+        // Fetch grading system data: Quarterly Assessment
+        $sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ?";
+        if ($stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment)) {
+            $stmtQuarterlyAssessment->bind_param("s", $subject_code);
+            if ($stmtQuarterlyAssessment->execute()) {
+                $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
+                if ($resultQuarterlyAssessment->num_rows > 0) {
+                    $row = $resultQuarterlyAssessment->fetch_assoc();
+                    $quarterly_assessment = htmlspecialchars($row['quarterly_assessment']);
+                }
+                $resultQuarterlyAssessment->free();
+            }
+            $stmtQuarterlyAssessment->close();
+        }
 } else {
     $_SESSION['error_message'] = "Subject code or name not provided.";
 }
@@ -609,38 +664,60 @@ $conn->close();
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                <!-- Written Task Row -->
+                <tr id="written-task-row">
                     <td><span class="red-text">Written Task</span><br>
                         &nbsp;&nbsp;&nbsp;- Quizzes<br>
                         &nbsp;&nbsp;&nbsp;- Written Task
                     </td>
-                    <td><span class="red-text">30%</span><br>
-                        &nbsp;&nbsp;&nbsp;15%<br>
-                        &nbsp;&nbsp;&nbsp;15%
+                    <td>
+                        <span class="red-text" id="written-task-percent">30%</span><br>
+                        &nbsp;&nbsp;&nbsp;<span id="quizzes-percent">
+                            <?php echo isset($quizzes) && is_numeric($quizzes) ? round($quizzes) . "%" : "0%"; ?>
+                        </span><br>
+                        &nbsp;&nbsp;&nbsp;<span id="written-task-detail">
+                            <?php echo isset($written_task) && is_numeric($written_task) ? round($written_task) . "%" : "0%"; ?>
+                        </span>
                     </td>
                 </tr>
-                <tr>
+
+                <!-- Performance Task Row -->
+                <tr id="performance-task-row">
                     <td><span class="red-text">Performance Tasks</span><br>
                         &nbsp;&nbsp;&nbsp;- Attendance<br>
                         &nbsp;&nbsp;&nbsp;- Behavior<br>
                         &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
                     </td>
-                    <td><span class="red-text">40%</span><br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;30%
+                    <td>
+                        <span class="red-text" id="performance-task-percent">40%</span><br>
+                        &nbsp;&nbsp;&nbsp;<span id="attendance-percent">
+                            <?php echo isset($attendance) && is_numeric($attendance) ? round($attendance) . "%" : "0%"; ?>
+                        </span><br>
+                        &nbsp;&nbsp;&nbsp;<span id="behavior-percent">
+                            <?php echo isset($behavior) && is_numeric($behavior) ? round($behavior) . "%" : "0%"; ?>
+                        </span><br>
+                        &nbsp;&nbsp;&nbsp;<span id="performance-product-percent">
+                            <?php echo isset($performance_product) && is_numeric($performance_product) ? round($performance_product) . "%" : "0%"; ?>
+                        </span>
                     </td>
                 </tr>
-                <tr>
+
+                <!-- Quarterly Assessment Row -->
+                <tr id="quarterly-assessment-row">
                     <td><span class="red-text">Quarterly Assessment</span></td>
-                    <td><span class="red-text">30%</span></td>
+                    <td><span class="red-text" id="quarterly-assessment-percent">
+                            <?php echo isset($quarterly_assessment) && is_numeric($quarterly_assessment) ? round($quarterly_assessment) . "%" : "0%"; ?>
+                        </span></td>
                 </tr>
+
+                <!-- Total Grade Percentage Row -->
                 <tr>
                     <td><strong>TOTAL Grade Percentage</strong></td>
                     <td><strong>100%</strong></td>
                 </tr>
             </tbody>
         </table>
+
 
         <!-- Signature Section -->
         <table id="signatureTable" class="custom-table">
