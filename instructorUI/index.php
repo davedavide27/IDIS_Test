@@ -62,7 +62,7 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IDIS</title>
+    <title>IDIS - Instructor</title>
     <link rel="stylesheet" href="style.css">
     <script src="instructor.js"></script>
     <style>
@@ -227,6 +227,7 @@ $conn->close();
                     <div></div>
                     <div>
                         <nav class="navtab">
+                            <!-- Tabs for different sections -->
                             <button class="tablinks" onclick="openTab(event, 'ILOs')">Plans</button>
                             <button class="tablinks" onclick="openTab(event, 'Competencies')">Competencies</button>
                             <button class="tablinks" onclick="openTab(event, 'Comments')">Comments</button>
@@ -236,6 +237,7 @@ $conn->close();
                 <main>
 
                     <div class="filesContainer">
+                        <!-- Plans Tab -->
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
                             <div id="containerPlan">
@@ -286,28 +288,38 @@ $conn->close();
                                     </form>
                                 </div>
 
+                            </div>
+                        </div>
 
+                        <!-- Competencies Tab -->
+                        <div id="Competencies" class="tabcontent">
+                            <h6><br>Remark check if the competency is implemented.</h6>
+                            <div id="container">
+                                <table class="remarksTable" id="competenciesTable" data-subject-code="">
+                                    <tr>
+                                        <th>Competencies</th>
+                                        <th>Remarks</th>
+                                    </tr>
+                                    <tr id="noCompetencies">
+                                        <td colspan="2">No competencies found for this subject.</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
 
-                                <div id="Competencies" class="tabcontent">
-                                    <h6><br>Remark check if the competency is implemented.</h6>
-                                    <div id="container">
-                                        <table class="remarksTable" id="competenciesTable" data-subject-code="">
-                                            <tr>
-                                                <th>Competencies</th>
-                                                <th>Remarks</th>
-                                            </tr>
-                                            <tr id="noCompetencies">
-                                                <td colspan="2">No competencies found for this subject.</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
+                        <!-- Comments Tab -->
+                        <div id="Comments" class="tabcontent">
+                            <h6><br>Pop up Comments / Suggestions</h6>
+                            <div id="containerComment" data-subject-code="">
+                                <!-- Comments will be dynamically appended here by JavaScript -->
+                            </div>
+                        </div>
 
-                                <div id="Comments" class="tabcontent">
-                                    <h6><br>Pop up Comments / Suggestions</h6>
-                                    <div id="containerComment" data-subject-code="">
-                                        <!-- The comments will be dynamically appended here by JavaScript -->
-                                    </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
