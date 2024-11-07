@@ -241,61 +241,73 @@ $conn->close();
                             <div id="containerPlan">
 
                                 <!-- Syllabus Plan Card -->
-                                <div class="planCard" data-subject-code="">
-                                    <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
-                                        <form action="edit_insert_syllabus.php" method="post" style="display: block; width: 100%; height: 100%;">
+                                <div class="planCard" data-subject-code="" onclick="document.getElementById('syllabusForm').submit();" style="cursor: pointer;">
+                                    <form id="syllabusForm" action="edit_insert_syllabus.php" method="post" style="width: 100%; height: 100%;">
+                                        <button type="submit" style="all: unset; display: block; width: 100%; height: 10%;">
                                             <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
                                             <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
-                                                <p style="text-align: center; margin: 0;">Syllabus</p>
-                                            </button>
-                                        </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
-                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                        </div>
-                                    </a>
+                                            <p style="text-align: center; margin: 0;">Syllabus</p>
+                                            <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
+                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
+                                                <div style="margin-top: 8px;">
+                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - All inputs must be included when submitting a syllabus.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </form>
                                 </div>
 
                                 <!-- Competencies Plan Card -->
-                                <div class="planCard" data-subject-code="">
-                                    <a href="insert_competencies.php">
-                                        <form action="insert_competencies.php" method="post" style="display: block; width: 100%; height: 100%;">
+                                <div class="planCard" data-subject-code="" onclick="document.getElementById('competenciesForm').submit();" style="cursor: pointer;">
+                                    <form id="competenciesForm" action="insert_competencies.php" method="post" style="width: 100%; height: 100%;">
+                                        <button type="submit" style="all: unset; display: block; width: 100%; height: 10%;">
                                             <input type="hidden" name="subject_code" id="selected_subject_code">
                                             <input type="hidden" name="subject_name" id="selected_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
-                                                <p style="text-align: center; margin: 0;">Competencies</p>
-                                            </button>
-                                        </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
-                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                        </div>
-                                    </a>
+                                            <p style="text-align: center; margin: 0;">Competencies</p>
+                                            <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
+                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
+                                                <div style="margin-top: 8px;">
+                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - All inputs must be included when submitting a syllabus.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
+                                                </div>
+                                            </div>
+                                        </button>
+                                    </form>
                                 </div>
 
-                            </div>
-                        </div>
-                    </div>
 
-                    <div id="Competencies" class="tabcontent">
-                        <h6><br>Remark check if the competency is implemented.</h6>
-                        <div id="container">
-                            <table class="remarksTable" id="competenciesTable" data-subject-code="">
-                                <tr>
-                                    <th>Competencies</th>
-                                    <th>Remarks</th>
-                                </tr>
-                                <tr id="noCompetencies">
-                                    <td colspan="2">No competencies found for this subject.</td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
 
-                    <div id="Comments" class="tabcontent">
-                        <h6><br>Pop up Comments / Suggestions</h6>
-                        <div id="containerComment" data-subject-code="">
-                            <!-- The comments will be dynamically appended here by JavaScript -->
-                        </div>
+                                <div id="Competencies" class="tabcontent">
+                                    <h6><br>Remark check if the competency is implemented.</h6>
+                                    <div id="container">
+                                        <table class="remarksTable" id="competenciesTable" data-subject-code="">
+                                            <tr>
+                                                <th>Competencies</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                            <tr id="noCompetencies">
+                                                <td colspan="2">No competencies found for this subject.</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div id="Comments" class="tabcontent">
+                                    <h6><br>Pop up Comments / Suggestions</h6>
+                                    <div id="containerComment" data-subject-code="">
+                                        <!-- The comments will be dynamically appended here by JavaScript -->
+                                    </div>
 </body>
 
 </html>

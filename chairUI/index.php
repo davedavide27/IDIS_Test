@@ -205,118 +205,99 @@ $conn->close();
                         <div id="ILOs" class="tabcontent">
                             <h6><br>Implement</h6>
                             <div id="containerPlan">
+                                <!-- Make the entire card clickable by wrapping the card in the anchor tag -->
+                                <a href="#" id="syllabusLink" style="text-decoration: none; color: inherit;">
+                                    <div class="planCard" id="syllabusCard" style="display: none;">
+                                        <p>Syllabus</p>
+                                    </div>
+                                </a>
 
-                                <!-- Syllabus Plan Card -->
-                                <div class="planCard" data-subject-code="">
-                                    <a href="edit_insert_syllabus.php" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
-                                        <form action="edit_insert_syllabus.php" method="post" style="display: block; width: 100%; height: 100%;">
-                                            <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
-                                            <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
-                                                <p style="text-align: center; margin: 0;">Syllabus</p>
-                                            </button>
-                                        </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
-                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                        </div>
-                                    </a>
-                                </div>
-
-                                <!-- Competencies Plan Card -->
-                                <div class="planCard" data-subject-code="">
-                                    <a href="insert_competencies.php">
-                                        <form action="insert_competencies.php" method="post" style="display: block; width: 100%; height: 100%;">
-                                            <input type="hidden" name="subject_code" id="selected_subject_code">
-                                            <input type="hidden" name="subject_name" id="selected_subject_name">
-                                            <button type="submit" style="all: unset; cursor: pointer; display: block; width: 100%;">
-                                                <p style="text-align: center; margin: 0;">Competencies</p>
-                                            </button>
-                                        </form>
-                                        <div style="text-align: center; font-size: 16px; color: #555; margin-top: -250px;">
-                                            <strong>Note:</strong> To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                        </div>
-                                    </a>
-                                </div>
-
-
+                                <a href="competencies.php" id="competenciesLink" style="text-decoration: none; color: inherit;">
+                                    <div class="planCard" id="competenciesCard" style="display: none;">
+                                        <p>Competencies</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
+                </main>
+            </div>
+        </div>
+    </div>
+    <script>
+        // JavaScript to control card visibility and linking logic
+        document.addEventListener("DOMContentLoaded", function() {
+            const syllabusCard = document.getElementById("syllabusCard");
+            const competenciesCard = document.getElementById("competenciesCard");
+            const syllabusLink = document.getElementById("syllabusLink");
 
-                    <script>
-                        // JavaScript to control card visibility and linking logic
-                        document.addEventListener("DOMContentLoaded", function() {
-                            const syllabusCard = document.getElementById("syllabusCard");
-                            const competenciesCard = document.getElementById("competenciesCard");
-                            const syllabusLink = document.getElementById("syllabusLink");
+            // Set the href for syllabusLink dynamically if needed
+            syllabusLink.href = "print_syllabus.php";
 
-                            // Set the href for syllabusLink dynamically if needed
-                            syllabusLink.href = "print_syllabus.php";
+            // Make cards visible
+            syllabusCard.style.display = "block";
+            competenciesCard.style.display = "block";
+        });
+    </script>
 
-                            // Make cards visible
-                            syllabusCard.style.display = "block";
-                            competenciesCard.style.display = "block";
+
+    <script>
+        // Function to fetch subjects based on selected instructor
+        function fetchSubjects(instructorId) {
+            if (!instructorId) {
+                document.getElementById('subjectsList').innerHTML = '<p>Please select an instructor.</p>';
+                return;
+            }
+
+            fetch('fetch_subjects.php?instructor_id=' + instructorId)
+                .then(response => response.json())
+                .then(data => {
+                    let subjectsList = document.getElementById('subjectsList');
+                    subjectsList.innerHTML = ''; // Clear previous subjects
+
+                    if (data.error) {
+                        // Display the error message if there's an error
+                        subjectsList.innerHTML = `<p>${data.error}</p>`;
+                    } else if (data.length > 0) {
+                        // Loop through the subjects and display them as buttons
+                        data.forEach(subject => {
+                            let button = document.createElement('button');
+                            button.textContent = subject.subject_name;
+                            button.className = "subjectButton"; // Adding a common class to dynamically created buttons
+                            button.onclick = function() {
+                                selectSubject(subject.subject_code, subject.subject_name, button);
+                            };
+                            subjectsList.appendChild(button);
                         });
-                    </script>
+                    } else {
+                        subjectsList.innerHTML = '<p>No PENDING subjects assigned to this instructor.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching subjects:', error);
+                    document.getElementById('subjectsList').innerHTML = '<p>Error fetching subjects.</p>';
+                });
+        }
 
+        // Function to highlight selected subject and show plan cards
+        function selectSubject(subjectCode, subjectName, buttonElement) {
+            // Clear the selection from all subject buttons inside subjectsList
+            document.querySelectorAll('#subjectsList .subjectButton').forEach(function(button) {
+                button.classList.remove('selected-subject'); // Remove the class from previously selected buttons
+            });
 
-                    <script>
-                        // Function to fetch subjects based on selected instructor
-                        function fetchSubjects(instructorId) {
-                            if (!instructorId) {
-                                document.getElementById('subjectsList').innerHTML = '<p>Please select an instructor.</p>';
-                                return;
-                            }
+            // Add the selection to the clicked subject button
+            buttonElement.classList.add('selected-subject');
 
-                            fetch('fetch_subjects.php?instructor_id=' + instructorId)
-                                .then(response => response.json())
-                                .then(data => {
-                                    let subjectsList = document.getElementById('subjectsList');
-                                    subjectsList.innerHTML = ''; // Clear previous subjects
+            // Show the Syllabus and Competencies plan cards
+            document.getElementById('syllabusCard').style.display = 'block';
+            document.getElementById('competenciesCard').style.display = 'block';
 
-                                    if (data.error) {
-                                        // Display the error message if there's an error
-                                        subjectsList.innerHTML = `<p>${data.error}</p>`;
-                                    } else if (data.length > 0) {
-                                        // Loop through the subjects and display them as buttons
-                                        data.forEach(subject => {
-                                            let button = document.createElement('button');
-                                            button.textContent = subject.subject_name;
-                                            button.className = "subjectButton"; // Adding a common class to dynamically created buttons
-                                            button.onclick = function() {
-                                                selectSubject(subject.subject_code, subject.subject_name, button);
-                                            };
-                                            subjectsList.appendChild(button);
-                                        });
-                                    } else {
-                                        subjectsList.innerHTML = '<p>No PENDING subjects assigned to this instructor.</p>';
-                                    }
-                                })
-                                .catch(error => {
-                                    console.error('Error fetching subjects:', error);
-                                    document.getElementById('subjectsList').innerHTML = '<p>Error fetching subjects.</p>';
-                                });
-                        }
-
-                        // Function to highlight selected subject and show plan cards
-                        function selectSubject(subjectCode, subjectName, buttonElement) {
-                            // Clear the selection from all subject buttons inside subjectsList
-                            document.querySelectorAll('#subjectsList .subjectButton').forEach(function(button) {
-                                button.classList.remove('selected-subject'); // Remove the class from previously selected buttons
-                            });
-
-                            // Add the selection to the clicked subject button
-                            buttonElement.classList.add('selected-subject');
-
-                            // Show the Syllabus and Competencies plan cards
-                            document.getElementById('syllabusCard').style.display = 'block';
-                            document.getElementById('competenciesCard').style.display = 'block';
-
-                            // Set the subject code and name dynamically in the Competencies and Syllabus links
-                            document.getElementById('competenciesLink').href = `competencies.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
-                            document.getElementById('syllabusLink').href = `print_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
-                        }
-                    </script>
+            // Set the subject code and name dynamically in the Competencies and Syllabus links
+            document.getElementById('competenciesLink').href = `competencies.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+            document.getElementById('syllabusLink').href = `print_syllabus.php?subject_code=${subjectCode}&subject_name=${subjectName}`;
+        }
+    </script>
 
 </body>
 
