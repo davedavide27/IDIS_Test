@@ -500,6 +500,51 @@ $conn->close();
         .prepared-signiture p {
             width: 250px;
         }
+
+
+        /*input box sa names and signature*/
+        .custom-table .info-cell input {
+            text-align: center;
+            font-size: 14px;
+            width: 50%;
+            margin-bottom: -30px;
+            height: 12px;
+            font-weight: 600;
+        }
+
+        .custom-table .info-cell p {
+            margin: 5px;
+        }
+
+        .custom-table .info-cell-approved input {
+            text-align: center;
+            font-size: 14px;
+            width: 50%;
+            margin-bottom: -30px;
+            height: 12px;
+            font-weight: 600;
+        }
+
+        .custom-table .info-cell-approved p {
+            margin: 5px;
+        }
+
+        .info-cell span {
+            padding-right: 430px;
+        }
+
+        .info-cell-approved span {
+            padding-right: 295px;
+        }
+
+        .signature-cell input {
+            text-align: center;
+            font-size: 14px;
+            width: 70%;
+            margin-bottom: 1px;
+            height: 12px;
+            font-weight: 600;
+        }
     </style>
     <script>
         // Auto resize textarea
@@ -626,6 +671,14 @@ $conn->close();
             opacity: 0.6;
             /* Dimmed appearance */
             cursor: not-allowed;
+        }
+
+        .custom-table .signature-cell {
+            text-align: center;
+            vertical-align: bottom;
+            padding-top: 10px;
+            font-size: 12px;
+            width: 20%;
         }
     </style>
 
@@ -1437,36 +1490,42 @@ $conn->close();
                     <tr>
                         <td class="info-cell">
                             <span class="red-text">Prepared by:</span><br>
-                            <strong>DAISA O. GUPIT, MIT</strong><br>
-                            Subject Teacher
+                            _____________________<br>
+                            <input type="text" required></p>
+                            <p>Subject Teacher</p>
                         </td>
-                        <td class="signature-cell">_____________<br>Date</td>
+                        <td class="signature-cell"><input type="text" required><br>Date</td>
                     </tr>
                     <tr>
                         <td class="info-cell">
                             <span class="red-text">Resources Checked & Verified by:</span><br>
-                            <strong>CONTISZA C. ABADIEZ, RL</strong><br>
-                            College Librarian
+                            ______________________<br>
+                            <input type="text" required></p>
+                            <p>College Librarian</p>
                         </td>
-                        <td class="signature-cell">_____________<br>Date</td>
+                        <td class="signature-cell"><input type="text" required><br>Date</td>
                     </tr>
                     <tr>
                         <td class="info-cell">
                             <span class="red-text">Reviewed by:</span><br>
-                            <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
-                            BSIT Program Chair<br>
-                            <strong>DAISA O. GUPIT, MIT</strong><br>
-                            Dean
+                            ______________________<br>
+                            <input type="text" required></p>
+                            <p>BSIT Program Chair</p><br>
+                            ______________________<br>
+                            <input type="text" required></p>
+                            <p>Dean</p>
+
                         </td>
-                        <td class="signature-cell">_____________<br>Date</td>
+                        <td class="signature-cell"><input type="text" required><br>Date</td>
                     </tr>
                     <tr>
                         <td colspan="2" class="info-cell-approved">
                             <span class="red-text">Approved by:</span><br>
-                            <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
-                            Vice President for Academic Affairs and Research
+                            ______________________<br>
+                            <input type="text" required>
+                            <p>Vice President for Academic Affairs and Research</p>
                         </td>
-                        <td class="signature-cell">_____________<br>Date</td>
+                        <td class="signature-cell"><input type="text" required><br>Date</td>
                     </tr>
                 </tbody>
             </table>
@@ -1476,7 +1535,7 @@ $conn->close();
 
 
 
-            
+
             <!-- Submit Button -->
             <button class="submit-button" type="submit" name="save_syllabus"
                 <?php echo ($status === 'APPROVED') ? 'disabled' : ''; ?>>

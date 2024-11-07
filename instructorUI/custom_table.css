@@ -24,7 +24,7 @@
 }
 
 .red-text {
-    color: red;
+    color: red; 
 }
 
 .custom-table img {
@@ -63,7 +63,7 @@
 .custom-table .signature-cell {
     text-align: center;
     vertical-align: bottom;
-    padding-top: 40px;
+    padding-top: 10px;
     font-size: 12px;
 }
 
