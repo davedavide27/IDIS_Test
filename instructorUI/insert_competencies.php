@@ -43,6 +43,7 @@ $percentage_competencies_implemented = "";
 $prepared_by = "";
 $checked_by = "";
 $noted_by = "";
+$status = "";
 
 // Fetch existing competencies for the subject
 if (isset($_POST['subject_code'])) {
@@ -77,6 +78,7 @@ if (isset($_POST['subject_code'])) {
             $prepared_by = $row['prepared_by'];
             $checked_by = $row['checked_by'];
             $noted_by = $row['noted_by'];
+            $status = $row['status'];
         }
     } else {
         // No existing data, setting to create new competency mode
@@ -284,44 +286,138 @@ $conn->close();
                 font-weight: bold;
             }
         }
+
         /* Base button styles */
-/* Base button styles */
-.print-button, .back-button {
-    background-color: #007BFF; /* Primary color */
-    color: white; /* Text color */
-    border: none; /* Remove default border */
-    padding: 10px 20px; /* Add some padding */
-    font-size: 16px; /* Font size */
-    border-radius: 5px; /* Rounded corners */
-    cursor: pointer; /* Pointer cursor on hover */
-    transition: all 0.3s ease; /* Smooth transition for all properties */
-}
+        /* Base button styles */
+        .print-button,
+        .back-button {
+            background-color: #007BFF;
+            /* Primary color */
+            color: white;
+            /* Text color */
+            border: none;
+            /* Remove default border */
+            padding: 10px 20px;
+            /* Add some padding */
+            font-size: 16px;
+            /* Font size */
+            border-radius: 5px;
+            /* Rounded corners */
+            cursor: pointer;
+            /* Pointer cursor on hover */
+            transition: all 0.3s ease;
+            /* Smooth transition for all properties */
+        }
 
-/* Hover effect */
-.print-button:hover, .back-button:hover {
-    background-color: #0056b3; /* Darker shade on hover */
-    transform: scale(1.05); /* Slightly scale up */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow */
-}
+        /* Hover effect */
+        .print-button:hover,
+        .back-button:hover {
+            background-color: #0056b3;
+            /* Darker shade on hover */
+            transform: scale(1.05);
+            /* Slightly scale up */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            /* Add shadow */
+        }
 
-/* Specific styles for print-button */
-.print-button {
-    background-color: #28a745; /* Green for Save Edits */
-}
+        /* Specific styles for print-button */
+        .print-button {
+            background-color: #28a745;
+            /* Green for Save Edits */
+        }
 
-.print-button:hover {
-    background-color: #218838; /* Darker green on hover */
-}
+        .print-button:hover {
+            background-color: #218838;
+            /* Darker green on hover */
+        }
 
-/* Specific styles for back-button */
-.back-button {
-    background-color: #dc3545; /* Red for Back */
-}
+        /* Specific styles for back-button */
+        .back-button {
+            background-color: #dc3545;
+            /* Red for Back */
+        }
 
-.back-button:hover {
-    background-color: #c82333; /* Darker red on hover */
-}
+        .back-button:hover {
+            background-color: #c82333;
+            /* Darker red on hover */
+        }
 
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            gap: 10px;
+            /* Adds space between items */
+        }
+
+        .status-button-like {
+            padding: 8px 15px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            cursor: default;
+            /* Disables the pointer cursor */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            background-color: #ccc;
+            /* Default color if no status */
+            letter-spacing: 1px;
+            /* Adds spacing between letters */
+        }
+
+        /* Different colors based on status */
+        .status-button-like.denied {
+            background-color: #f1c40f;
+            /* Yellow for pending */
+        }
+
+        .status-button-like.approved {
+            background-color: #2ecc71;
+            /* Green for approved */
+        }
+
+        .status-button-like.pending {
+            background-color: #e74c3c;
+            /* Red for denied */
+        }
+
+        /* Styling for status text to complement the button-like appearance */
+        .status-text {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-left: 5px;
+            /* Adjusts spacing next to the button */
+        }
+
+        .status-text.pending {
+            color: #f1c40f;
+        }
+
+        .status-text.approved {
+            color: #2ecc71;
+        }
+
+        .status-text.denied {
+            color: #e74c3c;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            /* Dimmed appearance */
+            cursor: not-allowed;
+        }
+
+        .print-button:disabled {
+            opacity: 0.6;
+            /* Dimmed appearance */
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -344,9 +440,17 @@ $conn->close();
 
         <table class="info-table">
             <tr>
+                <td class="status-container"><b>Status: </b>
+                    <span class="status-button-like <?php echo strtolower($status); ?>">
+                        <?php echo htmlspecialchars($status); ?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
                 <td>I. Subject code</td>
                 <td>: <input type="text" name="subject_code_display" value="<?php echo htmlspecialchars($subject_code); ?>" readonly></td>
             </tr>
+
             <tr>
                 <td>II. Subject title</td>
                 <td>: <input type="text" name="subject_name_display" value="<?php echo htmlspecialchars($subject_name); ?>" style="width: 300pt;" readonly></td>
@@ -370,31 +474,31 @@ $conn->close();
             <tr>
             <tr>
                 <td>VI. School year</td>
-                <td class="school-year-section" >: <input type="number" name="school_year_start" value="<?php echo htmlspecialchars($school_year_start); ?>" required> - <input type="number" name="school_year_end" value="<?php echo htmlspecialchars($school_year_end); ?>" required></td>
+                <td class="school-year-section">: <input type="number" name="school_year_start" value="<?php echo htmlspecialchars($school_year_start); ?>" required> - <input type="number" name="school_year_end" value="<?php echo htmlspecialchars($school_year_end); ?>" required></td>
             </tr>
             <tr>
             <tr>
-    <td>VII. Grading period/quarter</td>
-    <td>:
-        <select name="grading_period" class="grading-period-select" required>
-            <option value="1st SEMESTER" <?php echo $grading_period === '1st SEMESTER' ? 'selected' : ''; ?>>1st SEMESTER</option>
-            <option value="2nd SEMESTER" <?php echo $grading_period === '2nd SEMESTER' ? 'selected' : ''; ?>>2nd SEMESTER</option>
-        </select>
-        <select name="grading_quarter_start" class="grading-quarter-select" required>
-            <option value="PRELIM" <?php echo $grading_quarter_start === 'PRELIM' ? 'selected' : ''; ?>>PRELIM</option>
-            <option value="MIDTERM" <?php echo $grading_quarter_start === 'MIDTERM' ? 'selected' : ''; ?>>MIDTERM</option>
-            <option value="SEMI-FINAL" <?php echo $grading_quarter_start === 'SEMI-FINAL' ? 'selected' : ''; ?>>SEMI-FINAL</option>
-            <option value="FINAL" <?php echo $grading_quarter_start === 'FINAL' ? 'selected' : ''; ?>>FINAL</option>
-        </select>
-        -
-        <select name="grading_quarter_end" class="grading-quarter-select" required>
-            <option value="PRELIM" <?php echo $grading_quarter_end === 'PRELIM' ? 'selected' : ''; ?>>PRELIM</option>
-            <option value="MIDTERM" <?php echo $grading_quarter_end === 'MIDTERM' ? 'selected' : ''; ?>>MIDTERM</option>
-            <option value="SEMI-FINAL" <?php echo $grading_quarter_end === 'SEMI-FINAL' ? 'selected' : ''; ?>>SEMI-FINAL</option>
-            <option value="FINAL" <?php echo $grading_quarter_end === 'FINAL' ? 'selected' : ''; ?>>FINAL</option>
-        </select>
-    </td>
-</tr>
+                <td>VII. Grading period/quarter</td>
+                <td>:
+                    <select name="grading_period" class="grading-period-select" required>
+                        <option value="1st SEMESTER" <?php echo $grading_period === '1st SEMESTER' ? 'selected' : ''; ?>>1st SEMESTER</option>
+                        <option value="2nd SEMESTER" <?php echo $grading_period === '2nd SEMESTER' ? 'selected' : ''; ?>>2nd SEMESTER</option>
+                    </select>
+                    <select name="grading_quarter_start" class="grading-quarter-select" required>
+                        <option value="PRELIM" <?php echo $grading_quarter_start === 'PRELIM' ? 'selected' : ''; ?>>PRELIM</option>
+                        <option value="MIDTERM" <?php echo $grading_quarter_start === 'MIDTERM' ? 'selected' : ''; ?>>MIDTERM</option>
+                        <option value="SEMI-FINAL" <?php echo $grading_quarter_start === 'SEMI-FINAL' ? 'selected' : ''; ?>>SEMI-FINAL</option>
+                        <option value="FINAL" <?php echo $grading_quarter_start === 'FINAL' ? 'selected' : ''; ?>>FINAL</option>
+                    </select>
+                    -
+                    <select name="grading_quarter_end" class="grading-quarter-select" required>
+                        <option value="PRELIM" <?php echo $grading_quarter_end === 'PRELIM' ? 'selected' : ''; ?>>PRELIM</option>
+                        <option value="MIDTERM" <?php echo $grading_quarter_end === 'MIDTERM' ? 'selected' : ''; ?>>MIDTERM</option>
+                        <option value="SEMI-FINAL" <?php echo $grading_quarter_end === 'SEMI-FINAL' ? 'selected' : ''; ?>>SEMI-FINAL</option>
+                        <option value="FINAL" <?php echo $grading_quarter_end === 'FINAL' ? 'selected' : ''; ?>>FINAL</option>
+                    </select>
+                </td>
+            </tr>
 
         </table>
 
@@ -435,42 +539,42 @@ $conn->close();
         </table>
 
         <button type="button" class="add-competency-btn no-print" onclick="addCompetency()">Add Competency</button>
-<div>
-<h4>
+        <div>
+            <h4>
                 IX.
-</h4>
-</div>
+            </h4>
+        </div>
 
-<ul class="competency-list">
-    <li class="competency-item">
-        A. Total number of Competencies DepEd/TESDA/CHED:
-        <input type="number" class="competency-input" name="total_competencies_deped_tesda_ched" value="<?php echo htmlspecialchars($total_competencies_deped_tesda_ched); ?>" required>
-    </li>
-    <li class="competency-item">
-        B. Total Number of Competencies SMCC based on DepEd/TESDA/CHED:
-        <input type="number" class="competency-input" name="total_competencies_smcc" value="<?php echo htmlspecialchars($total_competencies_smcc); ?>" required>
-    </li>
-    <li class="competency-item">
-        C. Total Number of Institutional Competencies:
-        <input type="number" class="competency-input" name="total_institutional_competencies" value="<?php echo htmlspecialchars($total_institutional_competencies); ?>" required>
-    </li>
-    <li class="competency-item">
-        D. Total Number of B and C:
-        <input type="number" class="competency-input" name="total_competencies_b_and_c" value="<?php echo htmlspecialchars($total_competencies_b_and_c); ?>" required>
-    </li>
-    <li class="competency-item">
-        E. Total Number of Competencies Implemented:
-        <input type="number" class="competency-input" name="total_competencies_implemented" value="<?php echo htmlspecialchars($total_competencies_implemented); ?>" required>
-    </li>
-    <li class="competency-item">
-        F. Total Number of Competencies NOT Implemented:
-        <input type="number" class="competency-input" name="total_competencies_not_implemented" value="<?php echo htmlspecialchars($total_competencies_not_implemented); ?>" required>
-    </li>
-    <li class="competency-item">
-        G. % Number of Competencies Implemented:
-        <input type="number" class="competency-input" name="percentage_competencies_implemented" value="<?php echo htmlspecialchars($percentage_competencies_implemented); ?>" required>
-    </li>
-</ul>
+        <ul class="competency-list">
+            <li class="competency-item">
+                A. Total number of Competencies DepEd/TESDA/CHED:
+                <input type="number" class="competency-input" name="total_competencies_deped_tesda_ched" value="<?php echo htmlspecialchars($total_competencies_deped_tesda_ched); ?>" required>
+            </li>
+            <li class="competency-item">
+                B. Total Number of Competencies SMCC based on DepEd/TESDA/CHED:
+                <input type="number" class="competency-input" name="total_competencies_smcc" value="<?php echo htmlspecialchars($total_competencies_smcc); ?>" required>
+            </li>
+            <li class="competency-item">
+                C. Total Number of Institutional Competencies:
+                <input type="number" class="competency-input" name="total_institutional_competencies" value="<?php echo htmlspecialchars($total_institutional_competencies); ?>" required>
+            </li>
+            <li class="competency-item">
+                D. Total Number of B and C:
+                <input type="number" class="competency-input" name="total_competencies_b_and_c" value="<?php echo htmlspecialchars($total_competencies_b_and_c); ?>" required>
+            </li>
+            <li class="competency-item">
+                E. Total Number of Competencies Implemented:
+                <input type="number" class="competency-input" name="total_competencies_implemented" value="<?php echo htmlspecialchars($total_competencies_implemented); ?>" required>
+            </li>
+            <li class="competency-item">
+                F. Total Number of Competencies NOT Implemented:
+                <input type="number" class="competency-input" name="total_competencies_not_implemented" value="<?php echo htmlspecialchars($total_competencies_not_implemented); ?>" required>
+            </li>
+            <li class="competency-item">
+                G. % Number of Competencies Implemented:
+                <input type="number" class="competency-input" name="percentage_competencies_implemented" value="<?php echo htmlspecialchars($percentage_competencies_implemented); ?>" required>
+            </li>
+        </ul>
 
         <div class="signatures">
             <p class="signature-label">Prepared by: <input type="text" style="text-align:center" name="prepared_by" value="<?php echo htmlspecialchars($prepared_by); ?>" style="width: 100%;" required></p>
@@ -478,7 +582,10 @@ $conn->close();
             <p class="signature-label">Noted by: <input type="text" style="text-align:center" name="noted_by" value="<?php echo htmlspecialchars($noted_by); ?>" style="width: 100%;" required></p>
         </div>
 
-        <button class="print-button no-print" type="submit"><?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?></button>
+        <button class="print-button no-print" type="submit"
+            <?php echo ($status === 'PENDING') ? 'disabled' : ''; ?>>
+            <?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?>
+        </button>
         <button class="back-button no-print" type="button" onclick="window.location.href='index.php'">Back</button>
 
     </form>

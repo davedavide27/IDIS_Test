@@ -53,7 +53,17 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
             $status = htmlspecialchars($row['status']);  // Get the syllabus status
         } else {
-            echo '<script>alert("No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
+            // If no record exists, we set the status to PENDING and insert it
+            $status = "PENDING";
+            // Insert a new record with the default status if it doesn't exist
+            $sqlInsertSyllabus = "INSERT INTO syllabus (subject_code, subject_name, status) VALUES (?, ?, ?)";
+            if ($stmtInsertSyllabus = $conn->prepare($sqlInsertSyllabus)) {
+                $stmtInsertSyllabus->bind_param("sss", $subject_code, $subject_name, $status);
+                $stmtInsertSyllabus->execute();
+                $stmtInsertSyllabus->close();
+            } else {
+                echo "Error inserting syllabus record: " . $conn->error;
+            }
         }
         $stmt->close();
     } else {
@@ -145,7 +155,7 @@ if (isset($_POST['approve'])) {
 
     // Update the status in the related tables (cilo_gilo_map, pilo_gilo_map, context)
     $sqlUpdateCiloGilo = "UPDATE cilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
-    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?"; 
+    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
     $sqlUpdateContext = "UPDATE context SET status = 'APPROVED' WHERE subject_code = ?";
 
     // Prepare and execute the queries
@@ -179,10 +189,28 @@ if (isset($_POST['approve'])) {
     $stmtUpdateContext->close();
 }
 
+// Handle "Deny" button click
+if (isset($_POST['deny'])) {
+    // Update the status to "DENIED" in the syllabus table
+    $sqlUpdateSyllabus = "UPDATE syllabus SET status = 'DENIED' WHERE subject_code = ?";
+    $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
+    $stmtUpdateSyllabus->bind_param("s", $subject_code);
+    
+    // Execute the query
+    if ($stmtUpdateSyllabus->execute()) {
+        echo "<script>alert('Subject code $subject_code has been denied');</script>";
+        // Refresh the page to reflect the updated status
+        echo "<script>window.location.href = '?subject_code=$subject_code&subject_name=$subject_name';</script>";
+    } else {
+        echo "Error updating status: " . $stmtUpdateSyllabus->error;
+    }
+
+    // Close the prepared statement
+    $stmtUpdateSyllabus->close();
+}
+
 $conn->close();
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -311,21 +339,55 @@ $conn->close();
 
         /* Status Button Styling */
         .status-button {
-            padding: 5px;
-            font-size: 12px;
+            padding: 8px 16px;
+            /* Increase padding for better button size */
+            font-size: 14px;
+            /* Slightly larger font size for readability */
             color: white;
+            /* Text color */
             border: none;
+            /* Remove border */
+            border-radius: 5px;
+            /* Rounded corners for the button */
             cursor: default;
+            /* Cursor stays as default */
+            font-weight: bold;
+            /* Bold text for emphasis */
+            text-transform: uppercase;
+            /* Uppercase text for consistency */
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            /* Smooth transitions */
         }
 
         /* Status color indicators */
         .status-button.pending {
             background-color: red;
+            /* Red for PENDING */
         }
 
         .status-button.approved {
             background-color: green;
+            /* Green for APPROVED */
         }
+
+        .status-button.denied {
+            background-color: yellow;
+            /* Yellow for DENIED */
+            color: black;
+            /* Black text for contrast on yellow */
+        }
+
+        /* Button hover effects */
+        .status-button:hover {
+            transform: scale(1.05);
+            /* Slightly enlarge the button on hover */
+        }
+
+        /* Remove outline on button focus */
+        .status-button:focus {
+            outline: none;
+        }
+
 
         /* Button container to align the buttons side by side */
         .button-container {
@@ -354,7 +416,7 @@ $conn->close();
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             height: 0%;
         }
-    
+
         .back-button:hover {
             background-color: #c82333;
             transform: translateY(-2px);
@@ -392,6 +454,34 @@ $conn->close();
             transform: translateY(1px);
         }
 
+        /* Same deny button styling */
+        .deny-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ffc107;
+            /* Yellow background */
+            color: black;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .deny-button:hover {
+            background-color: #e0a800;
+            /* Darker yellow */
+            transform: translateY(-2px);
+        }
+
+        .deny-button:active {
+            background-color: #c69500;
+            /* Even darker yellow */
+            transform: translateY(1px);
+        }
 
         /* Context Table Specific Styling */
         .context-styled-table {
@@ -483,10 +573,14 @@ $conn->close();
 
         <!-- Display Course Information -->
         <ul>
-            <li class="status-container"><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
+            <li class="status-container"><b>Status</b>
+                <button class="status-button <?php echo strtolower($status); ?>">
                     <?php echo htmlspecialchars($status); ?>
-                </button></li>
+                </button>
+            </li>
         </ul>
+
+
 
         <!-- Vision, Mission, Goal, Objectives, Michaelinian Identity -->
         <h3>I. School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
@@ -793,18 +887,27 @@ $conn->close();
         </table>
 
 
-        <!-- Print Button -->
-        <!-- Approve button (only show if status is PENDING) -->
+        <!-- Button Container -->
         <div class="button-container">
-            <?php if ($status === 'PENDING'): ?>
+            <!-- Approve Syllabus Button (only show if status is PENDING) -->
+ 
                 <form method="post" onsubmit="return confirmApprove()">
                     <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
                 </form>
-            <?php endif; ?>
 
+
+            <!-- Deny Syllabus Button (only show if status is PENDING) -->
+
+                <form method="post" onsubmit="return confirmDeny()">
+                    <button class="deny-button" type="submit" name="deny">Deny Syllabus</button>
+                </form>
+
+
+            <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
         </div>
 
+        <!-- Footer -->
         <div class="divFooter">
             <img src="../footer.png" alt="Membership Logos" class="member-logos">
         </div>
@@ -820,6 +923,10 @@ $conn->close();
 
         function confirmApprove() {
             return confirm('Approve Syllabus?');
+        }
+
+        function confirmDeny() {
+            return confirm('Deny Syllabus?');
         }
     </script>
 

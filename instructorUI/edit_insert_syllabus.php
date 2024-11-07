@@ -29,6 +29,7 @@ $course_description = "";
 $prerequisites_corequisites = "";
 $contact_hours = "";
 $performance_tasks = "";
+$status = ""; // Add status initialization
 
 // Fetch subject code and name from POST data
 if (isset($_POST['syllabus_subject_code']) && isset($_POST['syllabus_subject_name'])) {
@@ -53,12 +54,14 @@ if (!empty($subject_code)) {
                 $prerequisites_corequisites = htmlspecialchars($row['prerequisites_corequisites']);
                 $contact_hours = htmlspecialchars($row['contact_hours']);
                 $performance_tasks = htmlspecialchars($row['performance_tasks']);
+                $status = htmlspecialchars($row['status']); // Add this line to fetch the status
             }
             $result->free();
         }
         $stmt->close();
     }
 }
+
 
 // Initialize grading data
 $written_task = "";
@@ -553,6 +556,79 @@ $conn->close();
     <?php
     }
     ?>
+    <style>
+        .status-container {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+            gap: 10px;
+            /* Adds space between items */
+        }
+
+        .status-button-like {
+            padding: 8px 15px;
+            font-weight: bold;
+            color: #fff;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            cursor: default;
+            /* Disables the pointer cursor */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+            background-color: #ccc;
+            /* Default color if no status */
+            letter-spacing: 1px;
+            /* Adds spacing between letters */
+        }
+
+        /* Different colors based on status */
+        .status-button-like.denied {
+            background-color: #f1c40f;
+            /* Yellow for pending */
+        }
+
+        .status-button-like.approved {
+            background-color: #2ecc71;
+            /* Green for approved */
+        }
+
+        .status-button-like.pending {
+            background-color: #e74c3c;
+            /* Red for denied */
+        }
+
+        /* Styling for status text to complement the button-like appearance */
+        .status-text {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-left: 5px;
+            /* Adjusts spacing next to the button */
+        }
+
+        .status-text.pending {
+            color: #f1c40f;
+        }
+
+        .status-text.approved {
+            color: #2ecc71;
+        }
+
+        .status-text.denied {
+            color: #e74c3c;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.6;
+            /* Dimmed appearance */
+            cursor: not-allowed;
+        }
+    </style>
+
 
 
     <!-- Main Content Section -->
@@ -609,8 +685,18 @@ $conn->close();
             <input type="hidden" name="subject_code" value="<?php echo htmlspecialchars($subject_code); ?>">
             <input type="hidden" name="subject_name" value="<?php echo htmlspecialchars($subject_name); ?>">
 
+
+
             <!-- Read-Only Vision, Mission Section -->
             <h3>I. School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
+            <ul>
+                <li class="status-container"><b>Status: </b>
+                    <span class="status-button-like <?php echo strtolower($status); ?>">
+                        <?php echo htmlspecialchars($status); ?>
+                    </span>
+                </li>
+            </ul>
+
 
             <h4>Vision</h4>
             <p>Saint Michael College of Caraga envisions to a university by 2035 and upholds spiritual formation and excellence in teaching, service, and, research.</p>
@@ -1391,7 +1477,11 @@ $conn->close();
                 <p>Prepared by: <input type="text" name="prepared_by" value="" required></p>
             </div>
             <!-- Submit Button -->
-            <button class="submit-button" type="submit" name="save_syllabus">Submit Syllabus</button>
+            <button class="submit-button" type="submit" name="save_syllabus"
+                <?php echo ($status === 'DENIED') ? 'disabled' : ''; ?>>
+                Submit Syllabus
+            </button>
+
 
             <!-- Back Button -->
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>

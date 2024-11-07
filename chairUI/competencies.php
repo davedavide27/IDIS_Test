@@ -91,8 +91,28 @@ if (isset($_POST['approve'])) {
     $stmtUpdate->close();
 }
 
+// Handle "Deny" button click
+if (isset($_POST['deny'])) {
+    // Update the status to "DENIED"
+    $sqlUpdateStatus = "UPDATE competencies SET status = 'DENIED' WHERE subject_code = ?";
+    $stmtUpdate = $conn->prepare($sqlUpdateStatus);
+    $stmtUpdate->bind_param("s", $subjectCode);
+
+    if ($stmtUpdate->execute()) {
+        // Trigger JavaScript alert after successful denial
+        echo "<script>alert('Subject code $subjectCode is denied');</script>";
+        // Refresh the page to reflect the updated status
+        echo "<script>window.location.href = '?subject_code=$subjectCode&subject_name=$subjectName';</script>";
+    } else {
+        echo "Error updating status: " . $stmtUpdate->error;
+    }
+
+    $stmtUpdate->close();
+}
+
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -121,7 +141,7 @@ $conn->close();
             color: white;
             border: none;
             cursor: default;
-            
+
         }
 
         /* Red for PENDING */
@@ -145,14 +165,41 @@ $conn->close();
             cursor: pointer;
             text-align: left;
             /* Changed to text-align */
-            margin-bottom: 13px; /* Adds spacing above the button */
-            
+            margin-bottom: 13px;
+            /* Adds spacing above the button */
+
         }
 
         .approve-button:hover {
             background-color: #1B3F6F;
-            transition: background-color 0.3s ease; /* Smooth color transition */
+            transition: background-color 0.3s ease;
+            /* Smooth color transition */
         }
+
+        /* Style for the button container to align buttons side by side */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            /* Adds space between the buttons */
+        }
+
+        /* Style for the deny button */
+        .deny-button {
+            padding: 5px;
+            background-color: #e74c3c;
+            /* Red color for deny */
+            color: white;
+            border: none;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .deny-button:hover {
+            background-color: #c0392b;
+            transition: background-color 0.3s ease;
+        }
+
+
 
 
         .no-print {
@@ -212,56 +259,64 @@ $conn->close();
 
             <table class="header-info">
                 <div>
-                <tr>
-                    <th class="status-container">Action</th>
-                    <td> <?php if ($status === 'PENDING'): ?>
-                            <form method="post" class="status-container" onsubmit="return confirmApprove()">
-                                <button class="approve-button" type="submit" name="approve">Approve Competency</button>
-                            </form>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-                </div>
-                
-                <tr>
-                    <th class="status-container">Status</th>
-                    <td> <button class="status-button <?php echo strtolower($status); ?>">
-                            <?php echo htmlspecialchars($status); ?>
-                        </button></td>
-                </tr>
+                    <tr>
+                        <th class="status-container">Action</th>
+                        <td>
+                            <?php if ($status === 'PENDING'): ?>
+                                <div class="button-container">
+                                    <form method="post" class="status-container" onsubmit="return confirmApprove()">
+                                        <button class="approve-button" type="submit" name="approve">Approve Competency</button>
+                                    </form>
+                                    <form method="post" class="status-container" onsubmit="return confirmDeny()">
+                                        <button class="deny-button" type="submit" name="deny">Deny Competency</button>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
 
-                <tr>
-                    <th>I. Subject code:</th>
-                    <td><?php echo htmlspecialchars($subjectCode); ?></td>
-                </tr>
-                <tr>
-                    <th>II. Subject title:</th>
-                    <td><?php echo htmlspecialchars($subjectName); ?></td>
-                </tr>
-                <tr>
-                    <th>III. Units:</th>
-                    <td><?php echo htmlspecialchars($units); ?> Units</td>
-                </tr>
-                <tr>
-                    <th>IV. Hours:</th>
-                    <td><?php echo htmlspecialchars($hours); ?> Hours</td>
-                </tr>
-                <tr>
-                    <th>V. Department:</th>
-                    <td><?php echo htmlspecialchars($department); ?></td>
-                </tr>
-                <tr>
-                    <th>VI. School year:</th>
-                    <td><?php echo htmlspecialchars($schoolYearStart . ' - ' . $schoolYearEnd); ?></td>
-                </tr>
-                <tr>
-                    <th>VII. Grading period/quarter:</th>
-                    <td>
-                        <?php
-                        echo htmlspecialchars($gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
-                        ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <th class="status-container">Status</th>
+                        <td>
+                            <button class="status-button <?php echo strtolower($status); ?>">
+                                <?php echo htmlspecialchars($status); ?>
+                            </button>
+                        </td>
+                    </tr>
+
+
+                    <tr>
+                        <th>I. Subject code:</th>
+                        <td><?php echo htmlspecialchars($subjectCode); ?></td>
+                    </tr>
+                    <tr>
+                        <th>II. Subject title:</th>
+                        <td><?php echo htmlspecialchars($subjectName); ?></td>
+                    </tr>
+                    <tr>
+                        <th>III. Units:</th>
+                        <td><?php echo htmlspecialchars($units); ?> Units</td>
+                    </tr>
+                    <tr>
+                        <th>IV. Hours:</th>
+                        <td><?php echo htmlspecialchars($hours); ?> Hours</td>
+                    </tr>
+                    <tr>
+                        <th>V. Department:</th>
+                        <td><?php echo htmlspecialchars($department); ?></td>
+                    </tr>
+                    <tr>
+                        <th>VI. School year:</th>
+                        <td><?php echo htmlspecialchars($schoolYearStart . ' - ' . $schoolYearEnd); ?></td>
+                    </tr>
+                    <tr>
+                        <th>VII. Grading period/quarter:</th>
+                        <td>
+                            <?php
+                            echo htmlspecialchars($gradingPeriod) . ' <strong>FROM</strong> ' . htmlspecialchars($gradingQuarterStart) . ' <strong>TO</strong> ' . htmlspecialchars($gradingQuarterEnd);
+                            ?>
+                        </td>
+                    </tr>
             </table>
 
             <table class="competency-table">
@@ -356,6 +411,10 @@ $conn->close();
 
                 function confirmApprove() {
                     return confirm('Approve Competency?');
+                }
+
+                function confirmDeny() {
+                    return confirm('Deny Competency?');
                 }
             </script>
 </body>
