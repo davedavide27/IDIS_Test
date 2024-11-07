@@ -1470,15 +1470,16 @@ $conn->close();
                     </tr>
                 </tbody>
             </table>
+            <!-- Signature Section -->
 
-            <!-- Performance Tasks Section -->
 
-            <div class="prepared-signiture">
-                <p>Prepared by: <input type="text" name="prepared_by" value="" required></p>
-            </div>
+
+
+
+            
             <!-- Submit Button -->
             <button class="submit-button" type="submit" name="save_syllabus"
-                <?php echo ($status === 'DENIED') ? 'disabled' : ''; ?>>
+                <?php echo ($status === 'APPROVED') ? 'disabled' : ''; ?>>
                 Submit Syllabus
             </button>
 

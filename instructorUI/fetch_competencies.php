@@ -45,4 +45,3 @@ $conn->close();
 // Return the competencies as a JSON response
 echo json_encode($competencies);
 exit(); // End script execution after returning JSON
-?>

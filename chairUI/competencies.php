@@ -256,7 +256,7 @@ $conn->close();
 
             <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
 
-
+                <!-- Action button -->
             <table class="header-info">
                 <div>
                     <tr>
@@ -274,7 +274,9 @@ $conn->close();
                             <?php endif; ?>
                         </td>
                     </tr>
+                <!-- Action button -->
 
+                
                     <tr>
                         <th class="status-container">Status</th>
                         <td>

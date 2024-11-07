@@ -583,7 +583,7 @@ $conn->close();
         </div>
 
         <button class="print-button no-print" type="submit"
-            <?php echo ($status === 'PENDING') ? 'disabled' : ''; ?>>
+            <?php echo ($status === 'APPROVED') ? 'disabled' : ''; ?>>
             <?php echo !empty($competencies) ? 'Save Edits' : 'Save New Competency'; ?>
         </button>
         <button class="back-button no-print" type="button" onclick="window.location.href='index.php'">Back</button>

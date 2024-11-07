@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 // Check if the user is authenticated and is a student
 if (!isset($_SESSION['user_ID']) || $_SESSION['user_type'] != 'student') {
