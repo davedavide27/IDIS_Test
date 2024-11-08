@@ -202,7 +202,10 @@ $conn->close();
                                 <div class="btnSubjects">
                                     <!-- Pass the instructor's full name to the selectSubject function -->
                                     <button onclick="selectSubject(this, '<?php echo htmlspecialchars($subject['instructor_fullname']); ?>')">
-                                        <?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)
+                                        <?php echo htmlspecialchars($subject['subject_name']); ?>
+                                        <span style="display: none;">
+                                            (<?php echo htmlspecialchars($subject['subject_code']); ?>)
+                                        </span>
                                     </button>
                                 </div>
                             <?php endforeach; ?>

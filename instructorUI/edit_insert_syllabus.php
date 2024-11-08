@@ -30,6 +30,16 @@ $prerequisites_corequisites = "";
 $contact_hours = "";
 $performance_tasks = "";
 $status = ""; // Add status initialization
+$prepared_by = "";
+$prepared_date = "";
+$resource_checked_by = "";
+$resource_checked_date = "";
+$reviewed_by_program_chair = "";
+$reviewed_by_dean = "";
+$reviewed_by_date = "";
+$approved_by = "";
+$approved_by_date = "";
+
 
 // Fetch subject code and name from POST data
 if (isset($_POST['syllabus_subject_code']) && isset($_POST['syllabus_subject_name'])) {
@@ -55,6 +65,15 @@ if (!empty($subject_code)) {
                 $contact_hours = htmlspecialchars($row['contact_hours']);
                 $performance_tasks = htmlspecialchars($row['performance_tasks']);
                 $status = htmlspecialchars($row['status']); // Add this line to fetch the status
+                $prepared_by = htmlspecialchars($row['prepared_by']);
+                $prepared_by_date = !empty($row['prepared_by_date']) ? htmlspecialchars($row['prepared_by_date']) : date('Y-m-d');
+                $resource_checked_by = htmlspecialchars($row['resource_checked_by']);
+                $resource_checked_by_date = !empty($row['resource_checked_by_date']) ? htmlspecialchars($row['resource_checked_by_date']) : date('Y-m-d');
+                $reviewed_by_program_chair = htmlspecialchars($row['reviewed_by_program_chair']);
+                $reviewed_by_dean = htmlspecialchars($row['reviewed_by_dean']);
+                $reviewed_by_date = !empty($row['reviewed_by_date']) ? htmlspecialchars($row['reviewed_by_date']) : date('Y-m-d');
+                $approved_by = htmlspecialchars($row['approved_by']);
+                $approved_by_date = !empty($row['approved_by_date']) ? htmlspecialchars($row['approved_by_date']) : date('Y-m-d');
             }
             $result->free();
         }
@@ -64,65 +83,33 @@ if (!empty($subject_code)) {
 
 
 // Initialize grading data
-$written_task = "";
-$quizzes = "";
-$attendance = "";
-$behavior = "";
-$performance_product = "";
-$quarterly_assessment = "";
+$written_task_criteria = [];
+$performance_task_criteria = [];
+$quarterly_assessment_criteria = [];
 
-// Fetch written tasks data
-if (!empty($subject_code)) {
-    $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
-    if ($stmtWrittenTasks = $conn->prepare($sqlWrittenTasks)) {
-        $stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
-        if ($stmtWrittenTasks->execute()) {
-            $resultWrittenTasks = $stmtWrittenTasks->get_result();
-            if ($resultWrittenTasks->num_rows > 0) {
-                $row = $resultWrittenTasks->fetch_assoc();
-                $written_task = htmlspecialchars($row['written_task']);
-                $quizzes = htmlspecialchars($row['quizzes']);
-            }
-            $resultWrittenTasks->free();
-        }
-        $stmtWrittenTasks->close();
+// Fetch existing grading system data from the database
+$sqlGradingSystem = "SELECT * FROM grading_system WHERE subject_code = ? AND instructor_id = ?";
+$stmtGradingSystem = $conn->prepare($sqlGradingSystem);
+$stmtGradingSystem->bind_param("si", $subject_code, $instructor_ID);
+$stmtGradingSystem->execute();
+$resultGradingSystem = $stmtGradingSystem->get_result();
+
+// Populate the arrays with data based on the criteria type
+while ($row = $resultGradingSystem->fetch_assoc()) {
+    if ($row['criteria_type'] == 'written_task') {
+        $written_task_criteria[$row['criteria_name']] = $row['percentage'];
+    } elseif ($row['criteria_type'] == 'performance_task') {
+        $performance_task_criteria[$row['criteria_name']] = $row['percentage'];
+    } elseif ($row['criteria_type'] == 'quarterly_assessment') {
+        $quarterly_assessment_criteria[$row['criteria_name']] = $row['percentage'];
     }
 }
 
-// Fetch performance tasks data
-$sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
-if ($stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks)) {
-    $stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
-    if ($stmtPerformanceTasks->execute()) {
-        $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
-        if ($resultPerformanceTasks->num_rows > 0) {
-            $row = $resultPerformanceTasks->fetch_assoc();
-            $attendance = htmlspecialchars($row['attendance']);
-            $behavior = htmlspecialchars($row['behavior']);
-            $performance_product = htmlspecialchars($row['performance_product']);
-        }
-        $resultPerformanceTasks->free();
-    }
-    $stmtPerformanceTasks->close();
-}
-
-// Fetch quarterly assessment data
-$sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
-if ($stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment)) {
-    $stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
-    if ($stmtQuarterlyAssessment->execute()) {
-        $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
-        if ($resultQuarterlyAssessment->num_rows > 0) {
-            $row = $resultQuarterlyAssessment->fetch_assoc();
-            $quarterly_assessment = htmlspecialchars($row['quarterly_assessment']);
-        }
-        $resultQuarterlyAssessment->free();
-    }
-    $stmtQuarterlyAssessment->close();
-}
+// Close the prepared statement
+$stmtGradingSystem->close();
 
 
-// Handle the form submission for saving or updating the syllabus
+
 if (isset($_POST['save_syllabus'])) {
     $conn->begin_transaction(); // Begin transaction for atomicity
 
@@ -138,16 +125,29 @@ if (isset($_POST['save_syllabus'])) {
             // Update existing syllabus
             $sqlUpdateSyllabus = "
                 UPDATE syllabus 
-                SET course_units = ?, course_description = ?, prerequisites_corequisites = ?, contact_hours = ?, performance_tasks = ? 
+                SET 
+                    course_units = ?, course_description = ?, prerequisites_corequisites = ?, 
+                    contact_hours = ?, performance_tasks = ?, prepared_by = ?, prepared_by_date = ?, 
+                    resource_checked_by = ?, resource_checked_by_date = ?, reviewed_by_program_chair = ?, 
+                    reviewed_by_dean = ?, reviewed_by_date = ?, approved_by = ?, approved_by_date = ? 
                 WHERE subject_code = ? AND instructor_ID = ?";
             $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
             $stmtUpdateSyllabus->bind_param(
-                "ssssssi",
+                "sssssssssssssssi",
                 $_POST['course_units'],
                 $_POST['course_description'],
                 $_POST['prerequisites_corequisites'],
                 $_POST['contact_hours'],
                 $_POST['performance_tasks'],
+                $_POST['prepared_by'],
+                $_POST['prepared_by_date'],
+                $_POST['resource_checked_by'],
+                $_POST['resource_checked_by_date'],
+                $_POST['reviewed_by_program_chair'],
+                $_POST['reviewed_by_dean'],
+                $_POST['reviewed_by_date'],
+                $_POST['approved_by'],
+                $_POST['approved_by_date'],
                 $subject_code,
                 $instructor_ID
             );
@@ -155,139 +155,94 @@ if (isset($_POST['save_syllabus'])) {
         } else {
             // Insert new syllabus
             $sqlInsertSyllabus = "
-                INSERT INTO syllabus (subject_code, instructor_ID, course_units, course_description, prerequisites_corequisites, contact_hours, performance_tasks)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+                INSERT INTO syllabus (
+                    subject_code, instructor_ID, course_units, course_description, prerequisites_corequisites, 
+                    contact_hours, performance_tasks, prepared_by, prepared_by_date, resource_checked_by, 
+                    resource_checked_by_date, reviewed_by_program_chair, reviewed_by_dean, reviewed_by_date, 
+                    approved_by, approved_by_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmtInsertSyllabus = $conn->prepare($sqlInsertSyllabus);
             $stmtInsertSyllabus->bind_param(
-                "sisssss",
+                "sissssssssssssss",
                 $subject_code,
                 $instructor_ID,
                 $_POST['course_units'],
                 $_POST['course_description'],
                 $_POST['prerequisites_corequisites'],
                 $_POST['contact_hours'],
-                $_POST['performance_tasks']
+                $_POST['performance_tasks'],
+                $_POST['prepared_by'],
+                $_POST['prepared_date'],
+                $_POST['resource_checked_by'],
+                $_POST['resource_checked_date'],
+                $_POST['reviewed_by_program_chair'],
+                $_POST['reviewed_by_dean'],
+                $_POST['reviewed_by_date'],
+                $_POST['approved_by'],
+                $_POST['approved_by_date']
             );
             $stmtInsertSyllabus->execute();
         }
-        // Save Written Tasks Data
-        $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ? AND instructor_id = ?";
-        $stmtWrittenTasks = $conn->prepare($sqlWrittenTasks);
-        $stmtWrittenTasks->bind_param("si", $subject_code, $instructor_ID);
-        $stmtWrittenTasks->execute();
-        $resultWrittenTasks = $stmtWrittenTasks->get_result();
+// Insert or update the grading criteria (percentage distribution)
+// Handle different sections of the grading system (Written Task, Performance Tasks, Quarterly Assessment)
+$criteria_types = [
+    'written_task' => ['criteria_name' => 'written_task_criteria', 'percentage' => 'written_task_percentage', 'delete_flag' => 'written_task_delete'],
+    'performance_task' => ['criteria_name' => 'performance_task_criteria', 'percentage' => 'performance_task_percentage', 'delete_flag' => 'performance_task_delete'],
+    'quarterly_assessment' => ['criteria_name' => 'quarterly_assessment_criteria', 'percentage' => 'quarterly_assessment_percentage', 'delete_flag' => 'quarterly_assessment_delete']
+];
 
-        if ($resultWrittenTasks->num_rows > 0) {
-            // Update existing written tasks data
-            $sqlUpdateWrittenTasks = "
-        UPDATE written_tasks 
-        SET written_task = ?, quizzes = ? 
-        WHERE subject_code = ? AND instructor_id = ?";
-            $stmtUpdateWrittenTasks = $conn->prepare($sqlUpdateWrittenTasks);
-            $stmtUpdateWrittenTasks->bind_param(
-                "ddsi",
-                $_POST['written_task'],
-                $_POST['quizzes'],
-                $subject_code,
-                $instructor_ID
-            );
-            $stmtUpdateWrittenTasks->execute();
-        } else {
-            // Insert new written tasks entry
-            $sqlInsertWrittenTasks = "
-        INSERT INTO written_tasks (subject_code, instructor_id, written_task, quizzes)
-        VALUES (?, ?, ?, ?)";
-            $stmtInsertWrittenTasks = $conn->prepare($sqlInsertWrittenTasks);
-            $stmtInsertWrittenTasks->bind_param(
-                "sidd",
-                $subject_code,
-                $instructor_ID,
-                $_POST['written_task'],
-                $_POST['quizzes']
-            );
-            $stmtInsertWrittenTasks->execute();
+foreach ($criteria_types as $section => $fieldNames) {
+    if (isset($_POST[$fieldNames['criteria_name']]) && is_array($_POST[$fieldNames['criteria_name']])) {
+        $criteriaNames = $_POST[$fieldNames['criteria_name']];
+        $percentages = $_POST[$fieldNames['percentage']];
+        $deleteFlags = $_POST[$fieldNames['delete_flag']];  // Assuming delete flag is passed for each criteria
+
+        for ($i = 0; $i < count($criteriaNames); $i++) {
+            $criteria_name = $criteriaNames[$i];
+            
+            // Skip entries with empty criteria names
+            if (empty($criteria_name)) {
+                continue;
+            }
+
+            $percentage = !empty($percentages[$i]) ? $percentages[$i] : 0;  // Use default value if percentage is empty
+            $delete_flag = !empty($deleteFlags[$i]) ? $deleteFlags[$i] : 0;  // Handle delete flag
+
+            if ($delete_flag == 1) {
+                // Delete criteria entry if flag is set to 1
+                $stmtDelete = $conn->prepare("DELETE FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                $stmtDelete->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                $stmtDelete->execute();
+                $stmtDelete->close();
+            } else {
+                // Insert or update criteria (check if exists)
+                $stmtCheck = $conn->prepare("SELECT * FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                $stmtCheck->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                $stmtCheck->execute();
+                $result = $stmtCheck->get_result();
+
+                if ($result->num_rows > 0) {
+                    // Update existing entry
+                    $stmtUpdate = $conn->prepare("UPDATE grading_system SET percentage = ? WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                    $stmtUpdate->bind_param("isiss", $percentage, $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                    $stmtUpdate->execute();
+                    $stmtUpdate->close();
+                } else {
+                    // Insert new criteria
+                    $stmtInsert = $conn->prepare("INSERT INTO grading_system (subject_code, instructor_id, criteria_name, percentage, criteria_type) VALUES (?, ?, ?, ?, ?)");
+                    $stmtInsert->bind_param("sisss", $subject_code, $instructor_ID, $criteria_name, $percentage, $section); // Pass $section as the criteria_type
+                    $stmtInsert->execute();
+                    $stmtInsert->close();
+                }
+
+                $stmtCheck->close();
+                $result->free();
+            }
         }
+    }
+}
 
-        // Save Performance Tasks Data
-        $sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ? AND instructor_id = ?";
-        $stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks);
-        $stmtPerformanceTasks->bind_param("si", $subject_code, $instructor_ID);
-        $stmtPerformanceTasks->execute();
-        $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
 
-        if ($resultPerformanceTasks->num_rows > 0) {
-            // Update existing performance tasks data
-            $sqlUpdatePerformanceTasks = "
-        UPDATE performance_tasks 
-        SET attendance = ?, behavior = ?, performance_product = ? 
-        WHERE subject_code = ? AND instructor_id = ?";
-            $stmtUpdatePerformanceTasks = $conn->prepare($sqlUpdatePerformanceTasks);
-            $stmtUpdatePerformanceTasks->bind_param(
-                "ddsii",
-                $_POST['attendance'],
-                $_POST['behavior'],
-                $_POST['performance_product'],
-                $subject_code,
-                $instructor_ID
-            );
-            $stmtUpdatePerformanceTasks->execute();
-        } else {
-            // Insert new performance tasks entry
-            $sqlInsertPerformanceTasks = "
-        INSERT INTO performance_tasks (subject_code, instructor_id, attendance, behavior, performance_product)
-        VALUES (?, ?, ?, ?, ?)";
-            $stmtInsertPerformanceTasks = $conn->prepare($sqlInsertPerformanceTasks);
-            $stmtInsertPerformanceTasks->bind_param(
-                "siddi",
-                $subject_code,
-                $instructor_ID,
-                $_POST['attendance'],
-                $_POST['behavior'],
-                $_POST['performance_product']
-            );
-            $stmtInsertPerformanceTasks->execute();
-        }
-
-        // Save Quarterly Assessment Data
-        $sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ? AND instructor_id = ?";
-        $stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment);
-        $stmtQuarterlyAssessment->bind_param("si", $subject_code, $instructor_ID);
-        $stmtQuarterlyAssessment->execute();
-        $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
-
-        if ($resultQuarterlyAssessment->num_rows > 0) {
-            // Update existing quarterly assessment data
-            $sqlUpdateQuarterlyAssessment = "
-        UPDATE quarterly_assessment 
-        SET quarterly_assessment = ? 
-        WHERE subject_code = ? AND instructor_id = ?";
-            $stmtUpdateQuarterlyAssessment = $conn->prepare($sqlUpdateQuarterlyAssessment);
-            $stmtUpdateQuarterlyAssessment->bind_param(
-                "dsi",
-                $_POST['quarterly_assessment'],
-                $subject_code,
-                $instructor_ID
-            );
-            $stmtUpdateQuarterlyAssessment->execute();
-        } else {
-            // Insert new quarterly assessment entry
-            $sqlInsertQuarterlyAssessment = "
-        INSERT INTO quarterly_assessment (subject_code, instructor_id, quarterly_assessment)
-        VALUES (?, ?, ?)";
-            $stmtInsertQuarterlyAssessment = $conn->prepare($sqlInsertQuarterlyAssessment);
-            $stmtInsertQuarterlyAssessment->bind_param(
-                "sid",
-                $subject_code,
-                $instructor_ID,
-                $_POST['quarterly_assessment']
-            );
-            $stmtInsertQuarterlyAssessment->execute();
-        }
-
-        // Close the statements
-        $stmtWrittenTasks->close();
-        $stmtPerformanceTasks->close();
-        $stmtQuarterlyAssessment->close();
 
 
         // Clear existing context data
@@ -369,12 +324,17 @@ if (isset($_POST['save_syllabus'])) {
                 }
             }
         }
-
-
         // Clear existing CILO-GILO mappings for the subject
         $stmtClearCiloGiloMappings = $conn->prepare("DELETE FROM cilo_gilo_map WHERE subject_code = ? AND instructor_ID = ?");
         $stmtClearCiloGiloMappings->bind_param("si", $subject_code, $instructor_ID);
         $stmtClearCiloGiloMappings->execute();
+
+        // Check for errors in the previous query
+        if ($stmtClearCiloGiloMappings->error) {
+            $_SESSION['error_message'] = "Error clearing CILO-GILO mappings: " . $stmtClearCiloGiloMappings->error;
+            echo "<script>alert('Error: " . addslashes($stmtClearCiloGiloMappings->error) . "'); window.location.href='index.php';</script>";
+            exit;
+        }
 
         // Insert new CILO-GILO mappings
         if (isset($_POST['cilo_description']) && is_array($_POST['cilo_description'])) {
@@ -406,7 +366,7 @@ if (isset($_POST['save_syllabus'])) {
                 $f = $f_values[$i] ?? '';
                 $g = $g_values[$i] ?? '';
                 $h = $h_values[$i] ?? '';
-                $i_col = $i_values[$i] ?? '';  // Avoid conflict with loop variable $i
+                $i_col = $i_values[$i] ?? ''; // Avoid conflict with loop variable $i
                 $j = $j_values[$i] ?? '';
                 $k = $k_values[$i] ?? '';
                 $l = $l_values[$i] ?? '';
@@ -416,11 +376,11 @@ if (isset($_POST['save_syllabus'])) {
 
                 // Prepare and bind the INSERT query for CILO-GILO mapping
                 $stmtCiloGilo = $conn->prepare("
-                INSERT INTO cilo_gilo_map (
-                    subject_code, instructor_ID, cilo_description,
-                    a, b, c, d, e, f, g, h, i, j, k, l, m, n, o
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ");
+            INSERT INTO cilo_gilo_map (
+                subject_code, instructor_ID, cilo_description,
+                a, b, c, d, e, f, g, h, i, j, k, l, m, n, o
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
                 $stmtCiloGilo->bind_param(
                     "sissssssssssssssss",
                     $subject_code,
@@ -443,26 +403,26 @@ if (isset($_POST['save_syllabus'])) {
                     $o
                 );
 
-                // Execute the statement and handle any errors
+                // Execute the statement and check for errors
                 if (!$stmtCiloGilo->execute()) {
-                    throw new Exception("Failed to insert CILO-GILO mapping: " . $stmtCiloGilo->error);
+                    $_SESSION['error_message'] = "Failed to insert CILO-GILO mapping: " . $stmtCiloGilo->error;
+                    echo "<script>alert('Error: " . addslashes($stmtCiloGilo->error) . "'); window.location.href='index.php';</script>";
+                    exit;
                 }
+                $stmtCiloGilo->close();  // Close the statement after execution
             }
         }
-        // Commit the transaction
-        if ($conn->commit()) {
-            echo "<script>alert('Syllabus submitted successfully!'); window.location.href='index.php';</script>";
-        } else {
-            throw new Exception("Transaction commit failed.");
-        }
+
+        // Commit the transaction if no errors
+        $conn->commit();
+        echo "<script>alert('Syllabus submitted successfully!'); window.location.href='index.php';</script>";
     } catch (Exception $e) {
+        // Rollback the transaction in case of any error
         $conn->rollback();
         $_SESSION['error_message'] = $e->getMessage();
         echo "<script>alert('Error: " . addslashes($e->getMessage()) . "'); window.location.href='index.php';</script>";
     }
 }
-
-// Close the connection
 $conn->close();
 ?>
 
@@ -1427,52 +1387,196 @@ $conn->close();
                     <tr>
                         <th>Criteria</th>
                         <th>Percentage</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Written Task Section -->
                     <tr>
-                        <td><span class="red-text">Written Task</span><br>
-                            &nbsp;&nbsp;&nbsp;- Quizzes<br>
-                            &nbsp;&nbsp;&nbsp;- Written Task
-                        </td>
-                        <td>
-                            <span class="red-text">30%</span><br>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="number" name="quizzes" value="<?php echo (int)$quizzes; ?>" style="width: 60px;" min="0" max="100" />%<br>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="number" name="written_task" value="<?php echo (int)$written_task; ?>" style="width: 60px;" min="0" max="100" />%
+                        <td colspan="3"><span class="red-text">Written Task</span></td>
+                    </tr>
+
+                    <?php if (!empty($written_task_criteria)) : ?>
+                        <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                            <tr class="written-task-row" data-section="written_task">
+                                <td><input type="text" name="written_task_criteria[]" value="<?php echo htmlspecialchars($criteria); ?>"></td>
+                                <td><input type="number" name="written_task_percentage[]" value="<?php echo (int)$percentage; ?>" style="width: 60px;" min="0" max="100" />%</td>
+                                <td>
+                                    <button type="button" onclick="deleteRow(this)">Delete</button>
+                                    <input type="hidden" name="written_task_delete[]" value="0">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr class="written-task-row initial-row" data-section="written_task">
+                            <td><input type="text" name="written_task_criteria[]" placeholder="Enter Criteria"></td>
+                            <td><input type="number" name="written_task_percentage[]" value="0" style="width: 60px;" min="0" max="100" />%</td>
+                            <td>
+                                <button type="button" onclick="deleteRow(this)">Delete</button>
+                                <input type="hidden" name="written_task_delete[]" value="0">
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <tr>
+                        <td colspan="3">
+                            <button type="button" onclick="addCriteria('written_task')">Add Written Task Criteria</button>
                         </td>
                     </tr>
+
+                    <!-- Performance Tasks Section -->
                     <tr>
-                        <td><span class="red-text">Performance Tasks</span><br>
-                            &nbsp;&nbsp;&nbsp;- Attendance<br>
-                            &nbsp;&nbsp;&nbsp;- Behavior<br>
-                            &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
-                        </td>
-                        <td>
-                            <span class="red-text">40%</span><br>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="number" name="attendance" value="<?php echo (int)$attendance; ?>" style="width: 60px;" min="0" max="100" />%<br>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="number" name="behavior" value="<?php echo (int)$behavior; ?>" style="width: 60px;" min="0" max="100" />%<br>
-                            &nbsp;&nbsp;&nbsp;
-                            <input type="number" name="performance_product" value="<?php echo (int)$performance_product; ?>" style="width: 60px;" min="0" max="100" />%
+                        <td colspan="3"><span class="red-text">Performance Tasks</span></td>
+                    </tr>
+
+                    <?php if (!empty($performance_task_criteria)) : ?>
+                        <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                            <tr class="performance-task-row" data-section="performance_task">
+                                <td><input type="text" name="performance_task_criteria[]" value="<?php echo htmlspecialchars($criteria); ?>"></td>
+                                <td><input type="number" name="performance_task_percentage[]" value="<?php echo (int)$percentage; ?>" style="width: 60px;" min="0" max="100" />%</td>
+                                <td>
+                                    <button type="button" onclick="deleteRow(this)">Delete</button>
+                                    <input type="hidden" name="performance_task_delete[]" value="0">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr class="performance-task-row initial-row" data-section="performance_task">
+                            <td><input type="text" name="performance_task_criteria[]" placeholder="Enter Criteria"></td>
+                            <td><input type="number" name="performance_task_percentage[]" value="0" style="width: 60px;" min="0" max="100" />%</td>
+                            <td>
+                                <button type="button" onclick="deleteRow(this)">Delete</button>
+                                <input type="hidden" name="performance_task_delete[]" value="0">
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <tr>
+                        <td colspan="3">
+                            <button type="button" onclick="addCriteria('performance_task')">Add Performance Task Criteria</button>
                         </td>
                     </tr>
+
+                    <!-- Quarterly Assessment Section -->
                     <tr>
-                        <td><span class="red-text">Quarterly Assessment</span></td>
-                        <td>
-                            <input type="number" name="quarterly_assessment" value="<?php echo (int)$quarterly_assessment; ?>" style="width: 60px;" min="0" max="100" />
+                        <td colspan="3"><span class="red-text">Quarterly Assessment</span></td>
+                    </tr>
+
+                    <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                        <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                            <tr class="quarterly-assessment-row" data-section="quarterly_assessment">
+                                <td><input type="text" name="quarterly_assessment_criteria[]" value="<?php echo htmlspecialchars($criteria); ?>"></td>
+                                <td><input type="number" name="quarterly_assessment_percentage[]" value="<?php echo (int)$percentage; ?>" style="width: 60px;" min="0" max="100" />%</td>
+                                <td>
+                                    <button type="button" onclick="deleteRow(this)">Delete</button>
+                                    <input type="hidden" name="quarterly_assessment_delete[]" value="0">
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else : ?>
+                        <tr class="quarterly-assessment-row initial-row" data-section="quarterly_assessment">
+                            <td><input type="text" name="quarterly_assessment_criteria[]" placeholder="Enter Criteria"></td>
+                            <td><input type="number" name="quarterly_assessment_percentage[]" value="0" style="width: 60px;" min="0" max="100" />%</td>
+                            <td>
+                                <button type="button" onclick="deleteRow(this)">Delete</button>
+                                <input type="hidden" name="quarterly_assessment_delete[]" value="0">
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+
+                    <tr>
+                        <td colspan="3">
+                            <button type="button" onclick="addCriteria('quarterly_assessment')">Add Quarterly Assessment Criteria</button>
                         </td>
                     </tr>
+
+                    <!-- Total -->
                     <tr>
                         <td><strong>TOTAL Grade Percentage</strong></td>
                         <td><strong>100%</strong></td>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
 
+            <script>
+                function addCriteria(section) {
+                    const tableBody = document.querySelector(`#gradingTable tbody`);
+                    const sectionRows = Array.from(tableBody.querySelectorAll(`tr[data-section="${section}"]`));
+                    const lastRow = sectionRows.length > 0 ? sectionRows[sectionRows.length - 1] : tableBody.querySelector(`.section-header[data-section="${section}"]`);
 
+                    // Add new row only if there's no row with empty criteria
+                    let rowHTML = `
+        <tr class="${section}-row" data-section="${section}">
+            <td><input type="text" name="${section}_criteria[]" placeholder="Enter Criteria"></td>
+            <td><input type="number" name="${section}_percentage[]" value="0" style="width: 60px;" min="0" max="100" />%</td>
+            <td>
+                <button type="button" class="delete-btn" onclick="deleteRow(this)">Delete</button>
+                <input type="hidden" name="${section}_delete[]" value="0">
+            </td>
+        </tr>
+        `;
+
+                    if (lastRow) {
+                        lastRow.insertAdjacentHTML("afterend", rowHTML);
+                    }
+                    updateDeleteButtons(section);
+                }
+
+                function deleteRow(button) {
+                    const row = button.closest('tr');
+                    const section = row.getAttribute('data-section');
+                    const sectionRows = document.querySelectorAll(`tr[data-section="${section}"]`);
+
+                    // Prevent deletion if there's only one row remaining
+                    if (sectionRows.length <= 0) {
+                        alert('At least one row must remain for each criteria.');
+                        return; // Exit function if only one row left
+                    }
+
+                    const deleteFlagInput = row.querySelector('input[type="hidden"][name$="_delete[]"]');
+                    deleteFlagInput.value = "1"; // Set delete flag to 1
+
+                    row.style.display = "none"; // Hide the row instead of removing it
+                }
+
+
+                function validateData() {
+                    let isValid = true;
+
+                    // Ensure each section has at least one row with valid data
+                    const sections = ['written_task', 'performance_task', 'quarterly_assessment'];
+                    sections.forEach(section => {
+                        const sectionRows = document.querySelectorAll(`tr[data-section="${section}"]`);
+                        if (sectionRows.length === 0) {
+                            isValid = false;
+                            alert(`At least one row must be added for ${section.replace('_', ' ').toUpperCase()}.`);
+                        }
+                    });
+
+                    // Check each row for missing criteria or percentages
+                    document.querySelectorAll('tr[data-section]').forEach(row => {
+                        const criteriaInput = row.querySelector('input[type="text"]');
+                        const percentageInput = row.querySelector('input[type="number"]');
+
+                        // Ensure there is no empty criteria input
+                        if (criteriaInput && criteriaInput.value.trim() === "") {
+                            isValid = false;
+                            alert('Please fill in all criteria fields.');
+                            criteriaInput.focus();
+                        }
+
+                        // Ensure there is no empty percentage input
+                        if (percentageInput && percentageInput.value.trim() === "") {
+                            isValid = false;
+                            alert('Please fill in all percentage fields.');
+                            percentageInput.focus();
+                        }
+                    });
+
+                    return isValid;
+                }
+            </script>
 
 
 
@@ -1491,50 +1595,52 @@ $conn->close();
                         <td class="info-cell">
                             <span class="red-text">Prepared by:</span><br>
                             _____________________<br>
-                            <input type="text" required></p>
+                            <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
                             <p>Subject Teacher</p>
                         </td>
-                        <td class="signature-cell"><input type="text" required><br>Date</td>
+                        <td class="signature-cell">
+                            <input type="date" name="prepared_by_date" value="<?php echo $prepared_by_date; ?>" required><br>Date
+                        </td>
                     </tr>
                     <tr>
                         <td class="info-cell">
                             <span class="red-text">Resources Checked & Verified by:</span><br>
                             ______________________<br>
-                            <input type="text" required></p>
+                            <input type="text" name="resource_checked_by" value="<?php echo $resource_checked_by; ?>" required>
                             <p>College Librarian</p>
                         </td>
-                        <td class="signature-cell"><input type="text" required><br>Date</td>
+                        <td class="signature-cell">
+                            <input type="date" name="resource_checked_by_date" value="<?php echo $resource_checked_by_date; ?>" required><br>Date
+                        </td>
                     </tr>
                     <tr>
                         <td class="info-cell">
                             <span class="red-text">Reviewed by:</span><br>
                             ______________________<br>
-                            <input type="text" required></p>
+                            <input type="text" name="reviewed_by_program_chair" value="<?php echo $reviewed_by_program_chair; ?>" required>
                             <p>BSIT Program Chair</p><br>
                             ______________________<br>
-                            <input type="text" required></p>
+                            <input type="text" name="reviewed_by_dean" value="<?php echo $reviewed_by_dean; ?>" required>
                             <p>Dean</p>
-
                         </td>
-                        <td class="signature-cell"><input type="text" required><br>Date</td>
+                        <td class="signature-cell">
+                            <input type="date" name="reviewed_by_date" value="<?php echo $reviewed_by_date; ?>" required><br>Date
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2" class="info-cell-approved">
                             <span class="red-text">Approved by:</span><br>
                             ______________________<br>
-                            <input type="text" required>
+                            <input type="text" name="approved_by" value="<?php echo $approved_by; ?>" required>
                             <p>Vice President for Academic Affairs and Research</p>
                         </td>
-                        <td class="signature-cell"><input type="text" required><br>Date</td>
+                        <td class="signature-cell">
+                            <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>Date
+                        </td>
                     </tr>
                 </tbody>
             </table>
             <!-- Signature Section -->
-
-
-
-
-
 
             <!-- Submit Button -->
             <button class="submit-button" type="submit" name="save_syllabus"
