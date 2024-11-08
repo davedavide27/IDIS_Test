@@ -183,64 +183,64 @@ if (isset($_POST['save_syllabus'])) {
             );
             $stmtInsertSyllabus->execute();
         }
-// Insert or update the grading criteria (percentage distribution)
-// Handle different sections of the grading system (Written Task, Performance Tasks, Quarterly Assessment)
-$criteria_types = [
-    'written_task' => ['criteria_name' => 'written_task_criteria', 'percentage' => 'written_task_percentage', 'delete_flag' => 'written_task_delete'],
-    'performance_task' => ['criteria_name' => 'performance_task_criteria', 'percentage' => 'performance_task_percentage', 'delete_flag' => 'performance_task_delete'],
-    'quarterly_assessment' => ['criteria_name' => 'quarterly_assessment_criteria', 'percentage' => 'quarterly_assessment_percentage', 'delete_flag' => 'quarterly_assessment_delete']
-];
+        // Insert or update the grading criteria (percentage distribution)
+        // Handle different sections of the grading system (Written Task, Performance Tasks, Quarterly Assessment)
+        $criteria_types = [
+            'written_task' => ['criteria_name' => 'written_task_criteria', 'percentage' => 'written_task_percentage', 'delete_flag' => 'written_task_delete'],
+            'performance_task' => ['criteria_name' => 'performance_task_criteria', 'percentage' => 'performance_task_percentage', 'delete_flag' => 'performance_task_delete'],
+            'quarterly_assessment' => ['criteria_name' => 'quarterly_assessment_criteria', 'percentage' => 'quarterly_assessment_percentage', 'delete_flag' => 'quarterly_assessment_delete']
+        ];
 
-foreach ($criteria_types as $section => $fieldNames) {
-    if (isset($_POST[$fieldNames['criteria_name']]) && is_array($_POST[$fieldNames['criteria_name']])) {
-        $criteriaNames = $_POST[$fieldNames['criteria_name']];
-        $percentages = $_POST[$fieldNames['percentage']];
-        $deleteFlags = $_POST[$fieldNames['delete_flag']];  // Assuming delete flag is passed for each criteria
+        foreach ($criteria_types as $section => $fieldNames) {
+            if (isset($_POST[$fieldNames['criteria_name']]) && is_array($_POST[$fieldNames['criteria_name']])) {
+                $criteriaNames = $_POST[$fieldNames['criteria_name']];
+                $percentages = $_POST[$fieldNames['percentage']];
+                $deleteFlags = $_POST[$fieldNames['delete_flag']];  // Assuming delete flag is passed for each criteria
 
-        for ($i = 0; $i < count($criteriaNames); $i++) {
-            $criteria_name = $criteriaNames[$i];
-            
-            // Skip entries with empty criteria names
-            if (empty($criteria_name)) {
-                continue;
-            }
+                for ($i = 0; $i < count($criteriaNames); $i++) {
+                    $criteria_name = $criteriaNames[$i];
 
-            $percentage = !empty($percentages[$i]) ? $percentages[$i] : 0;  // Use default value if percentage is empty
-            $delete_flag = !empty($deleteFlags[$i]) ? $deleteFlags[$i] : 0;  // Handle delete flag
+                    // Skip entries with empty criteria names
+                    if (empty($criteria_name)) {
+                        continue;
+                    }
 
-            if ($delete_flag == 1) {
-                // Delete criteria entry if flag is set to 1
-                $stmtDelete = $conn->prepare("DELETE FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
-                $stmtDelete->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
-                $stmtDelete->execute();
-                $stmtDelete->close();
-            } else {
-                // Insert or update criteria (check if exists)
-                $stmtCheck = $conn->prepare("SELECT * FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
-                $stmtCheck->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
-                $stmtCheck->execute();
-                $result = $stmtCheck->get_result();
+                    $percentage = !empty($percentages[$i]) ? $percentages[$i] : 0;  // Use default value if percentage is empty
+                    $delete_flag = !empty($deleteFlags[$i]) ? $deleteFlags[$i] : 0;  // Handle delete flag
 
-                if ($result->num_rows > 0) {
-                    // Update existing entry
-                    $stmtUpdate = $conn->prepare("UPDATE grading_system SET percentage = ? WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
-                    $stmtUpdate->bind_param("isiss", $percentage, $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
-                    $stmtUpdate->execute();
-                    $stmtUpdate->close();
-                } else {
-                    // Insert new criteria
-                    $stmtInsert = $conn->prepare("INSERT INTO grading_system (subject_code, instructor_id, criteria_name, percentage, criteria_type) VALUES (?, ?, ?, ?, ?)");
-                    $stmtInsert->bind_param("sisss", $subject_code, $instructor_ID, $criteria_name, $percentage, $section); // Pass $section as the criteria_type
-                    $stmtInsert->execute();
-                    $stmtInsert->close();
+                    if ($delete_flag == 1) {
+                        // Delete criteria entry if flag is set to 1
+                        $stmtDelete = $conn->prepare("DELETE FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                        $stmtDelete->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                        $stmtDelete->execute();
+                        $stmtDelete->close();
+                    } else {
+                        // Insert or update criteria (check if exists)
+                        $stmtCheck = $conn->prepare("SELECT * FROM grading_system WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                        $stmtCheck->bind_param("siss", $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                        $stmtCheck->execute();
+                        $result = $stmtCheck->get_result();
+
+                        if ($result->num_rows > 0) {
+                            // Update existing entry
+                            $stmtUpdate = $conn->prepare("UPDATE grading_system SET percentage = ? WHERE subject_code = ? AND instructor_id = ? AND criteria_name = ? AND criteria_type = ?");
+                            $stmtUpdate->bind_param("isiss", $percentage, $subject_code, $instructor_ID, $criteria_name, $section); // Pass $section as the criteria_type
+                            $stmtUpdate->execute();
+                            $stmtUpdate->close();
+                        } else {
+                            // Insert new criteria
+                            $stmtInsert = $conn->prepare("INSERT INTO grading_system (subject_code, instructor_id, criteria_name, percentage, criteria_type) VALUES (?, ?, ?, ?, ?)");
+                            $stmtInsert->bind_param("sisss", $subject_code, $instructor_ID, $criteria_name, $percentage, $section); // Pass $section as the criteria_type
+                            $stmtInsert->execute();
+                            $stmtInsert->close();
+                        }
+
+                        $stmtCheck->close();
+                        $result->free();
+                    }
                 }
-
-                $stmtCheck->close();
-                $result->free();
             }
         }
-    }
-}
 
 
 
@@ -497,14 +497,25 @@ $conn->close();
             padding-right: 295px;
         }
 
+        /*
         .signature-cell input {
+            margin: 15%;
+            margin-bottom: 30px;
             text-align: center;
+            font-size: 17px;
+            width: 70%;
+            height: 20px;
+            font-weight: 600;
+            border-style: none;
+        }
+
+        .signature-cell p {
+            margin: 0;
+            margin-top: -40px;
+            padding-left: 15%;
             font-size: 14px;
             width: 70%;
-            margin-bottom: 1px;
-            height: 12px;
-            font-weight: 600;
-        }
+        }*/
     </style>
     <script>
         // Auto resize textarea
@@ -1595,11 +1606,11 @@ $conn->close();
                         <td class="info-cell">
                             <span class="red-text">Prepared by:</span><br>
                             _____________________<br>
-                            <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
+                            <input type="text" required><br>
                             <p>Subject Teacher</p>
                         </td>
                         <td class="signature-cell">
-                            <input type="date" name="prepared_by_date" value="<?php echo $prepared_by_date; ?>" required><br>Date
+                            _____________________<br>Date
                         </td>
                     </tr>
                     <tr>
@@ -1610,7 +1621,7 @@ $conn->close();
                             <p>College Librarian</p>
                         </td>
                         <td class="signature-cell">
-                            <input type="date" name="resource_checked_by_date" value="<?php echo $resource_checked_by_date; ?>" required><br>Date
+                            _____________________<br>Date
                         </td>
                     </tr>
                     <tr>
@@ -1624,7 +1635,7 @@ $conn->close();
                             <p>Dean</p>
                         </td>
                         <td class="signature-cell">
-                            <input type="date" name="reviewed_by_date" value="<?php echo $reviewed_by_date; ?>" required><br>Date
+                            _____________________<br>Date
                         </td>
                     </tr>
                     <tr>
@@ -1635,7 +1646,7 @@ $conn->close();
                             <p>Vice President for Academic Affairs and Research</p>
                         </td>
                         <td class="signature-cell">
-                            <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>Date
+                            _____________________<br>Date
                         </td>
                     </tr>
                 </tbody>
