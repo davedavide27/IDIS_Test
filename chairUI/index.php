@@ -208,13 +208,45 @@ $conn->close();
                                 <!-- Make the entire card clickable by wrapping the card in the anchor tag -->
                                 <a href="#" id="syllabusLink" style="text-decoration: none; color: inherit;">
                                     <div class="planCard" id="syllabusCard" style="display: none;">
-                                        <p>Syllabus</p>
+                                        <button type="submit" style="all: unset; display: block; width: 100%; height: 10%;">
+                                            <input type="hidden" name="syllabus_subject_code" id="syllabus_subject_code">
+                                            <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
+                                            <p style="text-align: center; margin: 0;">Syllabus</p>
+                                            <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
+                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
+                                                <div style="margin-top: 8px;">
+                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - All inputs must be included when submitting a syllabus.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
+                                                </div>
+                                            </div>
+                                        </button>
                                     </div>
                                 </a>
 
                                 <a href="competencies.php" id="competenciesLink" style="text-decoration: none; color: inherit;">
                                     <div class="planCard" id="competenciesCard" style="display: none;">
-                                        <p>Competencies</p>
+                                        <button type="submit" style="all: unset; display: block; width: 100%; height: 10%;">
+                                            <input type="hidden" name="subject_code" id="selected_subject_code">
+                                            <input type="hidden" name="subject_name" id="selected_subject_name">
+                                            <p style="text-align: center; margin: 0;">Competencies</p>
+                                            <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
+                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
+                                                <div style="margin-top: 8px;">
+                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - All inputs must be included when submitting a syllabus.
+                                                </div>
+                                                <div style="margin-top: 8px;">
+                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
+                                                </div>
+                                            </div>
+                                        </button>
                                     </div>
                                 </a>
                             </div>

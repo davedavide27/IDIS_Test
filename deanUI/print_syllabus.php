@@ -386,6 +386,44 @@ $conn->close();
             list-style-type: disc;
             /* Disc style for bullet points */
         }
+
+        /*input box sa names and signature*/
+        .custom-table .info-cell input {
+            text-align: center;
+            font-size: 14px;
+            width: 50%;
+            margin-top: 0px;
+            margin-bottom: -5px;
+            height: 12px;
+            font-weight: 600;
+        }
+
+        .custom-table .info-cell p {
+            margin: 5px;
+        }
+
+        .custom-table .info-cell-approved input {
+
+            text-align: center;
+            font-size: 14px;
+            width: 50%;
+            margin-top: 0px;
+            margin-bottom: -5px;
+            height: 12px;
+            font-weight: 600;
+        }
+
+        .custom-table .info-cell-approved p {
+            margin: 5px;
+        }
+
+        .info-cell span {
+            padding-right: 430px;
+        }
+
+        .info-cell-approved span {
+            padding-right: 310px;
+        }
     </style>
 
 </head>
@@ -737,39 +775,49 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Prepared by:</span><br>
-                        <strong><?= $prepared_by; ?></strong><br>
-                        Subject Teacher
+                        _____________________<br>
+                        <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
+                        <p>Subject Teacher</p>
                     </td>
-                    <td class="signature-cell">_____________<br>Date</td>
+                    <td class="signature-cell">
+                        _____________________<br>Date
+                    </td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Resources Checked & Verified by:</span><br>
-                        <strong><?= $resource_checked_by; ?></strong><br>
-                        College Librarian
+                        ______________________<br>
+                        <input type="text" name="resource_checked_by" value="<?php echo $resource_checked_by; ?>" required>
+                        <p>College Librarian</p>
                     </td>
-                    <td class="signature-cell">_____________<br>Date</td>
+                    <td class="signature-cell">
+                        _____________________<br>Date
+                    </td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Reviewed by:</span><br>
-                        <strong><?= $reviewed_by_program_chair; ?></strong><br>
-                        BSIT Program Chair<br>
-                        <br>
-                        <br>
-                        <strong><?= $reviewed_by_dean; ?></strong><br>
-                        Dean
+                        ______________________<br>
+                        <input type="text" name="reviewed_by_program_chair" value="<?php echo $reviewed_by_program_chair; ?>" required>
+                        <p>BSIT Program Chair</p><br>
+                        ______________________<br>
+                        <input type="text" name="reviewed_by_dean" value="<?php echo $reviewed_by_dean; ?>" required>
+                        <p>Dean</p>
                     </td>
-                    <td class="signature-cell">_____________<br>Date</td>
+                    <td class="signature-cell">
+                        _____________________<br>Date
+                    </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="info-cell-approved">
                         <span class="red-text">Approved by:</span><br>
-                        <strong><?= $approved_by; ?></strong><br>
-                        Vice President for Academic Affairs and Research
+                        ______________________<br>
+                        <input type="text" name="approved_by" value="<?php echo $approved_by; ?>" required>
+                        <p>Vice President for Academic Affairs and Research</p>
                     </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
+                    <td class="signature-cell">
+                        _____________________<br>Date
+                    </td>
             </tbody>
         </table>
 

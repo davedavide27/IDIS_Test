@@ -467,7 +467,8 @@ $conn->close();
             text-align: center;
             font-size: 14px;
             width: 50%;
-            margin-bottom: -30px;
+            margin-top: 0px;
+            margin-bottom: -5px;
             height: 12px;
             font-weight: 600;
         }
@@ -477,10 +478,12 @@ $conn->close();
         }
 
         .custom-table .info-cell-approved input {
+
             text-align: center;
             font-size: 14px;
             width: 50%;
-            margin-bottom: -30px;
+            margin-top: 0px;
+            margin-bottom: -5px;
             height: 12px;
             font-weight: 600;
         }
