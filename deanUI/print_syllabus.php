@@ -32,12 +32,15 @@ $status = "PENDING"; // Default status for syllabus
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
-$written_task = "";
-$quizzes = "";
-$attendance = "";
-$behavior = "";
-$performance_product = "";
-$quarterly_assessment = "";
+$prepared_by = "";
+$prepared_date = "";
+$resource_checked_by = "";
+$resource_checked_date = "";
+$reviewed_by_program_chair = "";
+$reviewed_by_dean = "";
+$reviewed_by_date = "";
+$approved_by = "";
+$approved_by_date = "";
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -50,7 +53,9 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         $stmt->bind_param("s", $subject_code);
         $stmt->execute();
         $result = $stmt->get_result();
+
         if ($result->num_rows > 0) {
+            // If record exists, fetch the data
             $row = $result->fetch_assoc();
             $course_units = htmlspecialchars($row['course_units']);
             $course_description = htmlspecialchars($row['course_description']);
@@ -58,10 +63,44 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $contact_hours = htmlspecialchars($row['contact_hours']);
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
             $status = htmlspecialchars($row['status']);  // Get the syllabus status
+            $prepared_by = htmlspecialchars($row['prepared_by']);
+            $prepared_by_date = !empty($row['prepared_by_date']) ? htmlspecialchars($row['prepared_by_date']) : date('Y-m-d');
+            $resource_checked_by = htmlspecialchars($row['resource_checked_by']);
+            $resource_checked_by_date = !empty($row['resource_checked_by_date']) ? htmlspecialchars($row['resource_checked_by_date']) : date('Y-m-d');
+            $reviewed_by_program_chair = htmlspecialchars($row['reviewed_by_program_chair']);
+            $reviewed_by_dean = htmlspecialchars($row['reviewed_by_dean']);
+            $reviewed_by_date = !empty($row['reviewed_by_date']) ? htmlspecialchars($row['reviewed_by_date']) : date('Y-m-d');
+            $approved_by = htmlspecialchars($row['approved_by']);
+            $approved_by_date = !empty($row['approved_by_date']) ? htmlspecialchars($row['approved_by_date']) : date('Y-m-d');
         } else {
-            echo '<script>alert("No syllabus data found for subject code: ' . htmlspecialchars($subject_code) . '");</script>';
+            // If no record exists, show a message instead of inserting a new record
+            echo "<script>alert('No syllabus data found for subject code $subject_code.');</script>";
         }
         $stmt->close();
+    } else {
+        $_SESSION['error_message'] = "Error preparing syllabus query: " . $conn->error;
+    }
+
+
+    // Fetch grading criteria data
+    $sqlGradingSystem = "SELECT * FROM grading_system WHERE subject_code = ?";
+    if ($stmtGradingSystem = $conn->prepare($sqlGradingSystem)) {
+        $stmtGradingSystem->bind_param("s", $subject_code);
+        $stmtGradingSystem->execute();
+        $resultGradingSystem = $stmtGradingSystem->get_result();
+        while ($row = $resultGradingSystem->fetch_assoc()) {
+            $criteria_type = $row['criteria_type'];
+            $criteria_name = $row['criteria_name'];
+            $percentage = $row['percentage'];
+            if ($criteria_type === 'written_task') {
+                $written_task_criteria[$criteria_name] = $percentage;
+            } elseif ($criteria_type === 'performance_task') {
+                $performance_task_criteria[$criteria_name] = $percentage;
+            } elseif ($criteria_type === 'quarterly_assessment') {
+                $quarterly_assessment_criteria[$criteria_name] = $percentage;
+            }
+        }
+        $stmtGradingSystem->close();
     }
 
     // Fetch PILO-GILO mappings with updated columns
@@ -132,106 +171,16 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         }
         $stmt->close();
     }
-
-    // Fetch grading system data: Written Tasks
-    if (!empty($subject_code)) {
-        $sqlWrittenTasks = "SELECT * FROM written_tasks WHERE subject_code = ?";
-        if ($stmtWrittenTasks = $conn->prepare($sqlWrittenTasks)) {
-            $stmtWrittenTasks->bind_param("s", $subject_code);
-            if ($stmtWrittenTasks->execute()) {
-                $resultWrittenTasks = $stmtWrittenTasks->get_result();
-                if ($resultWrittenTasks->num_rows > 0) {
-                    $row = $resultWrittenTasks->fetch_assoc();
-                    $written_task = htmlspecialchars($row['written_task']);
-                    $quizzes = htmlspecialchars($row['quizzes']);
-                }
-                $resultWrittenTasks->free();
-            }
-            $stmtWrittenTasks->close();
-        }
-    }
-
-    // Fetch grading system data: Performance Tasks
-    $sqlPerformanceTasks = "SELECT * FROM performance_tasks WHERE subject_code = ?";
-    if ($stmtPerformanceTasks = $conn->prepare($sqlPerformanceTasks)) {
-        $stmtPerformanceTasks->bind_param("s", $subject_code);
-        if ($stmtPerformanceTasks->execute()) {
-            $resultPerformanceTasks = $stmtPerformanceTasks->get_result();
-            if ($resultPerformanceTasks->num_rows > 0) {
-                $row = $resultPerformanceTasks->fetch_assoc();
-                $attendance = htmlspecialchars($row['attendance']);
-                $behavior = htmlspecialchars($row['behavior']);
-                $performance_product = htmlspecialchars($row['performance_product']);
-            }
-            $resultPerformanceTasks->free();
-        }
-        $stmtPerformanceTasks->close();
-    }
-
-    // Fetch grading system data: Quarterly Assessment
-    $sqlQuarterlyAssessment = "SELECT * FROM quarterly_assessment WHERE subject_code = ?";
-    if ($stmtQuarterlyAssessment = $conn->prepare($sqlQuarterlyAssessment)) {
-        $stmtQuarterlyAssessment->bind_param("s", $subject_code);
-        if ($stmtQuarterlyAssessment->execute()) {
-            $resultQuarterlyAssessment = $stmtQuarterlyAssessment->get_result();
-            if ($resultQuarterlyAssessment->num_rows > 0) {
-                $row = $resultQuarterlyAssessment->fetch_assoc();
-                $quarterly_assessment = htmlspecialchars($row['quarterly_assessment']);
-            }
-            $resultQuarterlyAssessment->free();
-        }
-        $stmtQuarterlyAssessment->close();
-    }
 } else {
-    $_SESSION['error_message'] = "Subject code or name not provided.";
-}
-
-// Handle "Approve" button click
-if (isset($_POST['approve'])) {
-    // Update the status to "APPROVED" in the syllabus table
-    $sqlUpdateSyllabus = "UPDATE syllabus SET status = 'APPROVED' WHERE subject_code = ?";
-    $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
-    $stmtUpdateSyllabus->bind_param("s", $subject_code);
-
-    // Update the status in the related tables (cilo_gilo_map, pilo_gilo_map, context)
-    $sqlUpdateCiloGilo = "UPDATE cilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
-    $sqlUpdatePiloGilo = "UPDATE pilo_gilo_map SET status = 'APPROVED' WHERE subject_code = ?";
-    $sqlUpdateContext = "UPDATE context SET status = 'APPROVED' WHERE subject_code = ?";
-
-    // Prepare and execute the queries
-    $stmtUpdateCiloGilo = $conn->prepare($sqlUpdateCiloGilo);
-    $stmtUpdatePiloGilo = $conn->prepare($sqlUpdatePiloGilo);
-    $stmtUpdateContext = $conn->prepare($sqlUpdateContext);
-
-    $stmtUpdateCiloGilo->bind_param("s", $subject_code);
-    $stmtUpdatePiloGilo->bind_param("s", $subject_code);
-    $stmtUpdateContext->bind_param("s", $subject_code);
-
-    // Execute all updates
-    if (
-        $stmtUpdateSyllabus->execute() &&
-        $stmtUpdateCiloGilo->execute() &&
-        $stmtUpdatePiloGilo->execute() &&
-        $stmtUpdateContext->execute()
-    ) {
-        // Trigger JavaScript alert after successful approval
-        echo "<script>alert('Subject code $subject_code and all related data are approved');</script>";
-        // Refresh the page to reflect the updated status
-        echo "<script>window.location.href = '?subject_code=$subject_code&subject_name=$subject_name';</script>";
-    } else {
-        echo "Error updating status: " . $stmtUpdateSyllabus->error;
-    }
-
-    // Close the prepared statements
-    $stmtUpdateSyllabus->close();
-    $stmtUpdateCiloGilo->close();
-    $stmtUpdatePiloGilo->close();
-    $stmtUpdateContext->close();
+    echo "<script>
+            alert('Subject code or name not provided.');
+            window.location.href = 'index.php';
+          </script>";
+    exit();
 }
 
 $conn->close();
 ?>
-
 
 
 
@@ -692,6 +641,7 @@ $conn->close();
                 <tr>
                     <td colspan="8" class="performance-task">
                         <strong>Performance Tasks:</strong><br>
+                        <br>
                         <?php echo !empty($performance_tasks) ? nl2br(htmlspecialchars($performance_tasks)) : 'No performance tasks available'; ?>
                     </td>
                 </tr>
@@ -709,60 +659,67 @@ $conn->close();
                 </tr>
             </thead>
             <tbody>
-                <!-- Written Task Row -->
-                <tr id="written-task-row">
+                <!-- Written Task Section -->
+                <tr>
                     <td><span class="red-text">Written Task</span><br>
-                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
-                        &nbsp;&nbsp;&nbsp;- Written Task
+                        <?php if (!empty($written_task_criteria)) : ?>
+                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
-                    <td>
-                        <span class="red-text" id="written-task-percent">30%</span><br>
-                        &nbsp;&nbsp;&nbsp;<span id="quizzes-percent">
-                            <?php echo isset($quizzes) && is_numeric($quizzes) ? round($quizzes) . "%" : "0%"; ?>
-                        </span><br>
-                        &nbsp;&nbsp;&nbsp;<span id="written-task-detail">
-                            <?php echo isset($written_task) && is_numeric($written_task) ? round($written_task) . "%" : "0%"; ?>
-                        </span>
+                    <td><br>
+                        <?php if (!empty($written_task_criteria)) : ?>
+                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
 
-                <!-- Performance Task Row -->
-                <tr id="performance-task-row">
+                <!-- Performance Tasks Section -->
+                <tr>
                     <td><span class="red-text">Performance Tasks</span><br>
-                        &nbsp;&nbsp;&nbsp;- Attendance<br>
-                        &nbsp;&nbsp;&nbsp;- Behavior<br>
-                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                        <?php if (!empty($performance_task_criteria)) : ?>
+                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
-                    <td>
-                        <span class="red-text" id="performance-task-percent">40%</span><br>
-                        &nbsp;&nbsp;&nbsp;<span id="attendance-percent">
-                            <?php echo isset($attendance) && is_numeric($attendance) ? round($attendance) . "%" : "0%"; ?>
-                        </span><br>
-                        &nbsp;&nbsp;&nbsp;<span id="behavior-percent">
-                            <?php echo isset($behavior) && is_numeric($behavior) ? round($behavior) . "%" : "0%"; ?>
-                        </span><br>
-                        &nbsp;&nbsp;&nbsp;<span id="performance-product-percent">
-                            <?php echo isset($performance_product) && is_numeric($performance_product) ? round($performance_product) . "%" : "0%"; ?>
-                        </span>
+                    <td><br>
+                        <?php if (!empty($performance_task_criteria)) : ?>
+                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
 
-                <!-- Quarterly Assessment Row -->
-                <tr id="quarterly-assessment-row">
-                    <td><span class="red-text">Quarterly Assessment</span></td>
-                    <td><span class="red-text" id="quarterly-assessment-percent">
-                            <?php echo isset($quarterly_assessment) && is_numeric($quarterly_assessment) ? round($quarterly_assessment) . "%" : "0%"; ?>
-                        </span></td>
+                <!-- Quarterly Assessment Section -->
+                <tr>
+                    <td><span class="red-text">Quarterly Assesment</span><br>
+                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td><br>
+                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
 
-                <!-- Total Grade Percentage Row -->
+                <!-- Total -->
                 <tr>
                     <td><strong>TOTAL Grade Percentage</strong></td>
-                    <td><strong>100%</strong></td>
+                    <td><strong class="red-text">100%</strong></td>
                 </tr>
             </tbody>
         </table>
-
 
 
 
@@ -780,7 +737,7 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Prepared by:</span><br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        <strong><?= $prepared_by; ?></strong><br>
                         Subject Teacher
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -788,7 +745,7 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Resources Checked & Verified by:</span><br>
-                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                        <strong><?= $resource_checked_by; ?></strong><br>
                         College Librarian
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -796,9 +753,11 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Reviewed by:</span><br>
-                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                        <strong><?= $reviewed_by_program_chair; ?></strong><br>
                         BSIT Program Chair<br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        <br>
+                        <br>
+                        <strong><?= $reviewed_by_dean; ?></strong><br>
                         Dean
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -806,13 +765,15 @@ $conn->close();
                 <tr>
                     <td colspan="2" class="info-cell-approved">
                         <span class="red-text">Approved by:</span><br>
-                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                        <strong><?= $approved_by; ?></strong><br>
                         Vice President for Academic Affairs and Research
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
                 </tr>
             </tbody>
         </table>
+
+
 
         <br>
         <!-- Print Button -->

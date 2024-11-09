@@ -32,6 +32,15 @@ $status = "PENDING"; // Default status for syllabus
 $cilos = [];
 $pilo_gilo = [];
 $context = [];
+$prepared_by = "";
+$prepared_date = "";
+$resource_checked_by = "";
+$resource_checked_date = "";
+$reviewed_by_program_chair = "";
+$reviewed_by_dean = "";
+$reviewed_by_date = "";
+$approved_by = "";
+$approved_by_date = "";
 
 // Check if subject_code and subject_name are provided through GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
@@ -44,7 +53,9 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         $stmt->bind_param("s", $subject_code);
         $stmt->execute();
         $result = $stmt->get_result();
+        
         if ($result->num_rows > 0) {
+            // If record exists, fetch the data
             $row = $result->fetch_assoc();
             $course_units = htmlspecialchars($row['course_units']);
             $course_description = htmlspecialchars($row['course_description']);
@@ -52,22 +63,44 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $contact_hours = htmlspecialchars($row['contact_hours']);
             $performance_tasks = htmlspecialchars($row['performance_tasks']);
             $status = htmlspecialchars($row['status']);  // Get the syllabus status
+            $prepared_by = htmlspecialchars($row['prepared_by']);
+            $prepared_by_date = !empty($row['prepared_by_date']) ? htmlspecialchars($row['prepared_by_date']) : date('Y-m-d');
+            $resource_checked_by = htmlspecialchars($row['resource_checked_by']);
+            $resource_checked_by_date = !empty($row['resource_checked_by_date']) ? htmlspecialchars($row['resource_checked_by_date']) : date('Y-m-d');
+            $reviewed_by_program_chair = htmlspecialchars($row['reviewed_by_program_chair']);
+            $reviewed_by_dean = htmlspecialchars($row['reviewed_by_dean']);
+            $reviewed_by_date = !empty($row['reviewed_by_date']) ? htmlspecialchars($row['reviewed_by_date']) : date('Y-m-d');
+            $approved_by = htmlspecialchars($row['approved_by']);
+            $approved_by_date = !empty($row['approved_by_date']) ? htmlspecialchars($row['approved_by_date']) : date('Y-m-d');
         } else {
-            // If no record exists, we set the status to PENDING and insert it
-            $status = "PENDING";
-            // Insert a new record with the default status if it doesn't exist
-            $sqlInsertSyllabus = "INSERT INTO syllabus (subject_code, subject_name, status) VALUES (?, ?, ?)";
-            if ($stmtInsertSyllabus = $conn->prepare($sqlInsertSyllabus)) {
-                $stmtInsertSyllabus->bind_param("sss", $subject_code, $subject_name, $status);
-                $stmtInsertSyllabus->execute();
-                $stmtInsertSyllabus->close();
-            } else {
-                echo "Error inserting syllabus record: " . $conn->error;
-            }
+            // If no record exists, show a message instead of inserting a new record
+            echo "<script>alert('No syllabus data found for subject code $subject_code.');</script>";
         }
         $stmt->close();
     } else {
         $_SESSION['error_message'] = "Error preparing syllabus query: " . $conn->error;
+    }
+
+
+    // Fetch grading criteria data
+    $sqlGradingSystem = "SELECT * FROM grading_system WHERE subject_code = ?";
+    if ($stmtGradingSystem = $conn->prepare($sqlGradingSystem)) {
+        $stmtGradingSystem->bind_param("s", $subject_code);
+        $stmtGradingSystem->execute();
+        $resultGradingSystem = $stmtGradingSystem->get_result();
+        while ($row = $resultGradingSystem->fetch_assoc()) {
+            $criteria_type = $row['criteria_type'];
+            $criteria_name = $row['criteria_name'];
+            $percentage = $row['percentage'];
+            if ($criteria_type === 'written_task') {
+                $written_task_criteria[$criteria_name] = $percentage;
+            } elseif ($criteria_type === 'performance_task') {
+                $performance_task_criteria[$criteria_name] = $percentage;
+            } elseif ($criteria_type === 'quarterly_assessment') {
+                $quarterly_assessment_criteria[$criteria_name] = $percentage;
+            }
+        }
+        $stmtGradingSystem->close();
     }
 
     // Fetch PILO-GILO mappings with updated columns
@@ -195,7 +228,7 @@ if (isset($_POST['deny'])) {
     $sqlUpdateSyllabus = "UPDATE syllabus SET status = 'DENIED' WHERE subject_code = ?";
     $stmtUpdateSyllabus = $conn->prepare($sqlUpdateSyllabus);
     $stmtUpdateSyllabus->bind_param("s", $subject_code);
-    
+
     // Execute the query
     if ($stmtUpdateSyllabus->execute()) {
         echo "<script>alert('Subject code $subject_code has been denied');</script>";
@@ -796,6 +829,8 @@ $conn->close();
 
             </tbody>
         </table>
+
+
         <h4>XII. Grading System</h4>
         <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
             <thead>
@@ -805,38 +840,69 @@ $conn->close();
                 </tr>
             </thead>
             <tbody>
+                <!-- Written Task Section -->
                 <tr>
                     <td><span class="red-text">Written Task</span><br>
-                        &nbsp;&nbsp;&nbsp;- Quizzes<br>
-                        &nbsp;&nbsp;&nbsp;- Written Task
+                        <?php if (!empty($written_task_criteria)) : ?>
+                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
-                    <td><span class="red-text">30%</span><br>
-                        &nbsp;&nbsp;&nbsp;15%<br>
-                        &nbsp;&nbsp;&nbsp;15%
+                    <td><br>
+                        <?php if (!empty($written_task_criteria)) : ?>
+                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
+
+                <!-- Performance Tasks Section -->
                 <tr>
                     <td><span class="red-text">Performance Tasks</span><br>
-                        &nbsp;&nbsp;&nbsp;- Attendance<br>
-                        &nbsp;&nbsp;&nbsp;- Behavior<br>
-                        &nbsp;&nbsp;&nbsp;- Performance/Product/Laboratory
+                        <?php if (!empty($performance_task_criteria)) : ?>
+                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
-                    <td><span class="red-text">40%</span><br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;5%<br>
-                        &nbsp;&nbsp;&nbsp;30%
+                    <td><br>
+                        <?php if (!empty($performance_task_criteria)) : ?>
+                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
+
+                <!-- Quarterly Assessment Section -->
                 <tr>
-                    <td><span class="red-text">Quarterly Assessment</span></td>
-                    <td><span class="red-text">30%</span></td>
+                    <td><span class="red-text">Quarterly Assesment</span><br>
+                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
+                    <td><br>
+                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </td>
                 </tr>
+
+                <!-- Total -->
                 <tr>
                     <td><strong>TOTAL Grade Percentage</strong></td>
-                    <td><strong>100%</strong></td>
+                    <td><strong class="red-text">100%</strong></td>
                 </tr>
             </tbody>
         </table>
+
+
 
         <!-- Signature Section -->
         <table id="signatureTable" class="custom-table">
@@ -852,7 +918,7 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Prepared by:</span><br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        <strong><?= $prepared_by; ?></strong><br>
                         Subject Teacher
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -860,7 +926,7 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Resources Checked & Verified by:</span><br>
-                        <strong>CONTISZA C. ABADIEZ, RL</strong><br>
+                        <strong><?= $resource_checked_by; ?></strong><br>
                         College Librarian
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -868,9 +934,11 @@ $conn->close();
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Reviewed by:</span><br>
-                        <strong>MARLON JUHN TIMOGAN, MIT</strong><br>
+                        <strong><?= $reviewed_by_program_chair; ?></strong><br>
                         BSIT Program Chair<br>
-                        <strong>DAISA O. GUPIT, MIT</strong><br>
+                        <br>
+                        <br>
+                        <strong><?= $reviewed_by_dean; ?></strong><br>
                         Dean
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -878,7 +946,7 @@ $conn->close();
                 <tr>
                     <td colspan="2" class="info-cell-approved">
                         <span class="red-text">Approved by:</span><br>
-                        <strong>BEVERLY D. JAMINAL, Ed.D.</strong><br>
+                        <strong><?= $approved_by; ?></strong><br>
                         Vice President for Academic Affairs and Research
                     </td>
                     <td class="signature-cell">_____________<br>Date</td>
@@ -887,20 +955,21 @@ $conn->close();
         </table>
 
 
+
         <!-- Button Container -->
         <div class="button-container">
             <!-- Approve Syllabus Button (only show if status is PENDING) -->
- 
-                <form method="post" onsubmit="return confirmApprove()">
-                    <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
-                </form>
+
+            <form method="post" onsubmit="return confirmApprove()">
+                <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
+            </form>
 
 
             <!-- Deny Syllabus Button (only show if status is PENDING) -->
 
-                <form method="post" onsubmit="return confirmDeny()">
-                    <button class="deny-button" type="submit" name="deny">Deny Syllabus</button>
-                </form>
+            <form method="post" onsubmit="return confirmDeny()">
+                <button class="deny-button" type="submit" name="deny">Deny Syllabus</button>
+            </form>
 
 
             <!-- Back Button -->

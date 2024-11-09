@@ -1606,7 +1606,7 @@ $conn->close();
                         <td class="info-cell">
                             <span class="red-text">Prepared by:</span><br>
                             _____________________<br>
-                            <input type="text" required><br>
+                            <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
                             <p>Subject Teacher</p>
                         </td>
                         <td class="signature-cell">
