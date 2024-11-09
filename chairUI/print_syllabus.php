@@ -53,7 +53,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
         $stmt->bind_param("s", $subject_code);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+
         if ($result->num_rows > 0) {
             // If record exists, fetch the data
             $row = $result->fetch_assoc();
@@ -565,6 +565,47 @@ $conn->close();
             /* Adjust line spacing */
             word-wrap: break-word;
         }
+
+        /* Style for the disabled buttons */
+        button:disabled {
+            background-color: #ccc;
+            /* Light gray background */
+            color: #666;
+            /* Darker gray text */
+            border: 1px solid #999;
+            /* Light gray border */
+            cursor: not-allowed;
+            /* Not-allowed cursor */
+        }
+
+        /* Style for buttons in the active state */
+        button {
+            background-color: #4CAF50;
+            /* Green background */
+            color: white;
+            /* White text */
+            border: none;
+            /* No border */
+            padding: 10px 20px;
+            /* Padding for buttons */
+            text-align: center;
+            /* Center text */
+            text-decoration: none;
+            /* Remove underline */
+            display: inline-block;
+            /* Allow multiple buttons on the same line */
+            font-size: 16px;
+            /* Font size */
+            margin: 4px 2px;
+            /* Margin between buttons */
+            transition: background-color 0.3s ease;
+            /* Smooth background transition */
+        }
+
+        button:hover {
+            background-color: #45a049;
+            /* Darker green on hover */
+        }
     </style>
 
 </head>
@@ -956,20 +997,29 @@ $conn->close();
 
 
 
-        <!-- Button Container -->
         <div class="button-container">
-            <!-- Approve Syllabus Button (only show if status is PENDING) -->
+            <!-- Approve Syllabus Button (only show if status is not PENDING) -->
+            <?php if ($status !== 'APPROVED'): ?>
+                <form method="post" onsubmit="return confirmApprove()">
+                    <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
+                </form>
+            <?php else: ?>
+                <form method="post">
+                    <button class="approve-button" type="button" disabled>Approve Syllabus</button>
+                </form>
+            <?php endif; ?>
 
-            <form method="post" onsubmit="return confirmApprove()">
-                <button class="approve-button" type="submit" name="approve">Approve Syllabus</button>
-            </form>
 
-
-            <!-- Deny Syllabus Button (only show if status is PENDING) -->
-
-            <form method="post" onsubmit="return confirmDeny()">
-                <button class="deny-button" type="submit" name="deny">Deny Syllabus</button>
-            </form>
+            <!-- Deny Syllabus Button (only show if status is not PENDING) -->
+            <?php if ($status !== 'APPROVED'): ?>
+                <form method="post" onsubmit="return confirmDeny()">
+                    <button class="deny-button" type="submit" name="deny">Deny Syllabus</button>
+                </form>
+            <?php else: ?>
+                <form method="post">
+                    <button class="deny-button" type="button" disabled>Deny Syllabus</button>
+                </form>
+            <?php endif; ?>
 
 
             <!-- Back Button -->
@@ -980,6 +1030,8 @@ $conn->close();
         <div class="divFooter">
             <img src="../footer.png" alt="Membership Logos" class="member-logos">
         </div>
+
+
 
 
 

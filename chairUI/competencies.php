@@ -21,6 +21,7 @@ $percentageCompetenciesImplemented = $preparedBy = $checkedBy = $notedBy = '';
 $status = 'PENDING';  // Default status
 $competencies = [];
 
+
 // Fetch data based on subject_code and subject_name from GET
 if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
     $subjectCode = $_GET['subject_code'];
@@ -226,6 +227,18 @@ $conn->close();
         .back_btn:hover {
             background: rgb(255, 76, 76);
         }
+
+        /* Style for the disabled buttons */
+        button:disabled {
+            background-color: #ccc;
+            /* Light gray background */
+            color: #666;
+            /* Darker gray text */
+            border: 1px solid #999;
+            /* Light gray border */
+            cursor: not-allowed;
+            /* Not-allowed cursor */
+        }
     </style>
 </head>
 
@@ -256,27 +269,30 @@ $conn->close();
 
             <h2 style="text-align: center;">COMPETENCY IMPLEMENTATION</h2>
 
-                <!-- Action button -->
+            <!-- Action button -->
             <table class="header-info">
                 <div>
                     <tr>
                         <th class="status-container">Action</th>
                         <td>
-                            <?php if ($status === 'PENDING'): ?>
-                                <div class="button-container">
-                                    <form method="post" class="status-container" onsubmit="return confirmApprove()">
-                                        <button class="approve-button" type="submit" name="approve">Approve Competency</button>
-                                    </form>
-                                    <form method="post" class="status-container" onsubmit="return confirmDeny()">
-                                        <button class="deny-button" type="submit" name="deny">Deny Competency</button>
-                                    </form>
-                                </div>
-                            <?php endif; ?>
+                            <div class="button-container">
+                                <!-- Approve Competency Button -->
+                                <form method="post" class="status-container" onsubmit="return confirmApprove()">
+                                    <button class="approve-button" type="submit" name="approve"
+                                        <?php echo ($status === 'APPROVED') ? 'disabled' : ''; ?>>Approve Competency</button>
+                                </form>
+                                <!-- Deny Competency Button -->
+                                <form method="post" class="status-container" onsubmit="return confirmDeny()">
+                                    <button class="deny-button" type="submit" name="deny"
+                                        <?php echo ($status === 'APPROVED') ? 'disabled' : ''; ?>>Deny Competency</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
-                <!-- Action button -->
 
-                
+                    <!-- Action button -->
+
+
                     <tr>
                         <th class="status-container">Status</th>
                         <td>
