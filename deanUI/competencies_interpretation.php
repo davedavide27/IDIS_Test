@@ -34,12 +34,11 @@ $response = [
     'competencies' => []
 ];
 
-// Fetch competencies, remarks, and id, grouped by competency_description and remarks, and ordered by id
-$sqlCompetencies = "SELECT id, competency_description, remarks 
+// Fetch competencies and remarks directly from the course_outline_ratings table
+$sqlCompetencies = "SELECT competency_description, remarks 
                     FROM course_outline_ratings 
                     WHERE subject_code = ? 
-                    GROUP BY competency_description, remarks
-                    ORDER BY id ASC";  // Order by the id field
+                    GROUP BY competency_description, remarks";
 $stmt = $conn->prepare($sqlCompetencies);
 $stmt->bind_param("s", $subject_code);
 $stmt->execute();
@@ -59,7 +58,6 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $competencyDescription = htmlspecialchars($row['competency_description']);
         $teacherRemark = htmlspecialchars($row['remarks']);
-        $competencyId = intval($row['id']);  // Get the competency ID
 
         // Initialize total student rating and count for each competency
         $totalStudentRating = 0;
@@ -67,9 +65,9 @@ if ($result->num_rows > 0) {
 
         // Fetch student ratings for each competency from course_outline_ratings
         $sqlRatings = "SELECT rating FROM course_outline_ratings 
-                       WHERE subject_code = ? AND competency_description = ? AND id = ?";
+                       WHERE subject_code = ? AND competency_description = ?";
         $stmtRatings = $conn->prepare($sqlRatings);
-        $stmtRatings->bind_param("ssi", $subject_code, $competencyDescription, $competencyId);
+        $stmtRatings->bind_param("ss", $subject_code, $competencyDescription);
         $stmtRatings->execute();
         $resultRatings = $stmtRatings->get_result();
 
