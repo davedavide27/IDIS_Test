@@ -211,17 +211,6 @@ $conn->close();
                                             <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
                                             <p style="text-align: center; margin: 0;">Syllabus</p>
                                             <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
-                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
-                                                <div style="margin-top: 8px;">
-                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - All inputs must be included when submitting a syllabus.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
-                                                </div>
-                                            </div>
                                         </button>
                                     </a>
                                 </div>
@@ -229,22 +218,10 @@ $conn->close();
                                 <!-- Competencies Plan Card -->
                                 <div class="planCard" id="competenciesCard" style="display: none; cursor: pointer;">
                                     <a href="competencies.php" id="competenciesLink" style="display: block; width: 100%; height: 100%; text-decoration: none; color: inherit;">
-                                        <button type="submit" style="all: unset; display: block; width: 100%; height: 10%;">
+                                        <button type="submit" style="all: unset; display: block; width: 100%;">
                                             <input type="hidden" name="subject_code" id="selected_subject_code">
                                             <input type="hidden" name="subject_name" id="selected_subject_name">
                                             <p style="text-align: center; margin: 0;">Competencies</p>
-                                            <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
-                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
-                                                <div style="margin-top: 8px;">
-                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - All inputs must be included when submitting a syllabus.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
-                                                </div>
-                                            </div>
                                         </button>
                                     </a>
                                 </div>
@@ -254,6 +231,8 @@ $conn->close();
                     <div id="Topics" class="tabcontent">
                         <h6><br>The table below concludes all inputs.</h6>
                         <div id="container_ompe">
+
+                            <button id="printButton" onclick="printTable()">Print Table</button>
                             <table class="remarksTable">
                                 <thead>
                                     <tr>

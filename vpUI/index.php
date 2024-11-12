@@ -323,16 +323,6 @@ $conn->close();
                                             <input type="hidden" name="syllabus_subject_name" id="syllabus_subject_name">
                                             <p style="text-align: center; margin: 0;">Syllabus</p>
                                             <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
-                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
-                                                <div style="margin-top: 8px;">
-                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - All inputs must be included when submitting a syllabus.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
-                                                </div>
                                             </div>
                                         </button>
                                     </a>
@@ -345,16 +335,6 @@ $conn->close();
                                             <input type="hidden" name="subject_name" id="selected_subject_name">
                                             <p style="text-align: center; margin: 0;">Competencies</p>
                                             <div style="text-align: justify; font-size: 16px; color: #555; margin: 20px 20px 0; line-height: 1.6;">
-                                                <strong style="text-align: center; display: block;">Notes:</strong><br>
-                                                <div style="margin-top: 8px;">
-                                                    - To avoid miscalculation, ILOs, Course Outlines, & Competencies must be equal.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - All inputs must be included when submitting a syllabus.
-                                                </div>
-                                                <div style="margin-top: 8px;">
-                                                    - ILOs, Course Outlines, & Competencies must be unique to each other and not repeated.
-                                                </div>
                                             </div>
                                         </button>
                                     </a>
