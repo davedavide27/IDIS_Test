@@ -130,6 +130,30 @@ $conn->close();
             border-radius: 4px;
             font-size: 1em;
         }
+
+        .tabcontent button {
+            display: block;
+            margin: auto;
+            margin-bottom: 20px;
+            padding: 10px 40px;
+            border-radius: 5px;
+            border-style: none;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+            -webkit-transform-duration: 0.3s;
+            transition-duration: 0.3s;
+        }
+
+        .tabcontent button:hover {
+            box-shadow: 0 0 20px rgba (0, 0, 0, 0.5);
+            -webkit-transform: scale(1.1);
+            transform: scale(1.1);
+            background-color: #1e90ff;
+        }
+
+        h4 {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
@@ -150,7 +174,7 @@ $conn->close();
                 <div class="selectIns">
                     <form method="get" action="">
                         <!-- Search Bar for Instructor Filtering -->
-                        <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..." style="width: 74%; padding: 8px; margin-bottom: 8px;">
+                        <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..." style="width: 74%; padding: 8px; margin-bottom: 15px; border-radius: 6px">
 
                         <!-- Dropdown to Select Instructor -->
                         <select name="instructor_ID" id="showSelect" onchange="this.form.submit()">
