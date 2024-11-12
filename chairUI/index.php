@@ -151,6 +151,46 @@ $conn->close();
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
         }
+
+        .selectIns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 10px;
+        }
+
+        .search-container h4 {
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #searchInstructor {
+            width: 89%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            margin-left: 35px;
+        }
+
+        #instructorSelectAssign {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
     </style>
 </head>
 
@@ -169,16 +209,42 @@ $conn->close();
                 <h4 style="text-align: center;">Select Instructor</h4>
                 <div class="selectIns">
                     <form method="get" action="index.php" id="instructorForm">
+                        <!-- Search input above the select dropdown -->
+                        <input type="text" id="searchInstructor" placeholder="Search Instructor..." onkeyup="filterInstructors()" style="width: 65%; padding: 8px; margin-bottom: 10px;">
+
+                        <!-- Instructor dropdown -->
                         <select name="instructor_ID" id="showSelect" onchange="fetchSubjects(this.value)">
                             <option value="">Select Instructor:</option>
                             <?php foreach ($instructors as $instructor): ?>
-                                <option value="<?php echo $instructor['instructor_ID']; ?>">
+                                <option value="<?php echo $instructor['instructor_ID']; ?>" class="instructor-option">
                                     <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </form>
                 </div>
+
+                <script>
+                    // Function to filter instructors based on search input
+                    function filterInstructors() {
+                        var input, filter, select, options, i, txtValue;
+                        input = document.getElementById('searchInstructor');
+                        filter = input.value.toUpperCase(); // Convert search input to uppercase for case-insensitive search
+                        select = document.getElementById('showSelect');
+                        options = select.getElementsByClassName('instructor-option');
+
+                        // Loop through all options and hide those that don't match the search query
+                        for (i = 0; i < options.length; i++) {
+                            txtValue = options[i].textContent || options[i].innerText;
+                            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                                options[i].style.display = ""; // Show matching options
+                            } else {
+                                options[i].style.display = "none"; // Hide non-matching options
+                            }
+                        }
+                    }
+                </script>
+
 
                 <br>
                 <h4 style="text-align: center;">PENDING SUBJECTS</h4>

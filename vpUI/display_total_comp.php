@@ -12,21 +12,29 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if (isset($_POST['subject_code'])) {
+if (isset($_POST['subject_code']) && isset($_POST['instructor_ID'])) {
     $subjectCode = $_POST['subject_code'];
+    $instructorID = $_POST['instructor_ID'];
 
-    // Fetch total number of competencies for the selected subject
-    $sql = "SELECT COUNT(*) as subject_competencies FROM competencies WHERE subject_code = ?";
+    // Fetch total number of competencies for the selected subject and instructor
+    $sql = "SELECT COUNT(*) as subject_competencies 
+            FROM competencies 
+            WHERE subject_code = ? AND instructor_id = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("s", $subjectCode);
+    $stmt->bind_param("si", $subjectCode, $instructorID);
     $stmt->execute();
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     $subjectCompetencies = $row['subject_competencies'];
 
-    // Fetch the total number of competencies across all subjects
-    $sqlTotal = "SELECT COUNT(*) as total_competencies FROM competencies";
-    $resultTotal = $conn->query($sqlTotal);
+    // Fetch the total number of competencies for the selected instructor across all their subjects
+    $sqlTotal = "SELECT COUNT(*) as total_competencies 
+                 FROM competencies 
+                 WHERE instructor_id = ?";
+    $stmtTotal = $conn->prepare($sqlTotal);
+    $stmtTotal->bind_param("i", $instructorID);
+    $stmtTotal->execute();
+    $resultTotal = $stmtTotal->get_result();
     $rowTotal = $resultTotal->fetch_assoc();
     $totalCompetencies = $rowTotal['total_competencies'];
 
@@ -37,7 +45,7 @@ if (isset($_POST['subject_code'])) {
     ]);
 
     $stmt->close();
+    $stmtTotal->close();
 }
 
 $conn->close();
-?>

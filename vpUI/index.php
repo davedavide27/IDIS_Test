@@ -193,7 +193,45 @@ $conn->close();
             border-top-right-radius: 10px;
         }
 
-        /* Add more styling if needed */
+        .selectIns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 10px;
+        }
+
+        .search-container h4 {
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #searchInstructor {
+            width: 89%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            margin-left: 35px;
+        }
+
+        #instructorSelectAssign {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
     </style>
 </head>
 
@@ -215,20 +253,34 @@ $conn->close();
                     <span id="competenciesCount"><?php echo $competenciesCount; ?> out of <?php echo $competenciesCount; ?></span>
                 </h4>
 
+
                 <div class="selectIns">
                     <form method="get" action="">
-                        <select name="instructor_ID" id="showSelect" onchange="fetchCompetencies(this.value); this.form.submit();">
-                            <option value="">Select Instructor</option>
-                            <?php foreach ($instructors as $instructor): ?>
-                                <option value="<?php echo $instructor['instructor_ID']; ?>" <?php echo isset($selectedInstructorID) && $selectedInstructorID == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                        <!-- Search Bar for Instructor Filtering -->
+                        <div class="search-container">
+                            <h4>Select Instructor</h4>
+                            <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
+
+                            <!-- Dropdown to Select Instructor -->
+                            <select id="instructorSelectAssign" name="instructor_ID" onchange="fetchCompetencies(this.value); updateSearchInstructor(); this.form.submit();" required>
+                                <option value="">Select Instructor</option>
+                                <?php foreach ($instructors as $instructor):
+                                    $fullName = trim($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']);
+                                    $selected = (isset($selectedInstructorID) && $selectedInstructorID == $instructor['instructor_ID']) ? 'selected' : '';
+                                ?>
+                                    <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>" <?php echo $selected; ?>>
+                                        <?php echo htmlspecialchars($fullName); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                     </form>
                 </div>
+
                 <br>
+
                 <h4 style="text-align: center;">Subjects: <?php echo count($subjects); ?> out of <?php echo count($subjects); ?></h4>
+
                 <div class="subsContainer">
                     <div class="subjects">
                         <?php if (!empty($subjects)): ?>
@@ -242,6 +294,7 @@ $conn->close();
                         <?php endif; ?>
                     </div>
                 </div>
+
                 <form action="../logout.php" method="post">
                     <button class="logout_btn" type="submit">Logout</button>
                 </form>
@@ -384,6 +437,34 @@ $conn->close();
                             }
                         }
                     });
+
+                    // Function to filter instructors based on input
+                    function filterInstructors() {
+                        const input = document.getElementById('searchInstructor');
+                        const filter = input.value.toLowerCase();
+                        const select = document.getElementById('instructorSelectAssign');
+
+                        for (let i = 0; i < select.options.length; i++) {
+                            const txtValue = select.options[i].textContent || select.options[i].innerText;
+                            if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                                select.options[i].style.display = "";
+                            } else {
+                                select.options[i].style.display = "none";
+                            }
+                        }
+                    }
+
+                    // Function to update the search input with the selected instructor's full name
+                    function updateSearchInstructor() {
+                        const select = document.getElementById('instructorSelectAssign');
+                        const selectedOption = select.options[select.selectedIndex];
+
+                        // Get the full name from the selected option's data attribute
+                        const fullName = selectedOption.getAttribute('data-fullname');
+
+                        // Update the search input with the selected instructor's full name
+                        document.getElementById('searchInstructor').value = fullName;
+                    }
                 </script>
 
 

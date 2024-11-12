@@ -77,11 +77,58 @@ $conn->close();
     <link rel="stylesheet" href="dean.css">
     <script src="dean.js"></script>
     <style>
+        @media print {
+            #printButton {
+                display: none;
+                /* Hide the print button during printing */
+            }
+        }
+
         .planCard p {
             padding: 5px;
             background-color: #f2bb30;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
+        }
+
+        .selectIns {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .search-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90%;
+            max-width: 400px;
+            margin-bottom: 10px;
+        }
+
+        .search-container h4 {
+            margin-bottom: 8px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        #searchInstructor {
+            width: 89%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+            margin-left: 28px;
+        }
+
+        #instructorSelectAssign {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
         }
     </style>
 </head>
@@ -102,10 +149,14 @@ $conn->close();
                 <h4 style="text-align: center;">Select Instructor</h4>
                 <div class="selectIns">
                     <form method="get" action="">
+                        <!-- Search Bar for Instructor Filtering -->
+                        <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..." style="width: 74%; padding: 8px; margin-bottom: 8px;">
+
+                        <!-- Dropdown to Select Instructor -->
                         <select name="instructor_ID" id="showSelect" onchange="this.form.submit()">
                             <option value="">Select Instructor:</option>
                             <?php foreach ($instructors as $instructor): ?>
-                                <option value="<?php echo $instructor['instructor_ID']; ?>" <?php echo $selectedInstructorId == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
+                                <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" <?php echo isset($selectedInstructorId) && $selectedInstructorId == $instructor['instructor_ID'] ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -263,6 +314,71 @@ $conn->close();
             }
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
+        }
+
+        // Function to filter instructors based on input
+        function filterInstructors() {
+            const input = document.getElementById('searchInstructor').value.toLowerCase();
+            const select = document.getElementById('showSelect');
+
+            // Loop through all options in the dropdown
+            for (let i = 0; i < select.options.length; i++) {
+                const option = select.options[i];
+                const fullName = option.text.toLowerCase();
+
+                // Show or hide options based on the input filter
+                option.style.display = fullName.includes(input) ? '' : 'none';
+            }
+        }
+
+        function printTable() {
+            // Create a new window
+            const printWindow = window.open('', '_blank');
+
+            // Get the table's HTML content
+            const tableContent = document.querySelector('#container_ompe').innerHTML;
+
+            // Define the HTML structure for the print window
+            printWindow.document.write(`
+        <html>
+        <head>
+            <title>Print Table</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; }
+                table { width: 100%; border-collapse: collapse; }
+                th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+                th { background-color: #f2f2f2; }
+
+                /* Hide the Print Table button in the new page */
+                #printButton {
+                    display: none;
+                }
+
+                /* Hide the print button when printing */
+                @media print {
+                    #printButton {
+                        display: none;
+                    }
+                }
+            </style>
+        </head>
+        <body>
+            <h2>Competency Table</h2>
+            ${tableContent}
+        </body>
+        </html>
+    `);
+
+            // Close the document after loading the content
+            printWindow.document.close();
+
+            // Trigger the print dialog
+            printWindow.print();
+
+            // Close the print window after printing or cancelling
+            printWindow.onafterprint = function() {
+                printWindow.close();
+            };
         }
     </script>
 </body>
