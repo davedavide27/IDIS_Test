@@ -74,7 +74,10 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
             $approved_by_date = !empty($row['approved_by_date']) ? htmlspecialchars($row['approved_by_date']) : date('Y-m-d');
         } else {
             // If no record exists, show a message instead of inserting a new record
-            echo "<script>alert('No syllabus data found for subject code $subject_code.');</script>";
+            echo "<script>
+            alert('No syllabus data for $subject_code $subject_name.');
+            window.location.href = 'index.php';
+          </script>";
         }
         $stmt->close();
     } else {
