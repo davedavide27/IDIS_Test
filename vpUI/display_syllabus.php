@@ -768,15 +768,15 @@ $conn->close();
                         <img src="../image.png" alt="Logo"><br>
                         <span class="red-text">Curriculum 2022</span>
                     </td>
-                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                    <td class="title-cell red-text">COLLEGE OF COMPUTING <br> AND INFORMATION SCIENCES</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Prepared by:</span><br>
                         _____________________<br>
-                        <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
-                        <p>Subject Teacher</p>
+                        <a name="prepared_by"><?php echo $prepared_by; ?> <a>
+                                <p>Subject Teacher</p>
                     </td>
                     <td class="signature-cell">
                         _____________________<br>Date
@@ -786,7 +786,7 @@ $conn->close();
                     <td class="info-cell">
                         <span class="red-text">Resources Checked & Verified by:</span><br>
                         ______________________<br>
-                        <input type="text" name="resource_checked_by" value="<?php echo $resource_checked_by; ?>" required>
+                        <a name="resource_checked_by"><?php echo $resource_checked_by; ?></a>
                         <p>College Librarian</p>
                     </td>
                     <td class="signature-cell">
@@ -797,10 +797,10 @@ $conn->close();
                     <td class="info-cell">
                         <span class="red-text">Reviewed by:</span><br>
                         ______________________<br>
-                        <input type="text" name="reviewed_by_program_chair" value="<?php echo $reviewed_by_program_chair; ?>" required>
+                        <a name="reviewed_by_program_chair"><?php echo $reviewed_by_program_chair; ?></a>
                         <p>BSIT Program Chair</p><br>
                         ______________________<br>
-                        <input type="text" name="reviewed_by_dean" value="<?php echo $reviewed_by_dean; ?>" required>
+                        <a name="reviewed_by_dean"><?php echo $reviewed_by_dean; ?></a>
                         <p>Dean</p>
                     </td>
                     <td class="signature-cell">
@@ -811,7 +811,7 @@ $conn->close();
                     <td colspan="2" class="info-cell-approved">
                         <span class="red-text">Approved by:</span><br>
                         ______________________<br>
-                        <input type="text" name="approved_by" value="<?php echo $approved_by; ?>" required>
+                        <a name="approved_by"><?php echo $approved_by; ?></a>
                         <p>Vice President for Academic Affairs and Research</p>
                     </td>
                     <td class="signature-cell">

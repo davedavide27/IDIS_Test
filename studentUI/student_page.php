@@ -72,6 +72,7 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="modal.css">
     <script src="student.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
@@ -108,6 +109,7 @@ $conn->close();
             /* Allow scrolling when content overflows */
             padding: 10px;
             margin-bottom: 20px;
+            overflow: hidden; 
         }
 
         .logout_btn {
@@ -248,8 +250,10 @@ $conn->close();
                                 </table>
                             </div>
                         </div>
+                        <br>
                         <div id="Topics" class="tabcontent">
-                            <h6><br>Rate if the topics are being discussed clearly from 1 to 5.</h6>
+                            <h6>Rate if the topics are being discussed clearly from 1 to 5.</h6>
+                            <button class="legend-button" onclick="openModal()">Legend</button>
                             <div id="containerAll">
                                 <table class="remarksTable">
                                     <thead>
@@ -269,7 +273,69 @@ $conn->close();
         </div>
     </div>
 
+    <!-- Modal structure -->
+    <div id="legendModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="legend-container">
+                <p class="legend-title">Legend:</p>
 
+                <div class="rating-level rating-1">
+                    1 - Very Poor
+                    <p class="rating-description">
+                        The delivery did not align with the course outline; major topics were missing or poorly covered.
+                    </p>
+                </div>
+
+                <div class="rating-level rating-2">
+                    2 - Poor
+                    <p class="rating-description">
+                        Some aspects of the outline were covered, but many topics or details were unclear or inadequately addressed.
+                    </p>
+                </div>
+
+                <div class="rating-level rating-3">
+                    3 - Average
+                    <p class="rating-description">
+                        The course followed the outline, but some areas were not fully explained or well-developed.
+                    </p>
+                </div>
+
+                <div class="rating-level rating-4">
+                    4 - Good
+                    <p class="rating-description">
+                        The course largely followed the outline, clearly covering key topics and expectations.
+                    </p>
+                </div>
+
+                <div class="rating-level rating-5">
+                    5 - Excellent
+                    <p class="rating-description">
+                        The course fully followed the outline, providing clear explanations and covering all key topics as expected.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
+<script>
+    // Function to open the modal
+    function openModal() {
+        const modal = document.getElementById("legendModal");
+        modal.style.display = "block";
+        modal.classList.remove("fade-out"); // Remove fade-out effect if present
+    }
+
+    // Function to close the modal with fade-out animation
+    function closeModal() {
+        const modal = document.getElementById("legendModal");
+        modal.classList.add("fade-out"); // Apply fade-out effect
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 300); // Match with fadeOut animation duration
+    }
+
+</script>
 
 </html>

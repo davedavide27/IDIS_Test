@@ -1,0 +1,108 @@
+/* Button styling and position */
+.legend-button {
+    position: relative;
+    right: 46%; /* Adjust the left position as needed */
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.legend-button:hover {
+    background-color: #0056b3;
+}
+
+/* Modal styling with animation */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow: hidden; /* Remove scroll bar */
+}
+
+/* Modal content styling and animations */
+.modal-content {
+    background-color: #f9f9f9;
+    margin: 10% auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    transform: translateY(-50px);
+    animation: slideDown 0.4s ease forwards; /* Slide-down animation for opening */
+    overflow-y: auto; /* Only scroll content if it overflows within modal */
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Animation keyframes */
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-50px); opacity: 0; }
+}
+
+/* Class to apply fade-out and slide-up effect */
+.fade-out {
+    animation: slideUp 0.3s ease forwards;
+}
+
+/* Legend styling inside modal */
+.legend-container {
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+}
+
+.legend-title {
+    font-weight: bold;
+    color: black;
+    margin-bottom: 8px;
+}
+
+.rating-level {
+    margin: 8px 0;
+    padding: 8px;
+    border-left: 5px solid;
+    border-radius: 4px;
+    font-weight: bold;
+}
+.rating-1 { border-color: #e74c3c; color: #e74c3c; }
+.rating-2 { border-color: #e67e22; color: #e67e22; }
+.rating-3 { border-color: #f1c40f; color: #f1c40f; }
+.rating-4 { border-color: #2ecc71; color: #2ecc71; }
+.rating-5 { border-color: #3498db; color: #3498db; }
+
+.rating-description {
+    font-weight: normal;
+    margin-top: 5px;
+    color: #2c2929;
+    font-size: 14px;
+}
