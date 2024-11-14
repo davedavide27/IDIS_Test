@@ -68,8 +68,10 @@ unset($_SESSION['form_data']);
 $conn->close();
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -182,12 +184,25 @@ $conn->close();
         button:hover {
             background-color: #0056b3;
         }
+
         button[disabled] {
             background-color: #ddd;
             cursor: not-allowed;
         }
+
+        .error-message {
+            color: red;
+            /* Set text color to red */
+            font-size: 14px;
+            /* Set font size for the error message */
+            display: inline-block;
+            /* Ensure the span behaves like an inline-block element */
+            margin-top: 5px;
+            /* Add some space above the message */
+        }
     </style>
 </head>
+
 <body>
     <div class="containerOfAll">
         <!-- Success and Error Messages -->
@@ -207,9 +222,12 @@ $conn->close();
         <h3>Create Instructor</h3>
 
         <form method="post" action="insert_instructor.php" onsubmit="return validateForm()">
-            <!-- Instructor ID Field -->
-            <label for="instructor_ID">Instructor ID:</label>
-            <input type="number" name="instructor_ID" required>
+            <!-- Student ID Field -->
+            <label for="instructor_ID">Student ID:</label>
+            <input type="number" name="instructor_ID" id="instructor_ID" value="<?php echo $_SESSION['form_data']['instructor_ID'] ?? ''; ?>" required>
+            <span id="instructor_id_error" class="error-message"></span> <!-- Error message will be shown here -->
+            <br>
+            <br>
 
             <!-- Instructor Name Fields -->
             <label for="instructor_fname">First Name:</label>
@@ -223,22 +241,52 @@ $conn->close();
 
             <!-- Password Fields -->
             <label for="password">Password:</label>
-            <input type="password" name="password" required id="password">
+            <input type="password" name="password" required id="password" maxlength="8">
 
             <label for="confirm_password">Confirm Password:</label>
-            <input type="password" name="confirm_password" required id="confirm_password">
+            <input type="password" name="confirm_password" required id="confirm_password" maxlength="8">
 
-            <!-- Error Message for Password Validation -->
-            <span id="password_error" style="color: red; display: none;">Passwords do not match or are not within the required length (4-8 characters).</span>
+            <p>
+                <span id="password_error" class="error-message"></span>
+            </p>
 
             <!-- Submit Button -->
             <button type="submit" name="create_instructor" id="submitButton" style="margin: 0 auto; display: block;" disabled>Create Instructor</button>
         </form>
     </div>
 
-</body>
-<script>
-    // Notification handling logic (similar to the student insert page)
+    <script>
+    // Add event listener to dynamically check the instructor ID
+    document.getElementById("instructor_ID").addEventListener("input", function() {
+        var instructorID = this.value;
+        var errorMessage = document.getElementById("instructor_id_error");
+        var createInstructorBtn = document.getElementById("submitButton"); // Get the button element
+
+        if (instructorID) {
+            // Make AJAX request to check if the instructor ID exists in the database
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "check_instructor_id.php?instructor_ID=" + instructorID, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = xhr.responseText.trim();
+
+                    // Check the response and display an error if the ID exists
+                    if (response === "exists") {
+                        errorMessage.textContent = "Instructor ID already exists!";
+                        createInstructorBtn.disabled = true; // Disable submit button
+                    } else {
+                        errorMessage.textContent = "";
+                        createInstructorBtn.disabled = false; // Enable submit button if ID doesn't exist
+                    }
+                }
+            };
+            xhr.send();
+        } else {
+            errorMessage.textContent = ""; // Clear error message if input is empty
+            createInstructorBtn.disabled = false; // Enable submit button if input is empty
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const successContainer = document.getElementById('success-container');
         const errorContainer = document.getElementById('error-container');
@@ -247,8 +295,9 @@ $conn->close();
         const passwordField = document.getElementById('password');
         const confirmPasswordField = document.getElementById('confirm_password');
         const createInstructorBtn = document.getElementById('submitButton');
-        const passwordError = document.getElementById('password_error');  // Password error message
+        const passwordError = document.getElementById('password_error'); // Password error message
 
+        // Function to remove notification with fade-out effect
         function removeNotification(notification) {
             notification.classList.add('fade-out');
             setTimeout(() => {
@@ -256,6 +305,7 @@ $conn->close();
             }, 500);
         }
 
+        // Function to handle notifications
         function showNotifications() {
             document.querySelectorAll('.notification').forEach(notification => {
                 setTimeout(() => {
@@ -268,6 +318,7 @@ $conn->close();
             });
         }
 
+        // Clear all success notifications
         if (clearAllSuccessButton) {
             clearAllSuccessButton.addEventListener('click', function() {
                 successContainer.querySelectorAll('.notification').forEach(notification => {
@@ -277,6 +328,7 @@ $conn->close();
             });
         }
 
+        // Clear all error notifications
         if (clearAllErrorButton) {
             clearAllErrorButton.addEventListener('click', function() {
                 errorContainer.querySelectorAll('.notification').forEach(notification => {
@@ -286,25 +338,31 @@ $conn->close();
             });
         }
 
-        // Confirm password validation with error message
-        function validatePasswords() {
-            if (passwordField.value !== confirmPasswordField.value || passwordField.value.length < 4 || passwordField.value.length > 8) {
-                passwordError.style.display = 'inline';  // Show error message
-                createInstructorBtn.disabled = true;  // Disable submit button
-                return false;
+        // Validate password complexity and enable/disable submit button
+        function validatePassword() {
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+
+            // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
+
+            // Check if password matches the required pattern
+            if (!passwordRegex.test(password)) {
+                passwordError.innerText = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+                createInstructorBtn.disabled = true; // Disable submit button
+            } else if (password !== confirmPassword) {
+                passwordError.innerText = "Passwords do not match.";
+                createInstructorBtn.disabled = true; // Disable submit button
             } else {
-                passwordError.style.display = 'none';  // Hide error message
-                createInstructorBtn.disabled = false;  // Enable submit button
-                return true;
+                passwordError.innerText = ""; // Clear error message
+                createInstructorBtn.disabled = false; // Enable submit button if valid
             }
         }
 
-        // Validate on input
-        passwordField.addEventListener('input', validatePasswords);
-        confirmPasswordField.addEventListener('input', validatePasswords);
+        // Validate passwords when user types
+        passwordField.addEventListener('input', validatePassword);
+        confirmPasswordField.addEventListener('input', validatePassword);
 
-        showNotifications();
+        showNotifications(); // Show notifications on page load
     });
 </script>
-
-</html>

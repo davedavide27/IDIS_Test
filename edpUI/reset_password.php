@@ -108,9 +108,6 @@ if (isset($_POST['reset_password'])) {
 $conn->close();
 ?>
 
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -119,152 +116,8 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="insert_student.css">
     <link rel="stylesheet" href="../style2.css">
+    <link rel="stylesheet" href="reset_password.css">
     <title>Reset Password</title>
-    <style>
-        .containerOfAll {
-            justify-content: center;
-            padding: 20px;
-            height: 670px auto;
-            width: 520px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-        }
-
-        h3 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-        }
-
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-            max-width: 300px;
-        }
-
-        .notification {
-            display: flex;
-            justify-content: space-between;
-            background-color: #444;
-            color: white;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-
-        .notification.success {
-            background-color: #28a745;
-        }
-
-        .notification.error {
-            background-color: #dc3545;
-        }
-
-        .notification.fade-out {
-            opacity: 0;
-        }
-
-        .notification-close {
-            cursor: pointer;
-            margin-left: 15px;
-            font-weight: bold;
-        }
-
-        .clear-all-button {
-            display: block;
-            background-color: #444;
-            color: white;
-            padding: 10px;
-            margin-top: 10px;
-            text-align: center;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .clear-all-button:hover {
-            background-color: #333;
-        }
-
-        .back-button {
-            background-color: #f44336;
-            color: white;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            top: 10px;
-            left: 20px;
-            width: 80px;
-        }
-
-        .back-button:hover {
-            background-color: #d32f2f;
-        }
-
-        /* Hide forms initially */
-        .form-section {
-            display: none;
-        }
-
-        label {
-            margin-top: 10px;
-        }
-
-        .containerOfAll select {
-            width: 100%;
-            height: 40px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-
-        }
-
-        .name-display {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0;
-            box-sizing: border-box;
-            font-size: 14px;
-            color: #666;
-            background-color: #f1f1f1;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            cursor: not-allowed;
-        }
-
-        #instructor_name_display,
-        #student_name_display {
-            font-weight: bold;
-        }
-
-        /* Styling for error message */
-        .error-message {
-            color: red;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        /* Styling for invalid ID input */
-        .id-input.error {
-            border: 2px solid red;
-            box-shadow: 0 0 5px red;
-        }
-
-        /* Styling for disabled reset button */
-        button[disabled] {
-            background-color: #ddd;
-            cursor: not-allowed;
-        }
-    </style>
 </head>
 
 <body>
@@ -306,10 +159,14 @@ $conn->close();
             <input type="number" name="account_id" id="student_id" required oninput="fetchName('student')" class="id-input">
 
             <label for="new_password">New Password:</label>
-            <input type="password" name="new_password" required>
+            <input type="password" name="new_password" id="new_password_student" maxlength="8" required oninput="validatePassword('student')">
 
             <label for="confirm_password">Confirm New Password:</label>
-            <input type="password" name="confirm_password" required>
+            <input type="password" name="confirm_password" id="confirm_password_student" maxlength="8" required oninput="validatePassword('student')">
+
+            <p>
+                <span id="password_error_student" class="error-message"></span>
+            </p>
 
             <button type="submit" name="reset_password" id="student_reset_button" disabled>Reset Student Password</button>
         </form>
@@ -326,15 +183,20 @@ $conn->close();
             <input type="number" name="account_id" id="instructor_id" required oninput="fetchName('instructor')" class="id-input">
 
             <label for="new_password">New Password:</label>
-            <input type="password" name="new_password" required>
+            <input type="password" name="new_password" id="new_password_instructor" maxlength="8" required oninput="validatePassword('instructor')">
+
 
             <label for="confirm_password">Confirm New Password:</label>
-            <input type="password" name="confirm_password" required>
+            <input type="password" name="confirm_password" id="confirm_password_instructor" maxlength="8" required oninput="validatePassword('instructor')">
+
+            <p>
+                <span id="password_error_instructor" class="error-message"></span>
+            </p>
 
             <button type="submit" name="reset_password" id="instructor_reset_button" disabled>Reset Instructor Password</button>
         </form>
-
     </div>
+
 
     <script>
         // Toggle between student and instructor forms based on selection
@@ -377,13 +239,14 @@ $conn->close();
             }
         });
 
+        // Fetch name and handle display for the student or instructor
         function fetchName(accountType) {
             let accountIdField = document.getElementById(accountType === 'student' ? 'student_id' : 'instructor_id');
             let nameDisplayField = document.getElementById(accountType === 'student' ? 'student_name_display' : 'instructor_name_display');
             let resetButton = document.getElementById(accountType === 'student' ? 'student_reset_button' : 'instructor_reset_button');
 
             // Clear previous error styles
-            nameDisplayField.style.color = '';  // Reset to default color
+            nameDisplayField.style.color = ''; // Reset to default color
             accountIdField.classList.remove('error');
 
             if (accountIdField.value) {
@@ -393,7 +256,7 @@ $conn->close();
                         if (data === "Account not found") {
                             // Show error inside the name field and change color to red
                             nameDisplayField.value = accountType === 'student' ? 'Student not found!' : 'Instructor not found!';
-                            nameDisplayField.style.color = 'red';  // Make the text red
+                            nameDisplayField.style.color = 'red'; // Make the text red
                             resetButton.disabled = true; // Disable reset button
                         } else {
                             // Display name if found
@@ -408,5 +271,33 @@ $conn->close();
                 resetButton.disabled = true; // Disable reset button if input is empty
             }
         }
+
+        // Validate password complexity and enable/disable reset button
+        function validatePassword(formType) {
+            // Identify relevant fields for student or instructor form
+            const passwordField = document.getElementById(formType === 'instructor' ? 'new_password_instructor' : 'new_password_student');
+            const confirmPasswordField = document.getElementById(formType === 'instructor' ? 'confirm_password_instructor' : 'confirm_password_student');
+            const errorSpan = document.getElementById(formType === 'instructor' ? 'password_error_instructor' : 'password_error_student');
+            const resetButton = document.getElementById(formType === 'instructor' ? 'instructor_reset_button' : 'student_reset_button');
+
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+
+            // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
+
+            // Check if password matches the required pattern
+            if (!passwordRegex.test(password)) {
+                errorSpan.innerText = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+                resetButton.disabled = true;
+            } else if (password !== confirmPassword) {
+                errorSpan.innerText = "Passwords do not match.";
+                resetButton.disabled = true;
+            } else {
+                errorSpan.innerText = ""; // Clear error message
+                resetButton.disabled = false; // Enable reset button if valid
+            }
+        }
     </script>
+
 </body>

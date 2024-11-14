@@ -94,7 +94,6 @@ unset($_SESSION['form_data']);
 $conn->close();
 ?>
 
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -237,11 +236,24 @@ $conn->close();
         button:hover {
             background-color: #0056b3;
         }
+
         button[disabled] {
             background-color: #ddd;
             cursor: not-allowed;
         }
+
+        .error-message {
+            color: red;
+            /* Set text color to red */
+            font-size: 14px;
+            /* Set font size for the error message */
+            display: inline-block;
+            /* Ensure the span behaves like an inline-block element */
+            margin-top: 5px;
+            /* Add some space above the message */
+        }
     </style>
+
 </head>
 
 <body>
@@ -276,8 +288,10 @@ $conn->close();
         <form method="post" action="">
             <!-- Student ID Field -->
             <label for="student_ID">Student ID:</label>
-            <input type="number" name="student_ID" value="<?php echo $_SESSION['form_data']['student_ID'] ?? ''; ?>" required>
-
+            <input type="number" name="student_ID" id="student_ID" value="<?php echo $_SESSION['form_data']['student_ID'] ?? ''; ?>" required>
+            <span id="student_id_error" class="error-message"></span> <!-- Error message will be shown here -->
+            <br>
+            <br>
             <!-- Student Name Fields -->
             <label for="student_fname">First Name:</label>
             <input type="text" name="student_fname" value="<?php echo $_SESSION['form_data']['student_fname'] ?? ''; ?>" required>
@@ -294,14 +308,14 @@ $conn->close();
 
             <!-- Confirm Password Field -->
             <label for="confirm_password">Confirm Password:</label>
-            <input type="password" name="confirm_password" id="confirm_password" required onkeyup="validatePassword();" />
+            <input type="password" name="confirm_password" id="confirm_password" maxlength="8" required onkeyup="validatePassword();" />
 
-            <!-- Error Message for Password Validation -->
-            <span id="password_error" style="color: red; display: none;">Passwords do not match or are not within the required length (4-8 characters).</span>
-                
+            <p>
+                <span id="password_error_student" class="error-message"></span>
+            </p>
+
             <!-- Course Selection -->
-             <br>
-             <br>
+            <br><br>
             <h4>Select Course</h4>
             <select name="course" required>
                 <option value="">Select a Course</option>
@@ -328,74 +342,121 @@ $conn->close();
             <br>
 
             <!-- Submit Button -->
-            <button type="submit" name="create_student" id="create_button" style="margin: 0 auto; display: block;" disabled>Create Student</button>
+            <button type="submit" name="create_student" id="create_student" class="btn">Create Student</button>
         </form>
+    </div>
 
 
+    <script>
+    // Add event listener to dynamically check the student ID
+    document.getElementById("student_ID").addEventListener("input", function() {
+        var studentID = this.value;
+        var errorMessage = document.getElementById("student_id_error");
+        var createStudentBtn = document.getElementById("create_student"); // Get the button element
 
-        <script>
-            // JavaScript to validate password and confirm password fields
-            function validatePassword() {
-                var password = document.getElementById('password').value;
-                var confirmPassword = document.getElementById('confirm_password').value;
-                var passwordError = document.getElementById('password_error');
-                var createButton = document.getElementById('create_button');
+        if (studentID) {
+            // Make AJAX request to check if the student ID exists in the database
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "check_student_id.php?student_ID=" + studentID, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = xhr.responseText.trim();
 
-                // Check password length and confirm password match
-                if (password.length >= 4 && password.length <= 8 && password === confirmPassword) {
-                    passwordError.style.display = 'none'; // Hide error message
-                    createButton.disabled = false; // Enable the submit button
-                } else {
-                    passwordError.style.display = 'inline'; // Show the error message
-                    createButton.disabled = true; // Disable the submit button
+                    // Check the response and display an error if the ID exists
+                    if (response === "exists") {
+                        errorMessage.textContent = "Student ID already exists!";
+                        createStudentBtn.disabled = true; // Disable submit button
+                    } else {
+                        errorMessage.textContent = "";
+                        createStudentBtn.disabled = false; // Enable submit button if ID doesn't exist
+                    }
                 }
-            }
-            // Notification handling logic (similar to the original script)
-            document.addEventListener('DOMContentLoaded', function() {
-                const successContainer = document.getElementById('success-container');
-                const errorContainer = document.getElementById('error-container');
-                const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-                const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+            };
+            xhr.send();
+        } else {
+            errorMessage.textContent = ""; // Clear error message if input is empty
+            createStudentBtn.disabled = false; // Enable submit button if input is empty
+        }
+    });
 
-                function removeNotification(notification) {
-                    notification.classList.add('fade-out');
-                    setTimeout(() => {
-                        notification.remove();
-                    }, 500);
-                }
+    // Password validation function for student creation page
+    function validatePassword() {
+        var passwordField = document.getElementById("password");
+        var confirmPasswordField = document.getElementById("confirm_password");
+        var errorMessage = document.getElementById("password_error_student");
+        var createStudentBtn = document.getElementById("create_student");
 
-                function showNotifications() {
-                    document.querySelectorAll('.notification').forEach(notification => {
-                        setTimeout(() => {
-                            removeNotification(notification);
-                        }, 4000);
+        var password = passwordField.value;
+        var confirmPassword = confirmPasswordField.value;
 
-                        notification.querySelector('.notification-close').addEventListener('click', () => {
-                            removeNotification(notification);
-                        });
-                    });
-                }
+        // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
 
-                if (clearAllSuccessButton) {
-                    clearAllSuccessButton.addEventListener('click', function() {
-                        successContainer.querySelectorAll('.notification').forEach(notification => {
-                            removeNotification(notification);
-                        });
-                        clearAllSuccessButton.style.display = 'none';
-                    });
-                }
+        // Check if password matches the required pattern
+        if (!passwordRegex.test(password)) {
+            errorMessage.textContent = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+            createStudentBtn.disabled = true; // Disable submit button
+        } else if (password !== confirmPassword) {
+            errorMessage.textContent = "Passwords do not match.";
+            createStudentBtn.disabled = true; // Disable submit button
+        } else {
+            errorMessage.textContent = ""; // Clear error message
+            createStudentBtn.disabled = false; // Enable submit button if valid
+        }
+    }
 
-                if (clearAllErrorButton) {
-                    clearAllErrorButton.addEventListener('click', function() {
-                        errorContainer.querySelectorAll('.notification').forEach(notification => {
-                            removeNotification(notification);
-                        });
-                        clearAllErrorButton.style.display = 'none';
-                    });
-                }
+    // Validate passwords when user types
+    document.getElementById("password").addEventListener('input', validatePassword);
+    document.getElementById("confirm_password").addEventListener('input', validatePassword);
 
-                showNotifications();
+    showNotifications(); // Show notifications on page load
+    // Notification handling logic (similar to the original script)
+    document.addEventListener('DOMContentLoaded', function() {
+        const successContainer = document.getElementById('success-container');
+        const errorContainer = document.getElementById('error-container');
+        const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
+        const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+
+        function removeNotification(notification) {
+            notification.classList.add('fade-out');
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }
+
+        function showNotifications() {
+            document.querySelectorAll('.notification').forEach(notification => {
+                setTimeout(() => {
+                    removeNotification(notification);
+                }, 4000);
+
+                notification.querySelector('.notification-close').addEventListener('click', () => {
+                    removeNotification(notification);
+                });
             });
-        </script>
+        }
+
+        if (clearAllSuccessButton) {
+            clearAllSuccessButton.addEventListener('click', function() {
+                successContainer.querySelectorAll('.notification').forEach(notification => {
+                    removeNotification(notification);
+                });
+                clearAllSuccessButton.style.display = 'none';
+            });
+        }
+
+        if (clearAllErrorButton) {
+            clearAllErrorButton.addEventListener('click', function() {
+                errorContainer.querySelectorAll('.notification').forEach(notification => {
+                    removeNotification(notification);
+                });
+                clearAllErrorButton.style.display = 'none';
+            });
+        }
+
+        showNotifications();
+    });
+</script>
+
 
 </html>
