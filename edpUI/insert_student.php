@@ -298,8 +298,10 @@ $conn->close();
 
             <!-- Error Message for Password Validation -->
             <span id="password_error" style="color: red; display: none;">Passwords do not match or are not within the required length (4-8 characters).</span>
-
+                
             <!-- Course Selection -->
+             <br>
+             <br>
             <h4>Select Course</h4>
             <select name="course" required>
                 <option value="">Select a Course</option>
