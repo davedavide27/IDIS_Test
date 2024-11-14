@@ -15,57 +15,67 @@ if ($conn->connect_error) {
 }
 
 $message = "";
+$account_exists = true; // Flag to track if the account exists
 
 // Check if form has been submitted
 if (isset($_POST['reset_password'])) {
     $type = $_POST['account_type'];
     $account_id = $_POST['account_id'];
-    $old_password = $_POST['old_password'];
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
 
     // Ensure passwords match
     if ($new_password !== $confirm_password) {
         $message = "Passwords do not match.";
+    } elseif (strlen($new_password) < 4 || strlen($new_password) > 8) {
+        $message = "Password must be between 4 and 8 characters long.";
     } else {
         // Check whether it's for a student or instructor
         if ($type == "student") {
-            // Check old password
-            $sql = "SELECT password FROM student WHERE student_ID = ?";
+            // Check if student exists
+            $sql = "SELECT * FROM student WHERE student_ID = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $account_id);
             $stmt->execute();
-            $stmt->bind_result($current_password);
-            $stmt->fetch();
-            $stmt->close();
+            $result = $stmt->get_result();
 
-            if ($current_password != $old_password) {
-                $message = "Old password is incorrect.";
-            } else {
+            if ($result->num_rows > 0) {
+                // Fetch student data and update the password
+                $row = $result->fetch_assoc();
+                $student_name = $row['student_fname'] . " " . $row['student_lname'];
+
                 // Update the new password for the student
                 $sql = "UPDATE student SET password = ? WHERE student_ID = ?";
                 $stmt = $conn->prepare($sql);
                 $stmt->bind_param("si", $new_password, $account_id);
                 if ($stmt->execute()) {
-                    $message = "Student password reset.";
+                    $message = "Student password reset successfully.";
                 } else {
                     $message = "Error resetting student password.";
                 }
-                $stmt->close();
+
+                // Set the student name in the field
+                $_SESSION['student_name'] = $student_name;
+            } else {
+                // Account not found, display this in the name field
+                $_SESSION['student_name'] = "Account not found";
+                $message = "Student account not found.";
+                $account_exists = false;
             }
+            $stmt->close();
         } elseif ($type == "instructor") {
-            // Check old password
-            $sql = "SELECT password FROM instructor WHERE instructor_ID = ?";
+            // Check if instructor exists
+            $sql = "SELECT * FROM instructor WHERE instructor_ID = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("i", $account_id);
             $stmt->execute();
-            $stmt->bind_result($current_password);
-            $stmt->fetch();
-            $stmt->close();
+            $result = $stmt->get_result();
 
-            if ($current_password != $old_password) {
-                $message = "Old password is incorrect.";
-            } else {
+            if ($result->num_rows > 0) {
+                // Fetch instructor data and update the password
+                $row = $result->fetch_assoc();
+                $instructor_name = $row['instructor_fname'] . " " . $row['instructor_lname'];
+
                 // Update the new password for the instructor
                 $sql = "UPDATE instructor SET password = ? WHERE instructor_ID = ?";
                 $stmt = $conn->prepare($sql);
@@ -75,21 +85,30 @@ if (isset($_POST['reset_password'])) {
                 } else {
                     $message = "Error resetting instructor password.";
                 }
-                $stmt->close();
+
+                // Set the instructor name in the field
+                $_SESSION['instructor_name'] = $instructor_name;
+            } else {
+                // Account not found, display this in the name field
+                $_SESSION['instructor_name'] = "Account not found";
+                $message = "Instructor account not found.";
+                $account_exists = false;
             }
-        } else {
-            $message = "Please select a valid account type.";
+            $stmt->close();
         }
     }
 
-    // Store the message in the session and redirect back to form page
+    // Store the message in the session
     $_SESSION['message'] = $message;
-    header("Location: reset_password.php");
-    exit();
+    if ($account_exists) {
+        header("Location: reset_password.php");
+    }
 }
 
 $conn->close();
 ?>
+
+
 
 
 <!DOCTYPE html>
@@ -208,6 +227,43 @@ $conn->close();
             border: 1px solid #ccc;
 
         }
+
+        .name-display {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+            font-size: 14px;
+            color: #666;
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: not-allowed;
+        }
+
+        #instructor_name_display,
+        #student_name_display {
+            font-weight: bold;
+        }
+
+        /* Styling for error message */
+        .error-message {
+            color: red;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        /* Styling for invalid ID input */
+        .id-input.error {
+            border: 2px solid red;
+            box-shadow: 0 0 5px red;
+        }
+
+        /* Styling for disabled reset button */
+        button[disabled] {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 
@@ -243,11 +299,11 @@ $conn->close();
             <h4>Reset Student Password</h4>
             <input type="hidden" name="account_type" value="student">
 
-            <label for="account_id">Student ID:</label>
-            <input type="number" name="account_id" required>
+            <label for="student_name_display">Student Name:</label>
+            <input type="text" id="student_name_display" readonly class="name-display" value="<?php echo isset($_SESSION['student_name']) ? $_SESSION['student_name'] : ''; ?>">
 
-            <label for="old_password">Old Password:</label>
-            <input type="password" name="old_password" required>
+            <label for="student_id">Student ID:</label>
+            <input type="number" name="account_id" id="student_id" required oninput="fetchName('student')" class="id-input">
 
             <label for="new_password">New Password:</label>
             <input type="password" name="new_password" required>
@@ -255,7 +311,7 @@ $conn->close();
             <label for="confirm_password">Confirm New Password:</label>
             <input type="password" name="confirm_password" required>
 
-            <button type="submit" name="reset_password">Reset Student Password</button>
+            <button type="submit" name="reset_password" id="student_reset_button" disabled>Reset Student Password</button>
         </form>
 
         <!-- Reset Password for Instructor -->
@@ -263,11 +319,11 @@ $conn->close();
             <h4>Reset Instructor Password</h4>
             <input type="hidden" name="account_type" value="instructor">
 
-            <label for="account_id">Instructor ID:</label>
-            <input type="number" name="account_id" required>
+            <label for="instructor_name_display">Instructor Name:</label>
+            <input type="text" id="instructor_name_display" readonly class="name-display" value="<?php echo isset($_SESSION['instructor_name']) ? $_SESSION['instructor_name'] : ''; ?>">
 
-            <label for="old_password">Old Password:</label>
-            <input type="password" name="old_password" required>
+            <label for="instructor_id">Instructor ID:</label>
+            <input type="number" name="account_id" id="instructor_id" required oninput="fetchName('instructor')" class="id-input">
 
             <label for="new_password">New Password:</label>
             <input type="password" name="new_password" required>
@@ -275,7 +331,7 @@ $conn->close();
             <label for="confirm_password">Confirm New Password:</label>
             <input type="password" name="confirm_password" required>
 
-            <button type="submit" name="reset_password">Reset Instructor Password</button>
+            <button type="submit" name="reset_password" id="instructor_reset_button" disabled>Reset Instructor Password</button>
         </form>
 
     </div>
@@ -320,8 +376,37 @@ $conn->close();
                 }, 4000);
             }
         });
+
+        function fetchName(accountType) {
+            let accountIdField = document.getElementById(accountType === 'student' ? 'student_id' : 'instructor_id');
+            let nameDisplayField = document.getElementById(accountType === 'student' ? 'student_name_display' : 'instructor_name_display');
+            let resetButton = document.getElementById(accountType === 'student' ? 'student_reset_button' : 'instructor_reset_button');
+
+            // Clear previous error styles
+            nameDisplayField.style.color = '';  // Reset to default color
+            accountIdField.classList.remove('error');
+
+            if (accountIdField.value) {
+                fetch(`get_name.php?account_type=${accountType}&account_id=${accountIdField.value}`)
+                    .then(response => response.text())
+                    .then(data => {
+                        if (data === "Account not found") {
+                            // Show error inside the name field and change color to red
+                            nameDisplayField.value = accountType === 'student' ? 'Student not found!' : 'Instructor not found!';
+                            nameDisplayField.style.color = 'red';  // Make the text red
+                            resetButton.disabled = true; // Disable reset button
+                        } else {
+                            // Display name if found
+                            nameDisplayField.value = data;
+                            nameDisplayField.style.color = ''; // Reset the color to default
+                            resetButton.disabled = false; // Enable reset button
+                        }
+                    });
+            } else {
+                nameDisplayField.value = '';
+                nameDisplayField.style.color = ''; // Reset the color
+                resetButton.disabled = true; // Disable reset button if input is empty
+            }
+        }
     </script>
-
 </body>
-
-</html>

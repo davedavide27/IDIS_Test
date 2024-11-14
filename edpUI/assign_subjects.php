@@ -250,6 +250,28 @@ $conn->close();
         .back-button:hover {
             background-color: #d32f2f;
         }
+
+        #suggestionsContainer {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            width: 45.6%;
+            z-index: 999;
+        }
+
+        #suggestionsContainer li {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #suggestionsContainer li:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 
@@ -291,46 +313,51 @@ $conn->close();
 
         <h3>Assign Subjects to Instructor</h3>
 
-        <form method="post" action="">
-            <input type="hidden" name="assign_subjects" value="1">
+        <!-- Search Bar for Instructor Selection -->
+        <div class="search-container">
+            <h4>Select Instructor</h4>
+            <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
+            <!-- Suggestion list container (for suggestions) -->
+            <ul id="suggestionsContainer" style="display: none;"></ul>
 
-            <!-- Search Bar for Instructor Selection -->
-            <div class="search-container">
-                <h4>Select Instructor</h4>
-                <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
-                <select id="instructorSelectAssign" name="instructor_id" onchange="updateSearchInstructor()" required>
-                    <option value="">Select an Instructor</option>
-                    <?php foreach ($instructors as $instructor):
-                        $fullName = trim($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']);
-                        $selected = (isset($_SESSION['form_data']['instructor_id']) && $_SESSION['form_data']['instructor_id'] == $instructor['instructor_ID']) ? 'selected' : '';  // Preserve instructor selection
-                    ?>
-                        <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>" <?php echo $selected; ?>>
-                            <?php echo htmlspecialchars($fullName); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-
-            <h4>Select Subjects</h4>
-            <div class="check-all">
-                <input type="checkbox" id="checkAll" onclick="toggleCheckAll(this)">
-                <label for="checkAll">Select/Deselect All Subjects</label>
-            </div>
-
-            <div class="subject-list">
-                <?php foreach ($subjects as $subject):
-                    $checked = (isset($_SESSION['form_data']['subjects']) && in_array($subject['subject_code'], $_SESSION['form_data']['subjects'])) ? 'checked' : '';  // Preserve subject selection
+            <!-- Instructor Dropdown -->
+            <select id="instructorSelectAssign" name="instructor_id" onchange="updateSearchInstructor()" required>
+                <option value="" id="defaultOption">Select an Instructor</option>
+                <?php foreach ($instructors as $instructor):
+                    $fullName = trim($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']);
                 ?>
-                    <div>
-                        <input type="checkbox" name="subjects[]" value="<?php echo htmlspecialchars($subject['subject_code']); ?>" id="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>" <?php echo $checked; ?>>
-                        <label for="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>">
-                            <?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)
-                        </label>
-                    </div>
+                    <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>">
+                        <?php echo htmlspecialchars($fullName); ?>
+                    </option>
                 <?php endforeach; ?>
-            </div>
+            </select>
 
-            <button type="submit">Assign Subjects</button>
+
+
+        </div>
+
+
+
+        <h4>Select Subjects</h4>
+        <div class="check-all">
+            <input type="checkbox" id="checkAll" onclick="toggleCheckAll(this)">
+            <label for="checkAll">Select/Deselect All Subjects</label>
+        </div>
+
+        <div class="subject-list">
+            <?php foreach ($subjects as $subject):
+                $checked = (isset($_SESSION['form_data']['subjects']) && in_array($subject['subject_code'], $_SESSION['form_data']['subjects'])) ? 'checked' : '';  // Preserve subject selection
+            ?>
+                <div>
+                    <input type="checkbox" name="subjects[]" value="<?php echo htmlspecialchars($subject['subject_code']); ?>" id="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>" <?php echo $checked; ?>>
+                    <label for="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>">
+                        <?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)
+                    </label>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <button type="submit">Assign Subjects</button>
         </form>
     </div>
 
@@ -344,33 +371,105 @@ $conn->close();
         });
     }
 
-    // Function to filter instructors based on input
+    // Function to filter instructors dynamically based on search input
     function filterInstructors() {
         const input = document.getElementById('searchInstructor');
-        const filter = input.value.toLowerCase();
+        const filter = input.value.trim().toLowerCase(); // Trim input to remove unnecessary spaces
         const select = document.getElementById('instructorSelectAssign');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
 
+        // Clear previous suggestions
+        suggestionsContainer.innerHTML = '';
+
+        // Show suggestions if the input has any value
+        if (filter.length > 0) {
+            suggestionsContainer.style.display = 'block';
+        } else {
+            suggestionsContainer.style.display = 'none';
+        }
+
+        let foundMatch = false;
+
+        // Loop through all options in the select dropdown to filter instructors
         for (let i = 0; i < select.options.length; i++) {
-            const txtValue = select.options[i].textContent || select.options[i].innerText;
-            if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                select.options[i].style.display = "";
-            } else {
-                select.options[i].style.display = "none";
+            const option = select.options[i];
+            const instructorName = option.textContent || option.innerText;
+
+            // Skip the first option "Select an Instructor"
+            if (option.value === "") {
+                continue;
             }
+
+            // Check if the instructor name matches the filter
+            if (instructorName.toLowerCase().includes(filter)) {
+                // Show matching options in the dropdown
+                option.style.display = "";
+                foundMatch = true;
+
+                // Create suggestion items
+                const suggestionItem = document.createElement('li');
+                suggestionItem.textContent = instructorName.trim(); // Trim spaces before displaying
+                suggestionItem.dataset.id = option.value; // Store the instructor ID in the data attribute
+                suggestionItem.onclick = function() {
+                    // Update the input with the selected instructor's full name
+                    input.value = instructorName.trim(); // Use the trimmed name
+                    suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
+                };
+                suggestionsContainer.appendChild(suggestionItem);
+            } else {
+                // Hide non-matching options in the dropdown
+                option.style.display = "none";
+            }
+        }
+
+        // If no matches found, hide the suggestions container
+        if (!foundMatch) {
+            suggestionsContainer.style.display = 'none';
         }
     }
 
-    // Function to update the search input with the selected instructor's full name
+    // Function to update the search input with the selected instructor's name
     function updateSearchInstructor() {
         const select = document.getElementById('instructorSelectAssign');
         const selectedOption = select.options[select.selectedIndex];
-
-        // Get the full name from the selected option's data attribute
         const fullName = selectedOption.getAttribute('data-fullname');
-
-        // Update the search input with the selected instructor's full name
-        document.getElementById('searchInstructor').value = fullName;
+        document.getElementById('searchInstructor').value = fullName.trim(); // Trim spaces before setting
     }
+
+    // Event listener to hide suggestions on blur (when the user clicks outside the input field)
+    document.getElementById('searchInstructor').addEventListener('blur', function() {
+        setTimeout(function() { // Delay hiding to allow clicking suggestion
+            document.getElementById('suggestionsContainer').style.display = 'none';
+        }, 200);
+    });
+
+    // Event listener to hide suggestions on pressing the Enter key
+    document.getElementById('searchInstructor').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            document.getElementById('suggestionsContainer').style.display = 'none';
+        }
+    });
+
+    // Event listener to hide the "Select an Instructor" option when the dropdown is opened
+    document.getElementById('instructorSelectAssign').addEventListener('focus', function() {
+        const defaultOption = document.getElementById('defaultOption');
+        if (defaultOption) {
+            defaultOption.style.display = 'none'; // Hide the default "Select an Instructor" option
+        }
+    });
+
+    // Event listener to reset the "Select an Instructor" option when the dropdown loses focus
+    document.getElementById('instructorSelectAssign').addEventListener('blur', function() {
+        const defaultOption = document.getElementById('defaultOption');
+        if (defaultOption && !this.value) {
+            defaultOption.style.display = ''; // Show it again if no instructor is selected
+        }
+    });
+
+
+
+
+
 
     // Function to remove notifications, with optional fade-out effect
     function removeNotification(notification, immediate = false) {

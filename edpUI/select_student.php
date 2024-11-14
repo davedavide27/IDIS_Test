@@ -240,6 +240,28 @@ $conn->close();
         .back-button:hover {
             background-color: #d32f2f;
         }
+
+        #suggestionsContainer {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            width: 45.6%;
+            z-index: 999;
+        }
+
+        #suggestionsContainer li {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #suggestionsContainer li:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 
@@ -288,18 +310,23 @@ $conn->close();
             <div class="search-container">
                 <h4>Select Student</h4>
                 <input type="text" id="searchStudent" onkeyup="filterStudents()" placeholder="Search for student..">
+
+                <!-- Suggestion list container (for suggestions) -->
+                <ul id="suggestionsContainer" style="display: none;"></ul>
+
+                <!-- Student Dropdown -->
                 <select id="studentSelectAssign" name="student_id" onchange="updateSearchStudent()" required>
                     <option value="">Select a Student</option>
                     <?php foreach ($students as $student):
                         $fullName = trim($student['student_fname'] . ' ' . $student['student_mname'] . ' ' . $student['student_lname']);
-                        $selected = (isset($_SESSION['form_data']['student_id']) && $_SESSION['form_data']['student_id'] == $student['student_ID']) ? 'selected' : '';  // Preserve student selection
                     ?>
-                        <option value="<?php echo htmlspecialchars($student['student_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>" <?php echo $selected; ?>>
+                        <option value="<?php echo htmlspecialchars($student['student_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>">
                             <?php echo htmlspecialchars($fullName); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
+
 
             <h4>Select Subjects</h4>
             <div class="check-all">
@@ -327,28 +354,78 @@ $conn->close();
 </body>
 
 <script>
+    // Function to filter students based on input
     function filterStudents() {
         const input = document.getElementById('searchStudent');
         const filter = input.value.toLowerCase();
         const select = document.getElementById('studentSelectAssign');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
 
+        let suggestions = [];
+
+        // Filter the options in the dropdown based on the search input
         for (let i = 0; i < select.options.length; i++) {
             const txtValue = select.options[i].textContent || select.options[i].innerText;
-            if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                select.options[i].style.display = "";
+
+            // Add matching students to the suggestions array
+            if (txtValue.toLowerCase().indexOf(filter) > -1 && txtValue !== 'Select a Student') {
+                select.options[i].style.display = ""; // Show the option
+                suggestions.push({
+                    value: select.options[i].value,
+                    text: txtValue
+                });
             } else {
-                select.options[i].style.display = "none";
+                select.options[i].style.display = "none"; // Hide the option
             }
+        }
+
+        // If there are matching suggestions, show them in the suggestion list
+        if (suggestions.length > 0 && filter.length > 0) {
+            suggestionsContainer.style.display = 'block';
+            suggestionsContainer.innerHTML = ''; // Clear the existing suggestions
+
+            // Populate the suggestion list
+            suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion.text;
+                li.dataset.value = suggestion.value;
+                li.onclick = function() {
+                    document.getElementById('searchStudent').value = suggestion.text;
+                    document.getElementById('studentSelectAssign').value = suggestion.value;
+                    suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
+                };
+                suggestionsContainer.appendChild(li);
+            });
+        } else {
+            suggestionsContainer.style.display = 'none'; // Hide the suggestion list if no matches
         }
     }
 
+    // Function to update the search input with the selected student's full name
     function updateSearchStudent() {
         const select = document.getElementById('studentSelectAssign');
         const selectedOption = select.options[select.selectedIndex];
 
+        // Get the full name from the selected option's data attribute
         const fullName = selectedOption.getAttribute('data-fullname');
+
+        // Update the search input with the selected student's full name
         document.getElementById('searchStudent').value = fullName;
     }
+
+    // Event listener to hide the suggestion container when the user moves away from the input field or presses Enter
+    document.getElementById('searchStudent').addEventListener('blur', function() {
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
+        suggestionsContainer.style.display = 'none';
+    });
+
+    document.getElementById('searchStudent').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            const suggestionsContainer = document.getElementById('suggestionsContainer');
+            suggestionsContainer.style.display = 'none';
+        }
+    });
+
 
     function toggleCheckAll(source) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');

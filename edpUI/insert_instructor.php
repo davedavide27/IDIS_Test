@@ -27,10 +27,15 @@ if (isset($_POST['create_instructor'])) {
     $instructor_mname = $_POST['instructor_mname'];
     $instructor_lname = $_POST['instructor_lname'];
     $password = $_POST['password'];  // Store password as plain text
+    $confirm_password = $_POST['confirm_password'];  // Store confirm password
 
     // Check for validation
-    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password)) {
+    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "All fields are required!";
+    } elseif ($password !== $confirm_password) {
+        $_SESSION['error_message'] = "Passwords do not match!";
+    } elseif (strlen($password) < 4 || strlen($password) > 8) {
+        $_SESSION['error_message'] = "Password must be between 4 and 8 characters.";
     } else {
         // Check if the instructor ID already exists
         $stmtCheck = $conn->prepare("SELECT instructor_ID FROM instructor WHERE instructor_ID = ?");
@@ -65,7 +70,6 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,23 +182,15 @@ $conn->close();
         button:hover {
             background-color: #0056b3;
         }
+        button[disabled] {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
     </style>
 </head>
-
 <body>
     <div class="containerOfAll">
         <!-- Success and Error Messages -->
-        <div class="notification-container" id="success-container">
-            <?php if (isset($_SESSION['success_message'])): ?>
-                <div class="notification success">
-                    <span><?php echo $_SESSION['success_message']; ?></span>
-                    <span class="notification-close">&times;</span>
-                </div>
-                <button class="clear-all-button" id="clearAllSuccessButton">[ clear all ]</button>
-                <?php unset($_SESSION['success_message']); ?>
-            <?php endif; ?>
-        </div>
-
         <div class="notification-container" id="error-container">
             <?php if (isset($_SESSION['error_message'])): ?>
                 <div class="notification error">
@@ -210,26 +206,33 @@ $conn->close();
         <button class="back-button" onclick="window.location.href='index.php';">Back</button>
         <h3>Create Instructor</h3>
 
-        <form method="post" action="insert_instructor.php">
+        <form method="post" action="insert_instructor.php" onsubmit="return validateForm()">
             <!-- Instructor ID Field -->
             <label for="instructor_ID">Instructor ID:</label>
-            <input type="number" name="instructor_ID" value="<?php echo $_SESSION['form_data']['instructor_ID'] ?? ''; ?>" required>
+            <input type="number" name="instructor_ID" required>
 
             <!-- Instructor Name Fields -->
             <label for="instructor_fname">First Name:</label>
-            <input type="text" name="instructor_fname" value="<?php echo $_SESSION['form_data']['instructor_fname'] ?? ''; ?>" required>
+            <input type="text" name="instructor_fname" required>
 
             <label for="instructor_mname">Middle Name:</label>
-            <input type="text" name="instructor_mname" value="<?php echo $_SESSION['form_data']['instructor_mname'] ?? ''; ?>">
+            <input type="text" name="instructor_mname">
 
             <label for="instructor_lname">Last Name:</label>
-            <input type="text" name="instructor_lname" value="<?php echo $_SESSION['form_data']['instructor_lname'] ?? ''; ?>" required>
+            <input type="text" name="instructor_lname" required>
 
-            <!-- Password Field -->
+            <!-- Password Fields -->
             <label for="password">Password:</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" required id="password">
 
-            <button type="submit" style="margin: 0 auto; display: block;" name="create_instructor">Create Instructor</button>
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" name="confirm_password" required id="confirm_password">
+
+            <!-- Error Message for Password Validation -->
+            <span id="password_error" style="color: red; display: none;">Passwords do not match or are not within the required length (4-8 characters).</span>
+
+            <!-- Submit Button -->
+            <button type="submit" name="create_instructor" id="submitButton" style="margin: 0 auto; display: block;" disabled>Create Instructor</button>
         </form>
     </div>
 
@@ -241,6 +244,10 @@ $conn->close();
         const errorContainer = document.getElementById('error-container');
         const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
         const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirm_password');
+        const createInstructorBtn = document.getElementById('submitButton');
+        const passwordError = document.getElementById('password_error');  // Password error message
 
         function removeNotification(notification) {
             notification.classList.add('fade-out');
@@ -278,6 +285,23 @@ $conn->close();
                 clearAllErrorButton.style.display = 'none';
             });
         }
+
+        // Confirm password validation with error message
+        function validatePasswords() {
+            if (passwordField.value !== confirmPasswordField.value || passwordField.value.length < 4 || passwordField.value.length > 8) {
+                passwordError.style.display = 'inline';  // Show error message
+                createInstructorBtn.disabled = true;  // Disable submit button
+                return false;
+            } else {
+                passwordError.style.display = 'none';  // Hide error message
+                createInstructorBtn.disabled = false;  // Enable submit button
+                return true;
+            }
+        }
+
+        // Validate on input
+        passwordField.addEventListener('input', validatePasswords);
+        confirmPasswordField.addEventListener('input', validatePasswords);
 
         showNotifications();
     });
