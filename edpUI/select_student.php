@@ -354,78 +354,89 @@ $conn->close();
 </body>
 
 <script>
-    // Function to filter students based on input
+    // Function to filter students based on input and display in the suggestions container
     function filterStudents() {
         const input = document.getElementById('searchStudent');
-        const filter = input.value.toLowerCase();
+        const filter = input.value.toLowerCase().trim();
         const select = document.getElementById('studentSelectAssign');
         const suggestionsContainer = document.getElementById('suggestionsContainer');
 
-        let suggestions = [];
+        // Clear previous suggestions
+        suggestionsContainer.innerHTML = '';
+        suggestionsContainer.style.display = 'none'; // Hide by default
 
-        // Filter the options in the dropdown based on the search input
+        // Filter dropdown options temporarily based on input
+        let dropdownHasMatches = false;
         for (let i = 0; i < select.options.length; i++) {
-            const txtValue = select.options[i].textContent || select.options[i].innerText;
+            const option = select.options[i];
+            const optionText = option.text.toLowerCase();
 
-            // Add matching students to the suggestions array
-            if (txtValue.toLowerCase().indexOf(filter) > -1 && txtValue !== 'Select a Student') {
-                select.options[i].style.display = ""; // Show the option
-                suggestions.push({
-                    value: select.options[i].value,
-                    text: txtValue
-                });
+            // Filter options based on search term
+            if (optionText.includes(filter) && option.value !== '') {
+                option.style.display = ''; // Show matching options in dropdown
+                dropdownHasMatches = true;
             } else {
-                select.options[i].style.display = "none"; // Hide the option
+                option.style.display = 'none'; // Hide non-matching options in dropdown
             }
         }
 
-        // If there are matching suggestions, show them in the suggestion list
-        if (suggestions.length > 0 && filter.length > 0) {
-            suggestionsContainer.style.display = 'block';
-            suggestionsContainer.innerHTML = ''; // Clear the existing suggestions
+        // If there are matches in the dropdown, proceed to show suggestions in the suggestion list
+        if (dropdownHasMatches && filter.length > 0) {
+            const suggestions = Array.from(select.options)
+                .filter(option => option.style.display === '' && option.value !== '')
+                .map(option => ({
+                    value: option.value,
+                    text: option.text.trim()
+                }));
 
-            // Populate the suggestion list
+            // Populate the suggestion list with matching options
+            suggestionsContainer.style.display = 'block';
             suggestions.forEach(suggestion => {
                 const li = document.createElement('li');
                 li.textContent = suggestion.text;
                 li.dataset.value = suggestion.value;
+
+                // Event listener for each suggestion item
                 li.onclick = function() {
-                    document.getElementById('searchStudent').value = suggestion.text;
-                    document.getElementById('studentSelectAssign').value = suggestion.value;
+                    document.getElementById('searchStudent').value = suggestion.text; // Populate search input with selected name
+                    document.getElementById('studentSelectAssign').value = suggestion.value; // Update dropdown selection
                     suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
                 };
                 suggestionsContainer.appendChild(li);
             });
         } else {
-            suggestionsContainer.style.display = 'none'; // Hide the suggestion list if no matches
+            // Reset dropdown if no matches
+            for (let i = 0; i < select.options.length; i++) {
+                select.options[i].style.display = ''; // Show all options
+            }
         }
     }
 
-    // Function to update the search input with the selected student's full name
+    // Function to update search input with the full name of the selected student in the dropdown
     function updateSearchStudent() {
         const select = document.getElementById('studentSelectAssign');
         const selectedOption = select.options[select.selectedIndex];
 
-        // Get the full name from the selected option's data attribute
-        const fullName = selectedOption.getAttribute('data-fullname');
-
-        // Update the search input with the selected student's full name
-        document.getElementById('searchStudent').value = fullName;
+        // Populate search bar if a dropdown option is selected
+        if (selectedOption && selectedOption.value) {
+            document.getElementById('searchStudent').value = selectedOption.text.trim();
+        }
     }
 
-    // Event listener to hide the suggestion container when the user moves away from the input field or presses Enter
+    // Hide the suggestion container when the user moves away from the input field
     document.getElementById('searchStudent').addEventListener('blur', function() {
-        const suggestionsContainer = document.getElementById('suggestionsContainer');
-        suggestionsContainer.style.display = 'none';
+        setTimeout(() => {
+            document.getElementById('suggestionsContainer').style.display = 'none';
+        }, 100); // Delay to ensure suggestion item can be clicked
     });
 
+    // Prevent form submission on Enter keypress in search input
     document.getElementById('searchStudent').addEventListener('keydown', function(event) {
         if (event.key === 'Enter') {
-            const suggestionsContainer = document.getElementById('suggestionsContainer');
-            suggestionsContainer.style.display = 'none';
+            event.preventDefault(); // Prevent form submission
+            document.getElementById('suggestionsContainer').style.display = 'none';
         }
     });
-
 
     function toggleCheckAll(source) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -435,33 +446,18 @@ $conn->close();
     }
 
     function removeNotification(notification, immediate = false) {
-        if (immediate) {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
 
-                const remainingNotifications = document.querySelectorAll('.notification');
-                if (remainingNotifications.length === 0) {
-                    const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-                    const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-                    if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
-                    if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
-                }
-            }, 500);
-        } else {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
-
-                const remainingNotifications = document.querySelectorAll('.notification');
-                if (remainingNotifications.length === 0) {
-                    const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-                    const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-                    if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
-                    if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
-                }
-            }, 500);
-        }
+            const remainingNotifications = document.querySelectorAll('.notification');
+            if (remainingNotifications.length === 0) {
+                const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
+                const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+                if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
+                if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
+            }
+        }, immediate ? 0 : 500);
     }
 
     function showNotifications() {
@@ -472,7 +468,7 @@ $conn->close();
             }, 4000);
 
             notification.querySelector('.notification-close').addEventListener('click', () => {
-                removeNotification(notification);
+                removeNotification(notification, true);
             });
         });
     }

@@ -313,55 +313,54 @@ $conn->close();
 
         <h3>Assign Subjects to Instructor</h3>
 
-        <!-- Search Bar for Instructor Selection -->
-        <div class="search-container">
-            <h4>Select Instructor</h4>
-            <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
-            <!-- Suggestion list container (for suggestions) -->
-            <ul id="suggestionsContainer" style="display: none;"></ul>
+        <!-- Begin Form -->
+        <form method="post" action="">
+            <input type="hidden" name="assign_subjects" value="1">
+            <!-- Search Bar for Instructor Selection -->
+            <div class="search-container">
+                <h4>Select Instructor</h4>
+                <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
+                <!-- Suggestion list container (for suggestions) -->
+                <ul id="suggestionsContainer" style="display: none;"></ul>
 
-            <!-- Instructor Dropdown -->
-            <select id="instructorSelectAssign" name="instructor_id" onchange="updateSearchInstructor()" required>
-                <option value="" id="defaultOption">Select an Instructor</option>
-                <?php foreach ($instructors as $instructor):
-                    $fullName = trim($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']);
+                <!-- Instructor Dropdown -->
+                <select id="instructorSelectAssign" name="instructor_id" onchange="updateSearchInstructor()" required>
+                    <option value="" id="defaultOption">Select an Instructor</option>
+                    <?php foreach ($instructors as $instructor):
+                        $fullName = trim($instructor['instructor_fname'] . ' ' . $instructor['instructor_mname'] . ' ' . $instructor['instructor_lname']);
+                    ?>
+                        <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>">
+                            <?php echo htmlspecialchars($fullName); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <h4>Select Subjects</h4>
+            <div class="check-all">
+                <input type="checkbox" id="checkAll" onclick="toggleCheckAll(this)">
+                <label for="checkAll">Select/Deselect All Subjects</label>
+            </div>
+
+            <div class="subject-list">
+                <?php foreach ($subjects as $subject):
+                    $checked = (isset($_SESSION['form_data']['subjects']) && in_array($subject['subject_code'], $_SESSION['form_data']['subjects'])) ? 'checked' : '';  // Preserve subject selection
                 ?>
-                    <option value="<?php echo htmlspecialchars($instructor['instructor_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>">
-                        <?php echo htmlspecialchars($fullName); ?>
-                    </option>
+                    <div>
+                        <input type="checkbox" name="subjects[]" value="<?php echo htmlspecialchars($subject['subject_code']); ?>" id="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>" <?php echo $checked; ?>>
+                        <label for="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>">
+                            <?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)
+                        </label>
+                    </div>
                 <?php endforeach; ?>
-            </select>
+            </div>
 
-
-
-        </div>
-
-
-
-        <h4>Select Subjects</h4>
-        <div class="check-all">
-            <input type="checkbox" id="checkAll" onclick="toggleCheckAll(this)">
-            <label for="checkAll">Select/Deselect All Subjects</label>
-        </div>
-
-        <div class="subject-list">
-            <?php foreach ($subjects as $subject):
-                $checked = (isset($_SESSION['form_data']['subjects']) && in_array($subject['subject_code'], $_SESSION['form_data']['subjects'])) ? 'checked' : '';  // Preserve subject selection
-            ?>
-                <div>
-                    <input type="checkbox" name="subjects[]" value="<?php echo htmlspecialchars($subject['subject_code']); ?>" id="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>" <?php echo $checked; ?>>
-                    <label for="subject_<?php echo htmlspecialchars($subject['subject_code']); ?>">
-                        <?php echo htmlspecialchars($subject['subject_name']); ?> (<?php echo htmlspecialchars($subject['subject_code']); ?>)
-                    </label>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-        <button type="submit">Assign Subjects</button>
+            <button type="submit">Assign Subjects</button>
         </form>
+        <!-- End Form -->
     </div>
-
 </body>
+
 <script>
     // Function to toggle select/deselect all checkboxes for subjects
     function toggleCheckAll(source) {
