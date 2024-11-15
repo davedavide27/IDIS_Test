@@ -370,103 +370,128 @@ $conn->close();
         });
     }
 
-    // Function to filter instructors dynamically based on search input
-    function filterInstructors() {
-        const input = document.getElementById('searchInstructor');
-        const filter = input.value.trim().toLowerCase(); // Trim input to remove unnecessary spaces
-        const select = document.getElementById('instructorSelectAssign');
-        const suggestionsContainer = document.getElementById('suggestionsContainer');
+// Function to filter instructors dynamically based on search input
+function filterInstructors() {
+    const input = document.getElementById('searchInstructor');
+    const filter = input.value.trim().toLowerCase(); // Trim input to remove unnecessary spaces
+    const select = document.getElementById('instructorSelectAssign');
+    const suggestionsContainer = document.getElementById('suggestionsContainer');
 
-        // Clear previous suggestions
-        suggestionsContainer.innerHTML = '';
+    // Clear previous suggestions
+    suggestionsContainer.innerHTML = '';
 
-        // Show suggestions if the input has any value
-        if (filter.length > 0) {
-            suggestionsContainer.style.display = 'block';
+    // Show suggestions if the input has any value
+    if (filter.length > 0) {
+        suggestionsContainer.style.display = 'block';
+    } else {
+        suggestionsContainer.style.display = 'none';
+    }
+
+    let foundMatch = false;
+
+    // Loop through all options in the select dropdown to filter instructors
+    for (let i = 0; i < select.options.length; i++) {
+        const option = select.options[i];
+        const instructorName = option.textContent || option.innerText;
+
+        // Skip the first option "Select an Instructor"
+        if (option.value === "") {
+            continue;
+        }
+
+        // Check if the instructor name matches the filter
+        if (instructorName.toLowerCase().includes(filter)) {
+            // Show matching options in the dropdown
+            option.style.display = "";
+            foundMatch = true;
+
+            // Create suggestion items
+            const suggestionItem = document.createElement('li');
+            suggestionItem.textContent = instructorName.trim(); // Trim spaces before displaying
+            suggestionItem.dataset.id = option.value; // Store the instructor ID in the data attribute
+            suggestionItem.onclick = function() {
+                // Update the input with the selected instructor's full name
+                input.value = instructorName.trim(); // Use the trimmed name
+                suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
+
+                // Update the dropdown visibility based on the selected instructor's name
+                filterDropdownOptions(instructorName.trim().toLowerCase());
+            };
+            suggestionsContainer.appendChild(suggestionItem);
         } else {
-            suggestionsContainer.style.display = 'none';
-        }
-
-        let foundMatch = false;
-
-        // Loop through all options in the select dropdown to filter instructors
-        for (let i = 0; i < select.options.length; i++) {
-            const option = select.options[i];
-            const instructorName = option.textContent || option.innerText;
-
-            // Skip the first option "Select an Instructor"
-            if (option.value === "") {
-                continue;
-            }
-
-            // Check if the instructor name matches the filter
-            if (instructorName.toLowerCase().includes(filter)) {
-                // Show matching options in the dropdown
-                option.style.display = "";
-                foundMatch = true;
-
-                // Create suggestion items
-                const suggestionItem = document.createElement('li');
-                suggestionItem.textContent = instructorName.trim(); // Trim spaces before displaying
-                suggestionItem.dataset.id = option.value; // Store the instructor ID in the data attribute
-                suggestionItem.onclick = function() {
-                    // Update the input with the selected instructor's full name
-                    input.value = instructorName.trim(); // Use the trimmed name
-                    suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
-                };
-                suggestionsContainer.appendChild(suggestionItem);
-            } else {
-                // Hide non-matching options in the dropdown
-                option.style.display = "none";
-            }
-        }
-
-        // If no matches found, hide the suggestions container
-        if (!foundMatch) {
-            suggestionsContainer.style.display = 'none';
+            // Hide non-matching options in the dropdown
+            option.style.display = "none";
         }
     }
 
-    // Function to update the search input with the selected instructor's name
-    function updateSearchInstructor() {
-        const select = document.getElementById('instructorSelectAssign');
-        const selectedOption = select.options[select.selectedIndex];
+    // If no matches found, hide the suggestions container
+    if (!foundMatch) {
+        suggestionsContainer.style.display = 'none';
+    }
+}
+
+// Function to update the search input with the selected instructor's name
+function updateSearchInstructor() {
+    const select = document.getElementById('instructorSelectAssign');
+    const selectedOption = select.options[select.selectedIndex];
+    const input = document.getElementById('searchInstructor');
+    const suggestionsContainer = document.getElementById('suggestionsContainer');
+    
+    if (selectedOption && selectedOption.value) {
         const fullName = selectedOption.getAttribute('data-fullname');
-        document.getElementById('searchInstructor').value = fullName.trim(); // Trim spaces before setting
+        input.value = fullName.trim(); // Update the input with the full name
+        suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
+
+        // Update the dropdown visibility based on the selected instructor's name
+        filterDropdownOptions(fullName.trim().toLowerCase());
     }
+}
 
-    // Event listener to hide suggestions on blur (when the user clicks outside the input field)
-    document.getElementById('searchInstructor').addEventListener('blur', function() {
-        setTimeout(function() { // Delay hiding to allow clicking suggestion
-            document.getElementById('suggestionsContainer').style.display = 'none';
-        }, 200);
-    });
+// Function to filter dropdown options based on the search input
+function filterDropdownOptions(filter) {
+    const select = document.getElementById('instructorSelectAssign');
+    for (let i = 0; i < select.options.length; i++) {
+        const option = select.options[i];
+        const instructorName = option.textContent || option.innerText;
 
-    // Event listener to hide suggestions on pressing the Enter key
-    document.getElementById('searchInstructor').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            document.getElementById('suggestionsContainer').style.display = 'none';
+        // Show matching options in the dropdown
+        if (instructorName.toLowerCase().includes(filter)) {
+            option.style.display = "";
+        } else {
+            option.style.display = "none";
         }
-    });
+    }
+}
 
-    // Event listener to hide the "Select an Instructor" option when the dropdown is opened
-    document.getElementById('instructorSelectAssign').addEventListener('focus', function() {
-        const defaultOption = document.getElementById('defaultOption');
-        if (defaultOption) {
-            defaultOption.style.display = 'none'; // Hide the default "Select an Instructor" option
-        }
-    });
+// Event listener to hide suggestions on blur (when the user clicks outside the input field)
+document.getElementById('searchInstructor').addEventListener('blur', function() {
+    setTimeout(function() { // Delay hiding to allow clicking suggestion
+        document.getElementById('suggestionsContainer').style.display = 'none';
+    }, 200);
+});
 
-    // Event listener to reset the "Select an Instructor" option when the dropdown loses focus
-    document.getElementById('instructorSelectAssign').addEventListener('blur', function() {
-        const defaultOption = document.getElementById('defaultOption');
-        if (defaultOption && !this.value) {
-            defaultOption.style.display = ''; // Show it again if no instructor is selected
-        }
-    });
+// Event listener to hide suggestions on pressing the Enter key
+document.getElementById('searchInstructor').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        document.getElementById('suggestionsContainer').style.display = 'none';
+    }
+});
 
+// Event listener to hide the "Select an Instructor" option when the dropdown is opened
+document.getElementById('instructorSelectAssign').addEventListener('focus', function() {
+    const defaultOption = document.getElementById('defaultOption');
+    if (defaultOption) {
+        defaultOption.style.display = 'none'; // Hide the default "Select an Instructor" option
+    }
+});
 
-
+// Event listener to reset the "Select an Instructor" option when the dropdown loses focus
+document.getElementById('instructorSelectAssign').addEventListener('blur', function() {
+    const defaultOption = document.getElementById('defaultOption');
+    if (defaultOption && !this.value) {
+        defaultOption.style.display = ''; // Show it again if no instructor is selected
+    }
+});
 
 
 
