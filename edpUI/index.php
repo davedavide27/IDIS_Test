@@ -46,6 +46,7 @@
              <meta name="viewport" content="width=device-width, initial-scale=1.0">
              <title>IDIS - EDP</title>
              <link rel="stylesheet" href="style.css">
+             <link rel="stylesheet" href="list_table.css">
              <script src="edp.js"></script>
              <style>
                  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
@@ -140,6 +141,18 @@
                          <h5>Instructional Delivery Implementation System (IDIS)</h5>
                          <p>Saint Michael College of Caraga (SMCC)</p>
                      </header>
+                 </div>
+                 <div class="implementContainer">
+                     <a href="../edpUI/user_tables/student_table.php"><button class="user-list">Student List</button>
+                     </a>
+                     <a href="../edpUI/user_tables/instructor_table.php"><button class="user-list">Instructor List</button>
+                     </a>
+                     <a href="../edpUI/user_tables/dean_table.php"><button class="user-list">Dean List</button>
+                     </a>
+                     <a href="../edpUI/user_tables/vp_table.php"><button class="user-list">Vice President</button>
+                     </a>
+                     <a href="../edpUI/user_tables/librarian_table.php"><button class="user-list">Librarian User List</button>
+                     </a>
                  </div>
                  <div class="subjectsContainer">
                      <h4 style="text-align: center;">Manual User Assigning</h4>

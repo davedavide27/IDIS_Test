@@ -223,7 +223,7 @@ $conn->close();
 
         <form method="post" action="insert_instructor.php" onsubmit="return validateForm()">
             <!-- Student ID Field -->
-            <label for="instructor_ID">Student ID:</label>
+            <label for="instructor_ID">Instructor ID:</label>
             <input type="number" name="instructor_ID" id="instructor_ID" value="<?php echo $_SESSION['form_data']['instructor_ID'] ?? ''; ?>" required>
             <span id="instructor_id_error" class="error-message"></span> <!-- Error message will be shown here -->
             <br>
@@ -256,113 +256,113 @@ $conn->close();
     </div>
 
     <script>
-    // Add event listener to dynamically check the instructor ID
-    document.getElementById("instructor_ID").addEventListener("input", function() {
-        var instructorID = this.value;
-        var errorMessage = document.getElementById("instructor_id_error");
-        var createInstructorBtn = document.getElementById("submitButton"); // Get the button element
+        // Add event listener to dynamically check the instructor ID
+        document.getElementById("instructor_ID").addEventListener("input", function() {
+            var instructorID = this.value;
+            var errorMessage = document.getElementById("instructor_id_error");
+            var createInstructorBtn = document.getElementById("submitButton"); // Get the button element
 
-        if (instructorID) {
-            // Make AJAX request to check if the instructor ID exists in the database
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "check_instructor_id.php?instructor_ID=" + instructorID, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = xhr.responseText.trim();
+            if (instructorID) {
+                // Make AJAX request to check if the instructor ID exists in the database
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "check_instructor_id.php?instructor_ID=" + instructorID, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = xhr.responseText.trim();
 
-                    // Check the response and display an error if the ID exists
-                    if (response === "exists") {
-                        errorMessage.textContent = "Instructor ID already exists!";
-                        createInstructorBtn.disabled = true; // Disable submit button
-                    } else {
-                        errorMessage.textContent = "";
-                        createInstructorBtn.disabled = false; // Enable submit button if ID doesn't exist
+                        // Check the response and display an error if the ID exists
+                        if (response === "exists") {
+                            errorMessage.textContent = "Instructor ID already exists!";
+                            createInstructorBtn.disabled = true; // Disable submit button
+                        } else {
+                            errorMessage.textContent = "";
+                            createInstructorBtn.disabled = false; // Enable submit button if ID doesn't exist
+                        }
                     }
-                }
-            };
-            xhr.send();
-        } else {
-            errorMessage.textContent = ""; // Clear error message if input is empty
-            createInstructorBtn.disabled = false; // Enable submit button if input is empty
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const successContainer = document.getElementById('success-container');
-        const errorContainer = document.getElementById('error-container');
-        const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-        const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-        const passwordField = document.getElementById('password');
-        const confirmPasswordField = document.getElementById('confirm_password');
-        const createInstructorBtn = document.getElementById('submitButton');
-        const passwordError = document.getElementById('password_error'); // Password error message
-
-        // Function to remove notification with fade-out effect
-        function removeNotification(notification) {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
-            }, 500);
-        }
-
-        // Function to handle notifications
-        function showNotifications() {
-            document.querySelectorAll('.notification').forEach(notification => {
-                setTimeout(() => {
-                    removeNotification(notification);
-                }, 4000);
-
-                notification.querySelector('.notification-close').addEventListener('click', () => {
-                    removeNotification(notification);
-                });
-            });
-        }
-
-        // Clear all success notifications
-        if (clearAllSuccessButton) {
-            clearAllSuccessButton.addEventListener('click', function() {
-                successContainer.querySelectorAll('.notification').forEach(notification => {
-                    removeNotification(notification);
-                });
-                clearAllSuccessButton.style.display = 'none';
-            });
-        }
-
-        // Clear all error notifications
-        if (clearAllErrorButton) {
-            clearAllErrorButton.addEventListener('click', function() {
-                errorContainer.querySelectorAll('.notification').forEach(notification => {
-                    removeNotification(notification);
-                });
-                clearAllErrorButton.style.display = 'none';
-            });
-        }
-
-        // Validate password complexity and enable/disable submit button
-        function validatePassword() {
-            const password = passwordField.value;
-            const confirmPassword = confirmPasswordField.value;
-
-            // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
-            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
-
-            // Check if password matches the required pattern
-            if (!passwordRegex.test(password)) {
-                passwordError.innerText = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
-                createInstructorBtn.disabled = true; // Disable submit button
-            } else if (password !== confirmPassword) {
-                passwordError.innerText = "Passwords do not match.";
-                createInstructorBtn.disabled = true; // Disable submit button
+                };
+                xhr.send();
             } else {
-                passwordError.innerText = ""; // Clear error message
-                createInstructorBtn.disabled = false; // Enable submit button if valid
+                errorMessage.textContent = ""; // Clear error message if input is empty
+                createInstructorBtn.disabled = false; // Enable submit button if input is empty
             }
-        }
+        });
 
-        // Validate passwords when user types
-        passwordField.addEventListener('input', validatePassword);
-        confirmPasswordField.addEventListener('input', validatePassword);
+        document.addEventListener('DOMContentLoaded', function() {
+            const successContainer = document.getElementById('success-container');
+            const errorContainer = document.getElementById('error-container');
+            const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
+            const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+            const passwordField = document.getElementById('password');
+            const confirmPasswordField = document.getElementById('confirm_password');
+            const createInstructorBtn = document.getElementById('submitButton');
+            const passwordError = document.getElementById('password_error'); // Password error message
 
-        showNotifications(); // Show notifications on page load
-    });
-</script>
+            // Function to remove notification with fade-out effect
+            function removeNotification(notification) {
+                notification.classList.add('fade-out');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }
+
+            // Function to handle notifications
+            function showNotifications() {
+                document.querySelectorAll('.notification').forEach(notification => {
+                    setTimeout(() => {
+                        removeNotification(notification);
+                    }, 4000);
+
+                    notification.querySelector('.notification-close').addEventListener('click', () => {
+                        removeNotification(notification);
+                    });
+                });
+            }
+
+            // Clear all success notifications
+            if (clearAllSuccessButton) {
+                clearAllSuccessButton.addEventListener('click', function() {
+                    successContainer.querySelectorAll('.notification').forEach(notification => {
+                        removeNotification(notification);
+                    });
+                    clearAllSuccessButton.style.display = 'none';
+                });
+            }
+
+            // Clear all error notifications
+            if (clearAllErrorButton) {
+                clearAllErrorButton.addEventListener('click', function() {
+                    errorContainer.querySelectorAll('.notification').forEach(notification => {
+                        removeNotification(notification);
+                    });
+                    clearAllErrorButton.style.display = 'none';
+                });
+            }
+
+            // Validate password complexity and enable/disable submit button
+            function validatePassword() {
+                const password = passwordField.value;
+                const confirmPassword = confirmPasswordField.value;
+
+                // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+                const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
+
+                // Check if password matches the required pattern
+                if (!passwordRegex.test(password)) {
+                    passwordError.innerText = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+                    createInstructorBtn.disabled = true; // Disable submit button
+                } else if (password !== confirmPassword) {
+                    passwordError.innerText = "Passwords do not match.";
+                    createInstructorBtn.disabled = true; // Disable submit button
+                } else {
+                    passwordError.innerText = ""; // Clear error message
+                    createInstructorBtn.disabled = false; // Enable submit button if valid
+                }
+            }
+
+            // Validate passwords when user types
+            passwordField.addEventListener('input', validatePassword);
+            confirmPasswordField.addEventListener('input', validatePassword);
+
+            showNotifications(); // Show notifications on page load
+        });
+    </script>
