@@ -92,14 +92,39 @@ form h2 {
 }
 
 /* Input Fields */
+/* General Input Field Styling */
 .input-field {
     position: relative;
     margin: 25px 0;
     border-bottom: 2px solid #ccc;
 }
+.input-field option{
+    position: relative;
+    margin: 25px 0;
+    border-bottom: 2px solid #ccc;
+}
 
-/* Input Field Styling */
-.input-field input {
+.input-field select {
+    border-radius: 5px;
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    color: #ccc; /* Text color inside the dropdown */
+    font-size: 1rem;
+    padding: 12px 5px;
+    margin-top: 10px;
+}
+
+/* Styling the options inside the dropdown */
+.input-field select option {
+    color: #000; /* Change this to your desired color */
+    background-color: #fff; /* Background color for the options */
+    font-size: 1rem;
+}
+
+/* Styling for Input and Select */
+.input-field input,
+.input-field select {
     width: 100%;
     height: 40px;
     background: transparent;
@@ -108,29 +133,35 @@ form h2 {
     color: #fff;
     font-size: 1rem;
     padding: 12px 5px;
-    margin-top: 10px; /* Adjust to ensure the label is properly spaced */
+    margin-top: 10px;
 }
 
-/* Label Styling */
+/* Styling for Floating Label */
 .input-field label {
     position: absolute;
-    top: 65%;  /* Center label vertically */
-    left: 0px;
+    top: 50%;
+    left: 0;
     transform: translateY(-50%);
     color: #ccc;
     font-size: 1rem;
     pointer-events: none;
     transition: all 0.3s ease;
-    padding: 0 4px; /* Optional: to adjust the label position */
 }
 
-/* Floating Label on Focus or Typing */
+/* Floating Label on Focus or Input */
 .input-field input:focus + label,
 .input-field input:not(:placeholder-shown) + label {
-    top: -2px; /* Adjust this value to control the floating distance */
+    top: -15px;
     font-size: 0.8rem;
     color: #fff;
-    transform: translateY(0); /* Remove the translateY adjustment */
+}
+
+/* Styling for Select Element */
+.input-field select:focus + p,
+.input-field select:not(:placeholder-shown) + p {
+    top: -15px;
+    font-size: 0.8rem;
+    color: #fff;
 }
 
 /* Submit Button */
