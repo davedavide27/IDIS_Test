@@ -48,10 +48,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $idColumn = 'edp_ID';
             $redirectUrl = 'edpUI/index.php';
             break;
-        case 'program_chair':  // Adding program chair to the switch case
+        case 'program_chair':
             $table = 'program_chair';
             $idColumn = 'chair_ID';
             $redirectUrl = 'chairUI/index.php';
+            break;
+        case 'librarian':
+            $table = 'librarian';
+            $idColumn = 'chair_ID';
+            $redirectUrl = 'librarianUI/index.php';
+            break;
+        case 'admin':
+            $table = 'admin';
+            $idColumn = 'chair_ID';
+            $redirectUrl = 'adminUI/index.php';
             break;
         default:
             $error_message = "Invalid user type.";
@@ -148,8 +158,14 @@ $conn->close();
             <div class="content"><img src="" alt=""></div>
             <a href="librarian_login.php"><button class="login">LOGIN</button></a>
         </div>
+        <div class="card">
+            <div class="title">
+                <p>ADMIN</p>
+            </div>
+            <div class="content"><img src="" alt=""></div>
+            <a href="admin.php"><button class="login">LOGIN</button></a>
+        </div>
     </main>
-
     <footer>
         <h5>All rights reserved 2024<br>
             © IDIS SYSTEM</h5>
