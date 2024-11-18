@@ -15,9 +15,10 @@
         <div class="nav-container">
             <nav class="navigation-tabs">
                 <ul>
-                    <li><a href="#user-management">User Management</a></li>
-                    <li><a href="#system-settings">System Settings</a></li>
-                    <li><a href="#logs">Announcements</a></li>
+                    <li><a href="#">User Management</a></li>
+                    <li><a href="#">System Settings</a></li>
+                    <li><a href="#">Announcements</a></li>
+                    <li><a href="#logs">Logs</a></li>
                 </ul>
                 <ul>
                     <li><button class="logout-btn">Logout</button></li>

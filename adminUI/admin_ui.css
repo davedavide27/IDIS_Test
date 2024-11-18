@@ -75,12 +75,16 @@ body {
 /* Main Content */
 .content-box{
     margin-bottom: 10px;
-    border-radius: 5px;
+    border-radius: 10px;
     padding: 20px;
     background-color: #fff;
-    color:#0C1821
+    color:#0C1821;
+    margin-top: 20px;
+    margin-left: 30px;
+
     }
 .content-container {
+    
     height: auto;
     padding-top: 10px;
     border-radius: 5px;
