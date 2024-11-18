@@ -126,7 +126,7 @@ if ($user_type === 'student_table') {
     $query = "SELECT vp_ID, CONCAT(vp_fname, ' ', vp_mname, ' ', vp_lname) AS full_name, password FROM vp";
 } elseif ($user_type === 'librarian_table') {
     $query = "SELECT librarian_ID, CONCAT(librarian_fname, ' ', librarian_mname, ' ', librarian_lname) AS full_name, password, department FROM librarian";
-} 
+}
 
 
 // Execute query and fetch users

@@ -1,0 +1,112 @@
+/* General Styles */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    color: #fff;
+    background-color: #f4f4f4;
+}
+
+/* Sidebar */
+.containerOfSide {
+    width: 250px;
+    background-color: #0C1821;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.containerOfSide h3 {
+    color: white;
+    margin-bottom: 50px;
+}
+
+.navigation-tabs ul {
+    list-style: none;
+    padding: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.navigation-tabs ul li {
+    margin-bottom: 20px;
+}
+
+.navigation-tabs a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    padding: 10px 15px;
+    display: block;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.navigation-tabs a:hover {
+    background-color: #1A3A5F;
+}
+
+.navigation-tabs .logout-btn {
+    background-color: #F44336;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 80%;
+    margin: 0 auto;
+    transition: background-color 0.3s;
+}
+
+.navigation-tabs .logout-btn:hover {
+    background-color: #D32F2F;
+}
+
+/* Main Content */
+.content-box{
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 20px;
+    background-color: #fff;
+    color:#0C1821
+    }
+.content-container {
+    height: auto;
+    padding-top: 10px;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    color: #333;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+@media(max-width:480px){
+    .content-container{
+        grid-template-columns: repeat(1,1fr);
+    }
+}
+.content-container section {
+    margin: auto;
+    padding: 20px;
+    background-color: #f6f6f6;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 250px;
+}
+
+.content-container h2 {
+    color: #0C1821;
+    margin-bottom: 10px;
+}
