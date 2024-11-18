@@ -779,7 +779,7 @@ $conn->close();
                         Subject Teacher
                     </td>
                     <td class="signature-cell">
-                        <div class="signature-date"><?= date('M. d, Y', strtotime($prepared_by_date)); ?></div>
+                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -790,7 +790,7 @@ $conn->close();
                         College Librarian
                     </td>
                     <td class="signature-cell">
-                        <div class="signature-date"><?= date('M. d, Y', strtotime($resource_checked_by_date)); ?></div>
+                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -805,7 +805,7 @@ $conn->close();
                         Dean
                     </td>
                     <td class="signature-cell">
-                        <div class="signature-date"><?= date('M. d, Y', strtotime($reviewed_by_date)); ?></div>
+                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -816,7 +816,7 @@ $conn->close();
                         Vice President for Academic Affairs and Research
                     </td>
                     <td class="signature-cell">
-                        <div class="signature-date"><?= date('M. d, Y', strtotime($approved_by_date)); ?></div>
+                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
                         _____________<br>Date
                     </td>
                 </tr>
