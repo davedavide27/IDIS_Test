@@ -16,7 +16,7 @@
 
         <div class="login-wrapper">
             <div class="logo"></div>
-            <h2>LOGIN AS STUDENT</h2>
+            <h2>LOGIN AS LIBRARIAN</h2>
             <?php if (!empty($error_message)): ?>
                 <div class="alert" id="alert"><?php echo htmlspecialchars($error_message); ?></div>
                 <script>
@@ -25,39 +25,28 @@
                     }, 5000);
                 </script>
             <?php endif; ?>
-
             <form action="login.php" method="post">
                 <div class="input-field">
-                    <select name="" id="">
-                        <option value="" disabled selected>Department</option>
-                        <option value="">Computer Science</option>
-                        <option value="">Information Technology</option>
-                    </select>
-                </div>
-
-                <div class="input-field">
-                    <input type="number" name="id" id="student-id" required placeholder=" ">
-                    <label for="student-id">Student ID</label>
+                    <input type="number" name="id" id="" required placeholder=" ">
+                    <label for="">LIBRARIAN ID</label>
                 </div>
 
                 <div class="input-field">
                     <input type="password" name="password" id="password" required placeholder=" ">
                     <label for="password">Password</label>
-                    <input type="hidden" name="user_type" value="student">
                 </div>
 
+                <input type="hidden" name="" value="">
                 <button type="submit" class="login-btn">LOGIN</button>
-                <h4 class="return-home">
-                    <a href="login.php" style="color: #fff;">Click here to return home</a>
-                </h4>
+                <h4 class="return-home"><a href="login.php" style="color: #fff;">Click here to return home</a></h4>
             </form>
         </div>
+
         <footer>
             <h5>All rights reserved 2024<br>
                 © IDIS SYSTEM</h5>
         </footer>
-
-
+    </div>
 </body>
 
 </html>

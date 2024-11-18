@@ -31,22 +31,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         case 'dean':
             $table = 'dean';
             $idColumn = 'dean_ID';
-            $redirectUrl = 'deanUI/index.php'; 
+            $redirectUrl = 'deanUI/index.php';
             break;
         case 'instructor':
             $table = 'instructor';
             $idColumn = 'instructor_ID';
-            $redirectUrl = 'instructorUI/index.php'; 
+            $redirectUrl = 'instructorUI/index.php';
             break;
         case 'vp':
             $table = 'vp';
             $idColumn = 'vp_ID';
-            $redirectUrl = 'vpUI/index.php'; 
+            $redirectUrl = 'vpUI/index.php';
             break;
         case 'edp':
             $table = 'edp';
             $idColumn = 'edp_ID';
-            $redirectUrl = 'edpUI/index.php'; 
+            $redirectUrl = 'edpUI/index.php';
             break;
         case 'program_chair':  // Adding program chair to the switch case
             $table = 'program_chair';
@@ -86,52 +86,74 @@ $conn->close();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IDIS Authentication</title>
     <link rel="stylesheet" href="style1.css">
 </head>
+
 <body>
     <header>
         <h1>Login As:</h1>
     </header>
     <main>
         <div class="card">
-            <div class="title"><p>STUDENT</p></div>
+            <div class="title">
+                <p>STUDENT</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="student_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>INSTRUCTOR</p></div>
+            <div class="title">
+                <p>INSTRUCTOR</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="instructor_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>PROGRAM CHAIR</p></div>
+            <div class="title">
+                <p>PROGRAM CHAIR</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="program_chair_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>DEAN</p></div>
+            <div class="title">
+                <p>DEAN</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="dean_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>VICE-PRESIDENT</p></div>
+            <div class="title">
+                <p>VICE-PRESIDENT</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="vp_login.php"><button class="login">LOGIN</button></a>
         </div>
         <div class="card">
-            <div class="title"><p>EDP</p></div>
+            <div class="title">
+                <p>EDP</p>
+            </div>
             <div class="content"><img src="" alt=""></div>
             <a href="edp_login.php"><button class="login">LOGIN</button></a>
+        </div>
+        <div class="card">
+            <div class="title">
+                <p>LIBRARIAN</p>
+            </div>
+            <div class="content"><img src="" alt=""></div>
+            <a href="librarian_login.php"><button class="login">LOGIN</button></a>
         </div>
     </main>
 
     <footer>
-            <h5>All rights reserved 2024<br>
+        <h5>All rights reserved 2024<br>
             © IDIS SYSTEM</h5>
-        </footer>
+    </footer>
 </body>
+
 </html>
