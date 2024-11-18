@@ -27,7 +27,9 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
         'instructor' => 'instructor',
         'vp' => 'vp',
         'edp' => 'edp',
-        'program_chair' => 'program_chair'
+        'program_chair' => 'program_chair',
+        'librarian' => 'librarian',
+        'admin' => 'admin'
     ];
 
     $nameColumns = [
@@ -36,7 +38,9 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
         'instructor' => 'instructor_fname',
         'vp' => 'vp_fname',
         'edp' => 'edp_fname',
-        'program_chair' => 'chair_fname'
+        'program_chair' => 'chair_fname',
+        'librarian' => 'librarian_fname',
+        'admin' => 'admin_fname'
     ];
 
     // Map the correct ID columns for each user type
@@ -46,7 +50,9 @@ if (isset($_SESSION['user_ID']) && isset($_SESSION['user_type'])) {
         'instructor' => 'instructor_ID',
         'vp' => 'vp_ID',
         'edp' => 'edp_ID',
-        'program_chair' => 'chair_ID'
+        'program_chair' => 'chair_ID',
+        'librarian' => 'librarian_ID',
+        'admin' => 'admin_ID'
     ];
 
     // Validate user type

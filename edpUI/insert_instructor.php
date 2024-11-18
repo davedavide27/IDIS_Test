@@ -20,17 +20,28 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Fetch departments from the department table
+$departments = [];
+$sqlDepartments = "SELECT department_name FROM department"; // Fetch department names only
+$resultDepartments = $conn->query($sqlDepartments);
+if ($resultDepartments->num_rows > 0) {
+    while ($row = $resultDepartments->fetch_assoc()) {
+        $departments[] = $row;
+    }
+}
+
 // If the form is submitted to create an instructor
 if (isset($_POST['create_instructor'])) {
-    $instructor_ID = $_POST['instructor_ID'];  // Capture instructor_ID from the form
-    $instructor_fname = $_POST['instructor_fname'];
-    $instructor_mname = $_POST['instructor_mname'];
-    $instructor_lname = $_POST['instructor_lname'];
-    $password = $_POST['password'];  // Store password as plain text
-    $confirm_password = $_POST['confirm_password'];  // Store confirm password
+    $instructor_ID = trim($_POST['instructor_ID']); // Capture and trim input
+    $instructor_fname = trim($_POST['instructor_fname']);
+    $instructor_mname = trim($_POST['instructor_mname']);
+    $instructor_lname = trim($_POST['instructor_lname']);
+    $password = trim($_POST['password']); // Trimmed password
+    $confirm_password = trim($_POST['confirm_password']);
+    $department_name = trim($_POST['department']); // Capture department name
 
-    // Check for validation
-    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password) || empty($confirm_password)) {
+    // Validate form fields
+    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password) || empty($confirm_password) || empty($department_name)) {
         $_SESSION['error_message'] = "All fields are required!";
     } elseif ($password !== $confirm_password) {
         $_SESSION['error_message'] = "Passwords do not match!";
@@ -39,17 +50,18 @@ if (isset($_POST['create_instructor'])) {
     } else {
         // Check if the instructor ID already exists
         $stmtCheck = $conn->prepare("SELECT instructor_ID FROM instructor WHERE instructor_ID = ?");
-        $stmtCheck->bind_param("i", $instructor_ID);
+        $stmtCheck->bind_param("s", $instructor_ID);
         $stmtCheck->execute();
         $stmtCheck->store_result();
 
         if ($stmtCheck->num_rows > 0) {
-            // Instructor ID already exists
             $_SESSION['error_message'] = "Instructor ID already exists!";
         } else {
             // Insert the instructor into the database
-            $stmt = $conn->prepare("INSERT INTO instructor (instructor_ID, instructor_fname, instructor_mname, instructor_lname, password) VALUES (?, ?, ?, ?, ?)");
-            $stmt->bind_param("issss", $instructor_ID, $instructor_fname, $instructor_mname, $instructor_lname, $password);
+            $stmt = $conn->prepare(
+                "INSERT INTO instructor (instructor_ID, instructor_fname, instructor_mname, instructor_lname, password, department) VALUES (?, ?, ?, ?, ?, ?)"
+            );
+            $stmt->bind_param("isssss", $instructor_ID, $instructor_fname, $instructor_mname, $instructor_lname, $password, $department_name);
 
             if ($stmt->execute()) {
                 $_SESSION['success_message'] = "Instructor successfully created!";
@@ -61,9 +73,6 @@ if (isset($_POST['create_instructor'])) {
         $stmtCheck->close();
     }
 }
-
-// Clear the form data after submission
-unset($_SESSION['form_data']);
 
 $conn->close();
 ?>
@@ -200,12 +209,52 @@ $conn->close();
             margin-top: 5px;
             /* Add some space above the message */
         }
+
+        /* Dropdown styling */
+        select {
+            display: block;
+            width: 100%;
+            height: 40px;
+            padding: 6px 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #f9f9f9;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        select:hover {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 5px rgba(128, 189, 255, 0.5);
+        }
+
+        select:focus {
+            border-color: #80bdff;
+            outline: none;
+            box-shadow: 0 0 8px rgba(128, 189, 255, 0.5);
+        }
     </style>
 </head>
 
 <body>
     <div class="containerOfAll">
         <!-- Success and Error Messages -->
+        <div class="notification-container" id="success-container">
+            <?php if (isset($_SESSION['success_message'])): ?>
+                <div class="notification success">
+                    <span><?php echo $_SESSION['success_message']; ?></span>
+                    <span class="notification-close">&times;</span>
+                </div>
+                <button class="clear-all-button" id="clearAllSuccessButton">[ clear all ]</button>
+                <?php unset($_SESSION['success_message']); ?>
+            <?php endif; ?>
+        </div>
+
         <div class="notification-container" id="error-container">
             <?php if (isset($_SESSION['error_message'])): ?>
                 <div class="notification error">
@@ -216,7 +265,6 @@ $conn->close();
                 <?php unset($_SESSION['error_message']); ?>
             <?php endif; ?>
         </div>
-
         <!-- Back Button at the top of the page -->
         <button class="back-button" onclick="window.location.href='index.php';">Back</button>
         <h3>Create Instructor</h3>
@@ -238,6 +286,20 @@ $conn->close();
 
             <label for="instructor_lname">Last Name:</label>
             <input type="text" name="instructor_lname" required>
+
+
+            <!-- Department Selection -->
+            <h4>Select Department</h4>
+            <select name="department" required>
+                <option value="">Select a Department</option>
+                <?php foreach ($departments as $dept): ?>
+                    <option value="<?php echo htmlspecialchars($dept['department_name']); ?>">
+                        <?php echo htmlspecialchars($dept['department_name']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <br><br>
+
 
             <!-- Password Fields -->
             <label for="password">Password:</label>

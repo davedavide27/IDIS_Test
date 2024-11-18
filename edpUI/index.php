@@ -143,7 +143,9 @@
                      </header>
                  </div>
                  <div class="implementContainer">
-                     <a href="../edpUI/user_tables/student_table.php"><button class="user-list">Student List</button>
+                     <button onclick="window.location.href='../edpUI/user_tables/dean_table.php?user_type=student_table'">Users List</button>
+                     <!--
+                     <a href="../edpUI/user_tables/student_table.php"><button class="user-list">Users Lists</button>
                      </a>
                      <a href="../edpUI/user_tables/instructor_table.php"><button class="user-list">Instructor List</button>
                      </a>
@@ -153,6 +155,7 @@
                      </a>
                      <a href="../edpUI/user_tables/librarian_table.php"><button class="user-list">Librarian User List</button>
                      </a>
+                     -->
                  </div>
                  <div class="subjectsContainer">
                      <h4 style="text-align: center;">Manual User Assigning</h4>

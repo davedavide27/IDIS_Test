@@ -60,7 +60,7 @@ h3 {
 }
 
 .navigation-tabs ul li {
-    margin: 0;
+    margin: 0 10px; /* Adds spacing between tabs */
 }
 
 .navigation-tabs ul li a {
@@ -72,11 +72,20 @@ h3 {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-
+/* Hover effect */
 .navigation-tabs ul li a:hover {
     background-color: #0056b3;
     color: #ffffff;
 }
+
+/* Active tab style */
+.navigation-tabs ul li a.active {
+    background-color: #0056b3; /* Highlight color */
+    color: #ffffff; /* Text color for active tab */
+    font-weight: bold; /* Make the text bold to distinguish it */
+}
+
+
 .filter-container select{
     border: 1px solid #ddd;
     padding: 12px;
