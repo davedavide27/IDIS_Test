@@ -240,6 +240,28 @@ $conn->close();
         .back-button:hover {
             background-color: #d32f2f;
         }
+
+        #suggestionsContainer {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            position: absolute;
+            width: 45.6%;
+            z-index: 999;
+        }
+
+        #suggestionsContainer li {
+            padding: 8px;
+            cursor: pointer;
+        }
+
+        #suggestionsContainer li:hover {
+            background-color: #f0f0f0;
+        }
     </style>
 </head>
 
@@ -288,18 +310,23 @@ $conn->close();
             <div class="search-container">
                 <h4>Select Student</h4>
                 <input type="text" id="searchStudent" onkeyup="filterStudents()" placeholder="Search for student..">
+
+                <!-- Suggestion list container (for suggestions) -->
+                <ul id="suggestionsContainer" style="display: none;"></ul>
+
+                <!-- Student Dropdown -->
                 <select id="studentSelectAssign" name="student_id" onchange="updateSearchStudent()" required>
                     <option value="">Select a Student</option>
                     <?php foreach ($students as $student):
                         $fullName = trim($student['student_fname'] . ' ' . $student['student_mname'] . ' ' . $student['student_lname']);
-                        $selected = (isset($_SESSION['form_data']['student_id']) && $_SESSION['form_data']['student_id'] == $student['student_ID']) ? 'selected' : '';  // Preserve student selection
                     ?>
-                        <option value="<?php echo htmlspecialchars($student['student_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>" <?php echo $selected; ?>>
+                        <option value="<?php echo htmlspecialchars($student['student_ID']); ?>" data-fullname="<?php echo htmlspecialchars($fullName); ?>">
                             <?php echo htmlspecialchars($fullName); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
+
 
             <h4>Select Subjects</h4>
             <div class="check-all">
@@ -327,28 +354,89 @@ $conn->close();
 </body>
 
 <script>
+    // Function to filter students based on input and display in the suggestions container
     function filterStudents() {
         const input = document.getElementById('searchStudent');
-        const filter = input.value.toLowerCase();
+        const filter = input.value.toLowerCase().trim();
         const select = document.getElementById('studentSelectAssign');
+        const suggestionsContainer = document.getElementById('suggestionsContainer');
 
+        // Clear previous suggestions
+        suggestionsContainer.innerHTML = '';
+        suggestionsContainer.style.display = 'none'; // Hide by default
+
+        // Filter dropdown options temporarily based on input
+        let dropdownHasMatches = false;
         for (let i = 0; i < select.options.length; i++) {
-            const txtValue = select.options[i].textContent || select.options[i].innerText;
-            if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                select.options[i].style.display = "";
+            const option = select.options[i];
+            const optionText = option.text.toLowerCase();
+
+            // Filter options based on search term
+            if (optionText.includes(filter) && option.value !== '') {
+                option.style.display = ''; // Show matching options in dropdown
+                dropdownHasMatches = true;
             } else {
-                select.options[i].style.display = "none";
+                option.style.display = 'none'; // Hide non-matching options in dropdown
+            }
+        }
+
+        // If there are matches in the dropdown, proceed to show suggestions in the suggestion list
+        if (dropdownHasMatches && filter.length > 0) {
+            const suggestions = Array.from(select.options)
+                .filter(option => option.style.display === '' && option.value !== '')
+                .map(option => ({
+                    value: option.value,
+                    text: option.text.trim()
+                }));
+
+            // Populate the suggestion list with matching options
+            suggestionsContainer.style.display = 'block';
+            suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion.text;
+                li.dataset.value = suggestion.value;
+
+                // Event listener for each suggestion item
+                li.onclick = function() {
+                    document.getElementById('searchStudent').value = suggestion.text; // Populate search input with selected name
+                    document.getElementById('studentSelectAssign').value = suggestion.value; // Update dropdown selection
+                    suggestionsContainer.style.display = 'none'; // Hide suggestions after selection
+                };
+                suggestionsContainer.appendChild(li);
+            });
+        } else {
+            // Reset dropdown if no matches
+            for (let i = 0; i < select.options.length; i++) {
+                select.options[i].style.display = ''; // Show all options
             }
         }
     }
 
+    // Function to update search input with the full name of the selected student in the dropdown
     function updateSearchStudent() {
         const select = document.getElementById('studentSelectAssign');
         const selectedOption = select.options[select.selectedIndex];
 
-        const fullName = selectedOption.getAttribute('data-fullname');
-        document.getElementById('searchStudent').value = fullName;
+        // Populate search bar if a dropdown option is selected
+        if (selectedOption && selectedOption.value) {
+            document.getElementById('searchStudent').value = selectedOption.text.trim();
+        }
     }
+
+    // Hide the suggestion container when the user moves away from the input field
+    document.getElementById('searchStudent').addEventListener('blur', function() {
+        setTimeout(() => {
+            document.getElementById('suggestionsContainer').style.display = 'none';
+        }, 100); // Delay to ensure suggestion item can be clicked
+    });
+
+    // Prevent form submission on Enter keypress in search input
+    document.getElementById('searchStudent').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent form submission
+            document.getElementById('suggestionsContainer').style.display = 'none';
+        }
+    });
 
     function toggleCheckAll(source) {
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
@@ -358,33 +446,18 @@ $conn->close();
     }
 
     function removeNotification(notification, immediate = false) {
-        if (immediate) {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
+        notification.classList.add('fade-out');
+        setTimeout(() => {
+            notification.remove();
 
-                const remainingNotifications = document.querySelectorAll('.notification');
-                if (remainingNotifications.length === 0) {
-                    const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-                    const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-                    if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
-                    if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
-                }
-            }, 500);
-        } else {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
-
-                const remainingNotifications = document.querySelectorAll('.notification');
-                if (remainingNotifications.length === 0) {
-                    const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-                    const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-                    if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
-                    if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
-                }
-            }, 500);
-        }
+            const remainingNotifications = document.querySelectorAll('.notification');
+            if (remainingNotifications.length === 0) {
+                const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
+                const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+                if (clearAllSuccessButton) clearAllSuccessButton.style.display = 'none';
+                if (clearAllErrorButton) clearAllErrorButton.style.display = 'none';
+            }
+        }, immediate ? 0 : 500);
     }
 
     function showNotifications() {
@@ -395,7 +468,7 @@ $conn->close();
             }, 4000);
 
             notification.querySelector('.notification-close').addEventListener('click', () => {
-                removeNotification(notification);
+                removeNotification(notification, true);
             });
         });
     }

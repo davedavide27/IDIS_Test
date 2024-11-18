@@ -27,7 +27,14 @@ $subject_code = "";
 $subject_name = "";
 $units = "";
 $hours = "";
-$departments = "COLLEGE OF ARTS AND SCIENCES";
+$departments = [
+    "COLLEGE OF ARTS AND SCIENCES",
+    "COLLEGE OF COMPUTING AND INFORMATION SCIENCES",
+    "COLLEGE OF ENGINEERING AND ARCHITECTURE",
+    "COLLEGE OF BUSINESS ADMINISTRATION",
+    "COLLEGE OF EDUCATION"
+];
+
 $school_year_start = "";
 $school_year_end = "";
 $grading_period = "";
@@ -124,7 +131,7 @@ if (isset($_POST['save_edits'])) {
         "iissssssiiiiiiissss",
         $_POST['units'],
         $_POST['hours'],
-        $_POST['department'],
+        $_POST['department'], // Capture selected department
         $_POST['school_year_start'],
         $_POST['school_year_end'],
         $_POST['grading_period'],
@@ -467,11 +474,22 @@ $conn->close();
                 <td>V. Department</td>
                 <td>:
                     <select name="department" required>
-                        <option value="<?php echo htmlspecialchars($departments); ?>"><?php echo htmlspecialchars($departments); ?></option>
+                        <option value="" disabled selected>Select Department</option>
+                        <?php
+                        // Fetch the existing department if it's set from the database row
+                        $existingDepartment = isset($department) ? $department : ''; // This will hold the existing department value from the fetched data
+
+                        // Loop through the departments array and display each option
+                        foreach ($departments as $dept) : ?>
+                            <option value="<?php echo htmlspecialchars($dept); ?>"
+                                <?php echo ($existingDepartment === $dept) ? 'selected' : ''; ?>>
+                                <?php echo htmlspecialchars($dept); ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
                 </td>
+
             </tr>
-            <tr>
             <tr>
                 <td>VI. School year</td>
                 <td class="school-year-section">: <input type="number" name="school_year_start" value="<?php echo htmlspecialchars($school_year_start); ?>" required> - <input type="number" name="school_year_end" value="<?php echo htmlspecialchars($school_year_end); ?>" required></td>

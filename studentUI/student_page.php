@@ -16,13 +16,14 @@ if ($conn->connect_error) {
 
 $studentFullName = '';
 $assignedSubjects = []; // Array to store assigned subjects
+$studentDepartment = ''; // Variable to store department
 
 // Check if the student is logged in
 if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
     $studentId = $_SESSION['user_ID'];
 
-    // Fetch student's full name based on the student ID
-    $sql = "SELECT student_fname, student_mname, student_lname FROM student WHERE student_ID = ?";
+    // Fetch student's full name and department based on the student ID
+    $sql = "SELECT student_fname, student_mname, student_lname, department FROM student WHERE student_ID = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $studentId);
     $stmt->execute();
@@ -31,9 +32,12 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
         $studentFullName = $row['student_fname'] . ' ' . $row['student_mname'] . ' ' . $row['student_lname'];
+        $studentDepartment = $row['department']; // Get the department
         $_SESSION['user_fullname'] = $studentFullName; // Store the full name in session
+        $_SESSION['user_department'] = $studentDepartment; // Store the department in session
     } else {
         $studentFullName = 'Unknown Student';
+        $studentDepartment = 'N/A'; // Default department if not found
     }
     $stmt->close();
 
@@ -63,6 +67,7 @@ if (isset($_SESSION['user_ID']) && $_SESSION['user_type'] == 'student') {
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -109,7 +114,7 @@ $conn->close();
             /* Allow scrolling when content overflows */
             padding: 10px;
             margin-bottom: 20px;
-            overflow: hidden; 
+            overflow: hidden;
         }
 
         .logout_btn {
@@ -174,6 +179,69 @@ $conn->close();
             font-weight: 800;
             font-size: 1rem;
         }
+
+        /* Styling for the department display */
+        .department-container {
+            background-color: #f4f4f4;
+            /* Light gray background */
+            border-radius: 5px;
+            /* Rounded corners */
+            margin: 10px 0;
+            /* Margin to separate it from other content */
+            margin-left: 5%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /* Subtle shadow */
+            max-width: 90%;
+            /* Reduced width to 70% */
+            transition: all 0.3s ease;
+            /* Smooth transition for hover effect */
+        }
+
+        /* Hover effect: Change background, shadow, and text color */
+        .department-container:hover {
+            background-color: #007BFF;
+            /* Blue background on hover */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* Enhanced shadow */
+            color: #fff;
+            /* White text color on hover */
+            cursor: default;
+            /* Pointer cursor on hover */
+        }
+
+        /* Styling for the department info list */
+        .department-info {
+            list-style: none;
+            /* Remove bullets */
+            font-family: Arial, sans-serif;
+            /* Font style */
+            font-size: 14px;
+            /* Smaller font size */
+            color: #333;
+            /* Dark text color for better readability */
+            margin: 0;
+            /* Remove default margin */
+        }
+
+        /* Styling for each list item */
+        .department-info li {
+            margin: 5px 0;
+            /* Space between list items */
+        }
+
+        /* Styling for the label */
+        .department-info strong {
+            color: #FF6347;
+            /* Tomato color for the label */
+            font-weight: bold;
+            /* Bold text for emphasis */
+        }
+
+        /* Hover effect for the label */
+        .department-container:hover .department-info strong {
+            color: #FFD700;
+            /* Gold color for label text on hover */
+        }
     </style>
 </head>
 
@@ -188,6 +256,15 @@ $conn->close();
                 <div>
                     <ul>Name: <?php echo htmlspecialchars($studentFullName); ?></ul>
                     <ul>ID: <?php echo htmlspecialchars($studentId); ?></ul>
+
+                    <!-- Displaying department -->
+                    <div class="department-container">
+                        <ul class="department-info">
+                            <li><strong>Department:</strong> <br><?php echo htmlspecialchars($_SESSION['user_department']); ?></li>
+                        </ul>
+                    </div>
+
+
 
                     <!-- Instructor Assigned will initially be empty -->
                     <ul id="assignedInstructor">Instructor Assigned: <span id="instructorName">N/A</span></ul>
@@ -272,51 +349,53 @@ $conn->close();
             </div>
         </div>
     </div>
+</body>
 
-    <!-- Modal structure -->
-    <div id="legendModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div class="legend-container">
-                <p class="legend-title">Legend:</p>
 
-                <div class="rating-level rating-1">
-                    1 - Very Poor
-                    <p class="rating-description">
-                        The delivery did not align with the course outline; major topics were missing or poorly covered.
-                    </p>
-                </div>
+<!-- Modal structure -->
+<div id="legendModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <div class="legend-container">
+            <p class="legend-title">Legend:</p>
 
-                <div class="rating-level rating-2">
-                    2 - Poor
-                    <p class="rating-description">
-                        Some aspects of the outline were covered, but many topics or details were unclear or inadequately addressed.
-                    </p>
-                </div>
+            <div class="rating-level rating-1">
+                1 - Very Poor
+                <p class="rating-description">
+                    The delivery did not align with the course outline; major topics were missing or poorly covered.
+                </p>
+            </div>
 
-                <div class="rating-level rating-3">
-                    3 - Average
-                    <p class="rating-description">
-                        The course followed the outline, but some areas were not fully explained or well-developed.
-                    </p>
-                </div>
+            <div class="rating-level rating-2">
+                2 - Poor
+                <p class="rating-description">
+                    Some aspects of the outline were covered, but many topics or details were unclear or inadequately addressed.
+                </p>
+            </div>
 
-                <div class="rating-level rating-4">
-                    4 - Good
-                    <p class="rating-description">
-                        The course largely followed the outline, clearly covering key topics and expectations.
-                    </p>
-                </div>
+            <div class="rating-level rating-3">
+                3 - Average
+                <p class="rating-description">
+                    The course followed the outline, but some areas were not fully explained or well-developed.
+                </p>
+            </div>
 
-                <div class="rating-level rating-5">
-                    5 - Excellent
-                    <p class="rating-description">
-                        The course fully followed the outline, providing clear explanations and covering all key topics as expected.
-                    </p>
-                </div>
+            <div class="rating-level rating-4">
+                4 - Good
+                <p class="rating-description">
+                    The course largely followed the outline, clearly covering key topics and expectations.
+                </p>
+            </div>
+
+            <div class="rating-level rating-5">
+                5 - Excellent
+                <p class="rating-description">
+                    The course fully followed the outline, providing clear explanations and covering all key topics as expected.
+                </p>
             </div>
         </div>
     </div>
+</div>
 </body>
 
 <script>
@@ -335,7 +414,6 @@ $conn->close();
             modal.style.display = "none";
         }, 300); // Match with fadeOut animation duration
     }
-
 </script>
 
 </html>

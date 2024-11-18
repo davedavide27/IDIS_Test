@@ -609,6 +609,7 @@ $conn->close();
             background-color: #45a049;
             /* Darker green on hover */
         }
+        
     </style>
 
 </head>
@@ -948,55 +949,69 @@ $conn->close();
 
 
 
-        <!-- Signature Section -->
-        <table id="signatureTable" class="custom-table">
-            <tbody>
-                <tr>
-                    <td rowspan="4" class="logo-cell">
-                        <img src="../image.png" alt="Logo"><br>
-                        <span class="red-text">Curriculum 2022</span>
-                    </td>
-                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Prepared by:</span><br>
-                        <strong><?= $prepared_by; ?></strong><br>
-                        Subject Teacher
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Resources Checked & Verified by:</span><br>
-                        <strong><?= $resource_checked_by; ?></strong><br>
-                        College Librarian
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td class="info-cell">
-                        <span class="red-text">Reviewed by:</span><br>
-                        <strong><?= $reviewed_by_program_chair; ?></strong><br>
-                        BSIT Program Chair<br>
-                        <br>
-                        <br>
-                        <strong><?= $reviewed_by_dean; ?></strong><br>
-                        Dean
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-                <tr>
-                    <td colspan="2" class="info-cell-approved">
-                        <span class="red-text">Approved by:</span><br>
-                        <strong><?= $approved_by; ?></strong><br>
-                        Vice President for Academic Affairs and Research
-                    </td>
-                    <td class="signature-cell">_____________<br>Date</td>
-                </tr>
-            </tbody>
-        </table>
+<!-- Signature Section -->
+<table id="signatureTable" class="custom-table">
+    <tbody>
+        <tr>
+            <td rowspan="4" class="logo-cell">
+                <img src="../image.png" alt="Logo"><br>
+                <span class="red-text">Curriculum 2022</span>
+            </td>
+            <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Prepared by:</span><br>
+                <strong><?= $prepared_by; ?></strong><br>
+                Subject Teacher
+            </td>
+            <td class="signature-cell">
+                <div class="signature-date"><?= date('M. d, Y', strtotime($prepared_by_date)); ?></div>
+                _____________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Resources Checked & Verified by:</span><br>
+                <strong><?= $resource_checked_by; ?></strong><br>
+                College Librarian
+            </td>
+            <td class="signature-cell">
+                <div class="signature-date"><?= date('M. d, Y', strtotime($resource_checked_by_date)); ?></div>
+                _____________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Reviewed by:</span><br>
+                <strong><?= $reviewed_by_program_chair; ?></strong><br>
+                BSIT Program Chair<br>
+                <br>
+                <br>
+                <strong><?= $reviewed_by_dean; ?></strong><br>
+                Dean
+            </td>
+            <td class="signature-cell">
+                <div class="signature-date"><?= date('M. d, Y', strtotime($reviewed_by_date)); ?></div>
+                _____________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="info-cell-approved">
+                <span class="red-text">Approved by:</span><br>
+                <strong><?= $approved_by; ?></strong><br>
+                Vice President for Academic Affairs and Research
+            </td>
+            <td class="signature-cell">
+                <div class="signature-date"><?= date('M. d, Y', strtotime($approved_by_date)); ?></div>
+                _____________<br>Date
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
 
 
 

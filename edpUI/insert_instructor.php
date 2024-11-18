@@ -27,10 +27,15 @@ if (isset($_POST['create_instructor'])) {
     $instructor_mname = $_POST['instructor_mname'];
     $instructor_lname = $_POST['instructor_lname'];
     $password = $_POST['password'];  // Store password as plain text
+    $confirm_password = $_POST['confirm_password'];  // Store confirm password
 
     // Check for validation
-    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password)) {
+    if (empty($instructor_ID) || empty($instructor_fname) || empty($instructor_lname) || empty($password) || empty($confirm_password)) {
         $_SESSION['error_message'] = "All fields are required!";
+    } elseif ($password !== $confirm_password) {
+        $_SESSION['error_message'] = "Passwords do not match!";
+    } elseif (strlen($password) < 4 || strlen($password) > 8) {
+        $_SESSION['error_message'] = "Password must be between 4 and 8 characters.";
     } else {
         // Check if the instructor ID already exists
         $stmtCheck = $conn->prepare("SELECT instructor_ID FROM instructor WHERE instructor_ID = ?");
@@ -62,6 +67,7 @@ unset($_SESSION['form_data']);
 
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -178,23 +184,28 @@ $conn->close();
         button:hover {
             background-color: #0056b3;
         }
+
+        button[disabled] {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            color: red;
+            /* Set text color to red */
+            font-size: 14px;
+            /* Set font size for the error message */
+            display: inline-block;
+            /* Ensure the span behaves like an inline-block element */
+            margin-top: 5px;
+            /* Add some space above the message */
+        }
     </style>
 </head>
 
 <body>
     <div class="containerOfAll">
         <!-- Success and Error Messages -->
-        <div class="notification-container" id="success-container">
-            <?php if (isset($_SESSION['success_message'])): ?>
-                <div class="notification success">
-                    <span><?php echo $_SESSION['success_message']; ?></span>
-                    <span class="notification-close">&times;</span>
-                </div>
-                <button class="clear-all-button" id="clearAllSuccessButton">[ clear all ]</button>
-                <?php unset($_SESSION['success_message']); ?>
-            <?php endif; ?>
-        </div>
-
         <div class="notification-container" id="error-container">
             <?php if (isset($_SESSION['error_message'])): ?>
                 <div class="notification error">
@@ -210,38 +221,83 @@ $conn->close();
         <button class="back-button" onclick="window.location.href='index.php';">Back</button>
         <h3>Create Instructor</h3>
 
-        <form method="post" action="insert_instructor.php">
-            <!-- Instructor ID Field -->
-            <label for="instructor_ID">Instructor ID:</label>
-            <input type="number" name="instructor_ID" value="<?php echo $_SESSION['form_data']['instructor_ID'] ?? ''; ?>" required>
+        <form method="post" action="insert_instructor.php" onsubmit="return validateForm()">
+            <!-- Student ID Field -->
+            <label for="instructor_ID">Student ID:</label>
+            <input type="number" name="instructor_ID" id="instructor_ID" value="<?php echo $_SESSION['form_data']['instructor_ID'] ?? ''; ?>" required>
+            <span id="instructor_id_error" class="error-message"></span> <!-- Error message will be shown here -->
+            <br>
+            <br>
 
             <!-- Instructor Name Fields -->
             <label for="instructor_fname">First Name:</label>
-            <input type="text" name="instructor_fname" value="<?php echo $_SESSION['form_data']['instructor_fname'] ?? ''; ?>" required>
+            <input type="text" name="instructor_fname" required>
 
             <label for="instructor_mname">Middle Name:</label>
-            <input type="text" name="instructor_mname" value="<?php echo $_SESSION['form_data']['instructor_mname'] ?? ''; ?>">
+            <input type="text" name="instructor_mname">
 
             <label for="instructor_lname">Last Name:</label>
-            <input type="text" name="instructor_lname" value="<?php echo $_SESSION['form_data']['instructor_lname'] ?? ''; ?>" required>
+            <input type="text" name="instructor_lname" required>
 
-            <!-- Password Field -->
+            <!-- Password Fields -->
             <label for="password">Password:</label>
-            <input type="password" name="password" required>
+            <input type="password" name="password" required id="password" maxlength="8">
 
-            <button type="submit" style="margin: 0 auto; display: block;" name="create_instructor">Create Instructor</button>
+            <label for="confirm_password">Confirm Password:</label>
+            <input type="password" name="confirm_password" required id="confirm_password" maxlength="8">
+
+            <p>
+                <span id="password_error" class="error-message"></span>
+            </p>
+
+            <!-- Submit Button -->
+            <button type="submit" name="create_instructor" id="submitButton" style="margin: 0 auto; display: block;" disabled>Create Instructor</button>
         </form>
     </div>
 
-</body>
-<script>
-    // Notification handling logic (similar to the student insert page)
+    <script>
+    // Add event listener to dynamically check the instructor ID
+    document.getElementById("instructor_ID").addEventListener("input", function() {
+        var instructorID = this.value;
+        var errorMessage = document.getElementById("instructor_id_error");
+        var createInstructorBtn = document.getElementById("submitButton"); // Get the button element
+
+        if (instructorID) {
+            // Make AJAX request to check if the instructor ID exists in the database
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "check_instructor_id.php?instructor_ID=" + instructorID, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    var response = xhr.responseText.trim();
+
+                    // Check the response and display an error if the ID exists
+                    if (response === "exists") {
+                        errorMessage.textContent = "Instructor ID already exists!";
+                        createInstructorBtn.disabled = true; // Disable submit button
+                    } else {
+                        errorMessage.textContent = "";
+                        createInstructorBtn.disabled = false; // Enable submit button if ID doesn't exist
+                    }
+                }
+            };
+            xhr.send();
+        } else {
+            errorMessage.textContent = ""; // Clear error message if input is empty
+            createInstructorBtn.disabled = false; // Enable submit button if input is empty
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         const successContainer = document.getElementById('success-container');
         const errorContainer = document.getElementById('error-container');
         const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
         const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+        const passwordField = document.getElementById('password');
+        const confirmPasswordField = document.getElementById('confirm_password');
+        const createInstructorBtn = document.getElementById('submitButton');
+        const passwordError = document.getElementById('password_error'); // Password error message
 
+        // Function to remove notification with fade-out effect
         function removeNotification(notification) {
             notification.classList.add('fade-out');
             setTimeout(() => {
@@ -249,6 +305,7 @@ $conn->close();
             }, 500);
         }
 
+        // Function to handle notifications
         function showNotifications() {
             document.querySelectorAll('.notification').forEach(notification => {
                 setTimeout(() => {
@@ -261,6 +318,7 @@ $conn->close();
             });
         }
 
+        // Clear all success notifications
         if (clearAllSuccessButton) {
             clearAllSuccessButton.addEventListener('click', function() {
                 successContainer.querySelectorAll('.notification').forEach(notification => {
@@ -270,6 +328,7 @@ $conn->close();
             });
         }
 
+        // Clear all error notifications
         if (clearAllErrorButton) {
             clearAllErrorButton.addEventListener('click', function() {
                 errorContainer.querySelectorAll('.notification').forEach(notification => {
@@ -279,8 +338,31 @@ $conn->close();
             });
         }
 
-        showNotifications();
+        // Validate password complexity and enable/disable submit button
+        function validatePassword() {
+            const password = passwordField.value;
+            const confirmPassword = confirmPasswordField.value;
+
+            // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
+
+            // Check if password matches the required pattern
+            if (!passwordRegex.test(password)) {
+                passwordError.innerText = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+                createInstructorBtn.disabled = true; // Disable submit button
+            } else if (password !== confirmPassword) {
+                passwordError.innerText = "Passwords do not match.";
+                createInstructorBtn.disabled = true; // Disable submit button
+            } else {
+                passwordError.innerText = ""; // Clear error message
+                createInstructorBtn.disabled = false; // Enable submit button if valid
+            }
+        }
+
+        // Validate passwords when user types
+        passwordField.addEventListener('input', validatePassword);
+        confirmPasswordField.addEventListener('input', validatePassword);
+
+        showNotifications(); // Show notifications on page load
     });
 </script>
-
-</html>

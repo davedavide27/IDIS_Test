@@ -27,7 +27,7 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
-    overflow: hidden; /* Remove scroll bar */
+    overflow: hidden; 
 }
 
 /* Modal content styling and animations */
@@ -41,7 +41,7 @@
     max-width: 500px;
     transform: translateY(-50px);
     animation: slideDown 0.4s ease forwards; /* Slide-down animation for opening */
-    overflow-y: auto; /* Only scroll content if it overflows within modal */
+    overflow-y: auto; 
 }
 
 /* Close button */
