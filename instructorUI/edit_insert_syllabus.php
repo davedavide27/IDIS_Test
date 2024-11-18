@@ -1594,66 +1594,71 @@ $conn->close();
 
 
 
-            <!-- Signature Section -->
-            <table id="signatureTable" class="custom-table">
-                <tbody>
-                    <tr>
-                        <td rowspan="4" class="logo-cell">
-                            <img src="../image.png" alt="Logo"><br>
-                            <span class="red-text">Curriculum 2022</span>
-                        </td>
-                        <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td class="info-cell">
-                            <span class="red-text">Prepared by:</span><br>
-                            _____________________<br>
-                            <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required>
-                            <p>Subject Teacher</p>
-                        </td>
-                        <td class="signature-cell">
-                            _____________________<br>Date
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="info-cell">
-                            <span class="red-text">Resources Checked & Verified by:</span><br>
-                            ______________________<br>
-                            <input type="text" name="resource_checked_by" value="<?php echo $resource_checked_by; ?>" required>
-                            <p>College Librarian</p>
-                        </td>
-                        <td class="signature-cell">
-                            _____________________<br>Date
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="info-cell">
-                            <span class="red-text">Reviewed by:</span><br>
-                            ______________________<br>
-                            <input type="text" name="reviewed_by_program_chair" value="<?php echo $reviewed_by_program_chair; ?>" required>
-                            <p>BSIT Program Chair</p><br>
-                            ______________________<br>
-                            <input type="text" name="reviewed_by_dean" value="<?php echo $reviewed_by_dean; ?>" required>
-                            <p>Dean</p>
-                        </td>
-                        <td class="signature-cell">
-                            _____________________<br>Date
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" class="info-cell-approved">
-                            <span class="red-text">Approved by:</span><br>
-                            ______________________<br>
-                            <input type="text" name="approved_by" value="<?php echo $approved_by; ?>" required>
-                            <p>Vice President for Academic Affairs and Research</p>
-                        </td>
-                        <td class="signature-cell">
-                            _____________________<br>Date
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+<!-- Signature Section -->
+<table id="signatureTable" class="custom-table">
+    <tbody>
+        <tr>
+            <td rowspan="4" class="logo-cell">
+                <img src="../image.png" alt="Logo"><br>
+                <span class="red-text">Curriculum 2022</span>
+            </td>
+            <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Prepared by:</span><br>
+                <input type="text" name="prepared_by" value="<?php echo $prepared_by; ?>" required><br>
+                _____________________<br>
+                <p>Subject Teacher</p>
+            </td>
+            <td class="signature-cell">
+                <input type="date" name="prepared_by_date" value="<?php echo $prepared_by_date; ?>" required><br>
+                _____________________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Resources Checked & Verified by:</span><br>
+                <input type="text" name="resource_checked_by" value="<?php echo $resource_checked_by; ?>" required><br>
+                _____________________<br>
+                <p>College Librarian</p>
+            </td>
+            <td class="signature-cell">
+                <input type="date" name="resource_checked_by_date" value="<?php echo $resource_checked_by_date; ?>" required><br>
+                _____________________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td class="info-cell">
+                <span class="red-text">Reviewed by:</span><br>
+                <input type="text" name="reviewed_by_program_chair" value="<?php echo $reviewed_by_program_chair; ?>" required><br>
+                _____________________<br>
+                <p>BSIT Program Chair</p><br>
+                <input type="text" name="reviewed_by_dean" value="<?php echo $reviewed_by_dean; ?>" required><br>
+                _____________________<br>
+                <p>Dean</p>
+            </td>
+            <td class="signature-cell">
+                <input type="date" name="reviewed_by_date" value="<?php echo $reviewed_by_date; ?>" required><br>
+                _____________________<br>Date
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="info-cell-approved">
+                <span class="red-text">Approved by:</span><br>
+                <input type="text" name="approved_by" value="<?php echo $approved_by; ?>" required><br>
+                _____________________<br>
+                <p>Vice President for Academic Affairs and Research</p>
+            </td>
+            <td class="signature-cell">
+                <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
+                _____________________<br>Date
+            </td>
+        </tr>
+    </tbody>
+</table>
+
             <!-- Signature Section -->
 
             <!-- Submit Button -->

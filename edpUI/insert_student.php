@@ -30,6 +30,16 @@ if ($resultCourses->num_rows > 0) {
     }
 }
 
+// Fetch departments from the department table
+$departments = [];
+$sqlDepartments = "SELECT department_id, department_name FROM department"; // Fetch department names from the department table
+$resultDepartments = $conn->query($sqlDepartments);
+if ($resultDepartments->num_rows > 0) {
+    while ($row = $resultDepartments->fetch_assoc()) {
+        $departments[] = $row;
+    }
+}
+
 // If the form is submitted to create a student
 if (isset($_POST['create_student'])) {
     $student_ID = $_POST['student_ID'];  // Capture student_ID from the form
@@ -42,49 +52,60 @@ if (isset($_POST['create_student'])) {
     $section = $_POST['section'];
     $year_level = $_POST['year_level'];
 
-    // Fetch the course name based on the selected course_id
-    $sqlCourseName = "SELECT course FROM courses WHERE course_id = ?";
-    $stmtCourse = $conn->prepare($sqlCourseName);
-    $stmtCourse->bind_param("i", $course_id);
-    $stmtCourse->execute();
-    $resultCourse = $stmtCourse->get_result();
-    $courseName = '';
-    if ($resultCourse->num_rows > 0) {
-        $courseRow = $resultCourse->fetch_assoc();
-        $courseName = $courseRow['course'];
-    }
-    $stmtCourse->close();
+    // Capture the selected department(s) (as an array of department names)
+    $departments_selected = isset($_POST['department']) ? $_POST['department'] : [];
 
-    // Check for validation
-    if (empty($student_ID) || empty($student_fname) || empty($student_lname) || empty($password) || empty($confirm_password) || empty($course_id) || empty($section) || empty($year_level)) {
-        $_SESSION['error_message'] = "All fields are required!";
-    } elseif ($password !== $confirm_password) {
-        $_SESSION['error_message'] = "Passwords do not match!";
-    } elseif (strlen($password) < 4 || strlen($password) > 8) {
-        $_SESSION['error_message'] = "Password must be between 4 and 8 characters!";
+    // If no department is selected, set an error message
+    if (empty($departments_selected)) {
+        $_SESSION['error_message'] = "At least one department must be selected!";
     } else {
-        // Check if the student ID already exists
-        $stmtCheck = $conn->prepare("SELECT student_ID FROM student WHERE student_ID = ?");
-        $stmtCheck->bind_param("i", $student_ID);
-        $stmtCheck->execute();
-        $stmtCheck->store_result();
-
-        if ($stmtCheck->num_rows > 0) {
-            // Student ID already exists
-            $_SESSION['error_message'] = "Student ID already exists!";
-        } else {
-            // Insert the student into the database, including the course name from the courses table
-            $stmt = $conn->prepare("INSERT INTO student (student_ID, student_fname, student_mname, student_lname, password, course, section, year_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->bind_param("issssssi", $student_ID, $student_fname, $student_mname, $student_lname, $password, $courseName, $section, $year_level);
-
-            if ($stmt->execute()) {
-                $_SESSION['success_message'] = "Student successfully created!";
-            } else {
-                $_SESSION['error_message'] = "Failed to create student.";
-            }
-            $stmt->close();
+        // Fetch the course name based on the selected course_id
+        $sqlCourseName = "SELECT course FROM courses WHERE course_id = ?";
+        $stmtCourse = $conn->prepare($sqlCourseName);
+        $stmtCourse->bind_param("i", $course_id);
+        $stmtCourse->execute();
+        $resultCourse = $stmtCourse->get_result();
+        $courseName = '';
+        if ($resultCourse->num_rows > 0) {
+            $courseRow = $resultCourse->fetch_assoc();
+            $courseName = $courseRow['course'];
         }
-        $stmtCheck->close();
+        $stmtCourse->close();
+
+        // Capture the selected department (as a string)
+        $department = isset($_POST['department']) ? $_POST['department'] : null;
+
+        // Check for validation
+        if (empty($student_ID) || empty($student_fname) || empty($student_lname) || empty($password) || empty($confirm_password) || empty($course_id) || empty($section) || empty($year_level) || empty($department)) {
+            $_SESSION['error_message'] = "All fields are required!";
+        } elseif ($password !== $confirm_password) {
+            $_SESSION['error_message'] = "Passwords do not match!";
+        } elseif (strlen($password) < 4 || strlen($password) > 8) {
+            $_SESSION['error_message'] = "Password must be between 4 and 8 characters!";
+        } else {
+            // Check if the student ID already exists
+            $stmtCheck = $conn->prepare("SELECT student_ID FROM student WHERE student_ID = ?");
+            $stmtCheck->bind_param("i", $student_ID);
+            $stmtCheck->execute();
+            $stmtCheck->store_result();
+
+            if ($stmtCheck->num_rows > 0) {
+                // Student ID already exists
+                $_SESSION['error_message'] = "Student ID already exists!";
+            } else {
+                // Insert the student into the database, including the department
+                $stmt = $conn->prepare("INSERT INTO student (student_ID, student_fname, student_mname, student_lname, password, course, section, year_level, department) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("issssssis", $student_ID, $student_fname, $student_mname, $student_lname, $password, $courseName, $section, $year_level, $department);
+
+                if ($stmt->execute()) {
+                    $_SESSION['success_message'] = "Student successfully created!";
+                } else {
+                    $_SESSION['error_message'] = "Failed to create student.";
+                }
+                $stmt->close();
+            }
+            $stmtCheck->close();
+        }
     }
 }
 
@@ -93,6 +114,9 @@ unset($_SESSION['form_data']);
 
 $conn->close();
 ?>
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -340,6 +364,20 @@ $conn->close();
                 <option value="4" <?php echo (isset($_SESSION['form_data']['year_level']) && $_SESSION['form_data']['year_level'] == '4') ? 'selected' : ''; ?>>4th Year</option>
             </select>
             <br>
+            <!-- Department Selection -->
+            <h4>Select Department</h4>
+            <select name="department" required>
+                <option value="">Select a Department</option>
+                <?php foreach ($departments as $dept): ?>
+                    <option value="<?php echo $dept['department_name']; ?>"
+                        <?php echo (isset($_SESSION['form_data']['department']) && $_SESSION['form_data']['department'] == $dept['department_name']) ? 'selected' : ''; ?>>
+                        <?php echo $dept['department_name']; ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <br><br>
+
+
 
             <!-- Submit Button -->
             <button type="submit" name="create_student" id="create_student" class="btn">Create Student</button>
@@ -348,115 +386,117 @@ $conn->close();
 
 
     <script>
-    // Add event listener to dynamically check the student ID
-    document.getElementById("student_ID").addEventListener("input", function() {
-        var studentID = this.value;
-        var errorMessage = document.getElementById("student_id_error");
-        var createStudentBtn = document.getElementById("create_student"); // Get the button element
+        // Add event listener to dynamically check the student ID
+        document.getElementById("student_ID").addEventListener("input", function() {
+            var studentID = this.value;
+            var errorMessage = document.getElementById("student_id_error");
+            var createStudentBtn = document.getElementById("create_student"); // Get the button element
 
-        if (studentID) {
-            // Make AJAX request to check if the student ID exists in the database
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "check_student_id.php?student_ID=" + studentID, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    var response = xhr.responseText.trim();
+            if (studentID) {
+                // Make AJAX request to check if the student ID exists in the database
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "check_student_id.php?student_ID=" + studentID, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState == 4 && xhr.status == 200) {
+                        var response = xhr.responseText.trim();
 
-                    // Check the response and display an error if the ID exists
-                    if (response === "exists") {
-                        errorMessage.textContent = "Student ID already exists!";
-                        createStudentBtn.disabled = true; // Disable submit button
-                    } else {
-                        errorMessage.textContent = "";
-                        createStudentBtn.disabled = false; // Enable submit button if ID doesn't exist
+                        // Check the response and display an error if the ID exists
+                        if (response === "exists") {
+                            errorMessage.textContent = "Student ID already exists!";
+                            createStudentBtn.disabled = true; // Disable submit button
+                        } else {
+                            errorMessage.textContent = "";
+                            createStudentBtn.disabled = false; // Enable submit button if ID doesn't exist
+                        }
                     }
-                }
-            };
-            xhr.send();
-        } else {
-            errorMessage.textContent = ""; // Clear error message if input is empty
-            createStudentBtn.disabled = false; // Enable submit button if input is empty
-        }
-    });
+                };
+                xhr.send();
+            } else {
+                errorMessage.textContent = ""; // Clear error message if input is empty
+                createStudentBtn.disabled = false; // Enable submit button if input is empty
+            }
+        });
 
-    // Password validation function for student creation page
-    function validatePassword() {
-        var passwordField = document.getElementById("password");
-        var confirmPasswordField = document.getElementById("confirm_password");
-        var errorMessage = document.getElementById("password_error_student");
-        var createStudentBtn = document.getElementById("create_student");
+        // Password validation function for student creation page
+        function validatePassword() {
+            var passwordField = document.getElementById("password");
+            var confirmPasswordField = document.getElementById("confirm_password");
+            var errorMessage = document.getElementById("password_error_student");
+            var createStudentBtn = document.getElementById("create_student");
 
-        var password = passwordField.value;
-        var confirmPassword = confirmPasswordField.value;
+            var password = passwordField.value;
+            var confirmPassword = confirmPasswordField.value;
 
-        // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
+            // Regex for password validation: 4-8 characters, 1 uppercase, 1 special character
+            const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{4,8}$/;
 
-        // Check if password matches the required pattern
-        if (!passwordRegex.test(password)) {
-            errorMessage.textContent = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
-            createStudentBtn.disabled = true; // Disable submit button
-        } else if (password !== confirmPassword) {
-            errorMessage.textContent = "Passwords do not match.";
-            createStudentBtn.disabled = true; // Disable submit button
-        } else {
-            errorMessage.textContent = ""; // Clear error message
-            createStudentBtn.disabled = false; // Enable submit button if valid
-        }
-    }
-
-    // Validate passwords when user types
-    document.getElementById("password").addEventListener('input', validatePassword);
-    document.getElementById("confirm_password").addEventListener('input', validatePassword);
-
-    showNotifications(); // Show notifications on page load
-    // Notification handling logic (similar to the original script)
-    document.addEventListener('DOMContentLoaded', function() {
-        const successContainer = document.getElementById('success-container');
-        const errorContainer = document.getElementById('error-container');
-        const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
-        const clearAllErrorButton = document.getElementById('clearAllErrorButton');
-
-        function removeNotification(notification) {
-            notification.classList.add('fade-out');
-            setTimeout(() => {
-                notification.remove();
-            }, 500);
+            // Check if password matches the required pattern
+            if (!passwordRegex.test(password)) {
+                errorMessage.textContent = "Password must be 4-8 characters, contain 1 uppercase letter and 1 special character.";
+                createStudentBtn.disabled = true; // Disable submit button
+            } else if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match.";
+                createStudentBtn.disabled = true; // Disable submit button
+            } else {
+                errorMessage.textContent = ""; // Clear error message
+                createStudentBtn.disabled = false; // Enable submit button if valid
+            }
         }
 
-        function showNotifications() {
-            document.querySelectorAll('.notification').forEach(notification => {
+        // Validate passwords when user types
+        document.getElementById("password").addEventListener('input', validatePassword);
+        document.getElementById("confirm_password").addEventListener('input', validatePassword);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const successContainer = document.getElementById('success-container');
+            const errorContainer = document.getElementById('error-container');
+            const clearAllSuccessButton = document.getElementById('clearAllSuccessButton');
+            const clearAllErrorButton = document.getElementById('clearAllErrorButton');
+
+            // Function to remove notification
+            function removeNotification(notification) {
+                notification.classList.add('fade-out');
                 setTimeout(() => {
-                    removeNotification(notification);
-                }, 4000);
+                    notification.remove();
+                }, 500);
+            }
 
-                notification.querySelector('.notification-close').addEventListener('click', () => {
-                    removeNotification(notification);
+            // Show notifications and set timeout to remove them after 5 seconds
+            function showNotifications() {
+                document.querySelectorAll('.notification').forEach(notification => {
+                    setTimeout(() => {
+                        removeNotification(notification);
+                    }, 5000); // Notifications disappear after 5 seconds
+
+                    notification.querySelector('.notification-close').addEventListener('click', () => {
+                        removeNotification(notification);
+                    });
                 });
-            });
-        }
+            }
 
-        if (clearAllSuccessButton) {
-            clearAllSuccessButton.addEventListener('click', function() {
-                successContainer.querySelectorAll('.notification').forEach(notification => {
-                    removeNotification(notification);
+            // Clear all notifications in the success container
+            if (clearAllSuccessButton) {
+                clearAllSuccessButton.addEventListener('click', function() {
+                    successContainer.querySelectorAll('.notification').forEach(notification => {
+                        removeNotification(notification);
+                    });
+                    clearAllSuccessButton.style.display = 'none'; // Hide the clear button after clearing
                 });
-                clearAllSuccessButton.style.display = 'none';
-            });
-        }
+            }
 
-        if (clearAllErrorButton) {
-            clearAllErrorButton.addEventListener('click', function() {
-                errorContainer.querySelectorAll('.notification').forEach(notification => {
-                    removeNotification(notification);
+            // Clear all notifications in the error container
+            if (clearAllErrorButton) {
+                clearAllErrorButton.addEventListener('click', function() {
+                    errorContainer.querySelectorAll('.notification').forEach(notification => {
+                        removeNotification(notification);
+                    });
+                    clearAllErrorButton.style.display = 'none'; // Hide the clear button after clearing
                 });
-                clearAllErrorButton.style.display = 'none';
-            });
-        }
+            }
 
-        showNotifications();
-    });
-</script>
+            showNotifications();
+        });
+    </script>
 
 
 </html>

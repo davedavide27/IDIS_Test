@@ -388,7 +388,7 @@ $conn->close();
             /* Disc style for bullet points */
         }
 
-        /*input box sa names and signature*/
+        /*input box sa names and signature
         .custom-table .info-cell input {
             text-align: center;
             font-size: 14px;
@@ -425,6 +425,7 @@ $conn->close();
         .info-cell-approved span {
             padding-right: 310px;
         }
+            */
     </style>
 
 </head>
@@ -768,57 +769,60 @@ $conn->close();
                         <img src="../image.png" alt="Logo"><br>
                         <span class="red-text">Curriculum 2022</span>
                     </td>
-                    <td class="title-cell red-text">COLLEGE OF COMPUTING <br> AND INFORMATION SCIENCES</td>
+                    <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
                     <td></td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Prepared by:</span><br>
-                        _____________________<br>
-                        <a name="prepared_by"><?php echo $prepared_by; ?> <a>
-                                <p>Subject Teacher</p>
+                        <strong><?= $prepared_by; ?></strong><br>
+                        Subject Teacher
                     </td>
                     <td class="signature-cell">
-                        _____________________<br>Date
+                        <div class="signature-date"><?= date('M. d, Y', strtotime($prepared_by_date)); ?></div>
+                        _____________<br>Date
                     </td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Resources Checked & Verified by:</span><br>
-                        ______________________<br>
-                        <a name="resource_checked_by"><?php echo $resource_checked_by; ?></a>
-                        <p>College Librarian</p>
+                        <strong><?= $resource_checked_by; ?></strong><br>
+                        College Librarian
                     </td>
                     <td class="signature-cell">
-                        _____________________<br>Date
+                        <div class="signature-date"><?= date('M. d, Y', strtotime($resource_checked_by_date)); ?></div>
+                        _____________<br>Date
                     </td>
                 </tr>
                 <tr>
                     <td class="info-cell">
                         <span class="red-text">Reviewed by:</span><br>
-                        ______________________<br>
-                        <a name="reviewed_by_program_chair"><?php echo $reviewed_by_program_chair; ?></a>
-                        <p>BSIT Program Chair</p><br>
-                        ______________________<br>
-                        <a name="reviewed_by_dean"><?php echo $reviewed_by_dean; ?></a>
-                        <p>Dean</p>
+                        <strong><?= $reviewed_by_program_chair; ?></strong><br>
+                        BSIT Program Chair<br>
+                        <br>
+                        <br>
+                        <strong><?= $reviewed_by_dean; ?></strong><br>
+                        Dean
                     </td>
                     <td class="signature-cell">
-                        _____________________<br>Date
+                        <div class="signature-date"><?= date('M. d, Y', strtotime($reviewed_by_date)); ?></div>
+                        _____________<br>Date
                     </td>
                 </tr>
                 <tr>
                     <td colspan="2" class="info-cell-approved">
                         <span class="red-text">Approved by:</span><br>
-                        ______________________<br>
-                        <a name="approved_by"><?php echo $approved_by; ?></a>
-                        <p>Vice President for Academic Affairs and Research</p>
+                        <strong><?= $approved_by; ?></strong><br>
+                        Vice President for Academic Affairs and Research
                     </td>
                     <td class="signature-cell">
-                        _____________________<br>Date
+                        <div class="signature-date"><?= date('M. d, Y', strtotime($approved_by_date)); ?></div>
+                        _____________<br>Date
                     </td>
+                </tr>
             </tbody>
         </table>
+
 
 
         <!-- Print Button -->
