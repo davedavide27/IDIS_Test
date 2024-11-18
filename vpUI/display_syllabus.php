@@ -462,7 +462,13 @@ $conn->close();
                 </div>
             </div>
         </div>
-        <h2>Syllabus Information</h2>
+        <br>
+        <div style="display: flex; justify-content: center; align-items: center;">
+            <div style="width: 30%; background-color: yellow; padding: 1px 20px; border-radius: 2px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                <h2><span style="font-weight: normal;">Syllabus in </span><span style="font-weight: bold;"><?php echo htmlspecialchars($subject_name); ?></span></h2>
+                <h3><span style="font-weight: normal;">Course Code: </span><span style="font-weight: bold;"><?php echo htmlspecialchars($subject_code); ?></span></h3>
+            </div>
+        </div>
 
         <!-- Display Course Information -->
         <h3>Course Information</h3>
