@@ -258,7 +258,6 @@ $conn->close();
                     <form method="get" action="">
                         <!-- Search Bar for Instructor Filtering -->
                         <div class="search-container">
-                            <h4>Select Instructor</h4>
                             <input type="text" id="searchInstructor" onkeyup="filterInstructors()" placeholder="Search for instructor..">
 
                             <!-- Dropdown to Select Instructor -->

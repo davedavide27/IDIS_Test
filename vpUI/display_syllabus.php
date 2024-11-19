@@ -181,7 +181,7 @@ if (isset($_GET['subject_code']) && isset($_GET['subject_name'])) {
 
 $conn->close();
 ?>
-
+<?php include '../get_system_settings.php'; ?>
 
 
 <!DOCTYPE html>
@@ -440,28 +440,41 @@ $conn->close();
     <?php endif; ?>
     <!-- Main Content Section -->
     <div class="container">
-        <!-- Header Section -->
-        <div class="divHeader">
-            <div class="header-container">
-                <!-- Left Section (Logo) -->
-                <div class="headContents header-left">
-                    <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
-                </div>
-                <!-- Center Section (Text) -->
-                <div class="headContents header-center">
-                    <div class="college-name">Saint Michael College of Caraga</div>
-                    <div class="college-details">
-                        <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
-                        <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
-                        <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
-                    </div>
-                </div>
-                <!-- Right Section (Accreditation Logos) -->
-                <div class="headContents header-right">
-                    <img src="ISO&PAB.png" alt="Accreditation Logos" class="logo">
+
+
+<!-- Header Section -->
+<div class="divHeader">
+    <div class="header-container">
+        <!-- Left Section (Logo) -->
+        <div class="headContents header-left">
+            <!-- Display the header logo on the left side -->
+            <img src="<?php echo '../' . $header_logo_left; ?>" alt="SMCC Logo" class="logo">
+        </div>
+        <!-- Center Section (Text) -->
+        <div class="headContents header-center">
+            <!-- Display the college name -->
+            <div class="college-name"><?php echo $college_name; ?></div>
+            <div class="college-details">
+                <!-- Display the college details -->
+                <div><?php echo $college_details; ?></div>
+                <!-- Display the contact details -->
+                <div><?php echo $contact_details; ?></div>
+                <!-- Display the website link -->
+                <div>
+                    <!-- The header link should open directly when clicked -->
+                    <a href="<?php echo $header_link; ?>" ><?php echo $header_text; ?></a>
                 </div>
             </div>
         </div>
+        <!-- Right Section (Accreditation Logos) -->
+        <div class="headContents header-right">
+            <!-- Display the accreditation logos on the right side -->
+            <img src="<?php echo $header_logo_right; ?>" alt="Accreditation Logos" class="logo">
+        </div>
+    </div>
+</div>
+
+
         <br>
         <div style="display: flex; justify-content: center; align-items: center;">
             <div style="width: 30%; background-color: yellow; padding: 1px 20px; border-radius: 2px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -785,7 +798,7 @@ $conn->close();
                         Subject Teacher
                     </td>
                     <td class="signature-cell">
-                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
+                        <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -796,7 +809,7 @@ $conn->close();
                         College Librarian
                     </td>
                     <td class="signature-cell">
-                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
+                        <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -811,7 +824,7 @@ $conn->close();
                         Dean
                     </td>
                     <td class="signature-cell">
-                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
+                        <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -822,7 +835,7 @@ $conn->close();
                         Vice President for Academic Affairs and Research
                     </td>
                     <td class="signature-cell">
-                        <input type="date" name="approved_by_date" value="<?php echo $approved_by_date; ?>" required><br>
+                        <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
                         _____________<br>Date
                     </td>
                 </tr>
@@ -835,8 +848,9 @@ $conn->close();
         <button class="print-button" onclick="printSyllabus()">Print</button>
         <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
         <!-- Download Word Button -->
+        <!-- Footer Section -->
         <div class="divFooter">
-            <img src="../footer.png" alt="Membership Logos" class="member-logos">
+            <img src="<?php echo $footer_logo; ?>" alt="Membership Logos" class="member-logos">
         </div>
 
         <script>

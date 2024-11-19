@@ -1,0 +1,168 @@
+/* General form styling */
+form {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form labels */
+label {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+    color: #333;
+}
+
+/* Section styling */
+section {
+    margin-bottom: 30px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fafafa;
+}
+
+/* Header section styling */
+.header-section {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* College info section styling */
+.college-info-section {
+    background-color: #fff3e0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Footer section styling */
+.footer-section {
+    background-color: #c8e6c9;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Textarea styling */
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+/* File input styling */
+input[type="file"] {
+    margin-bottom: 15px;
+}
+
+/* Button styling */
+button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Image preview container */
+.image-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+/* Image preview styling */
+.image-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    border: 1px solid #ccc;
+    margin-top: 5px;
+    object-fit: cover;
+}
+
+/* Image preview description text */
+.image-preview p {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 5px;
+}
+
+/* Margin for form elements */
+form>label,
+form>textarea,
+form>input[type="file"],
+form>button {
+    margin-bottom: 20px;
+}
+
+/* Input text styling */
+input[type="text"] {
+    width: 100%;  /* Full width */
+    padding: 10px;
+    box-sizing: border-box; /* Ensures padding doesn't overflow the input */
+}
+
+/* Optional: Adjust the width for text areas */
+textarea {
+    width: 100%;  /* Ensure the text area takes up full width */
+    min-height: 50px; /* Minimum height */
+    resize: both; /* Allow resizing both horizontally and vertically */
+}
+
+/* Section header styling */
+section h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Logo container within the header section */
+.logo-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.logo-left, .logo-right {
+    width: 48%;
+}
+
+/* Styling for logo preview images */
+.image-preview img {
+    max-width: 100%;
+    margin-bottom: 10px;
+}
+
+/* Footer text area */
+textarea {
+    height: 100px;
+}
+
+/* Adjusting the width of the button */
+button[type="submit"] {
+    width: 100%;
+}

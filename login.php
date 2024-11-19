@@ -55,12 +55,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
         case 'librarian':
             $table = 'librarian';
-            $idColumn = 'chair_ID';
+            $idColumn = 'librarian_ID';
             $redirectUrl = 'librarianUI/index.php';
             break;
         case 'admin':
             $table = 'admin';
-            $idColumn = 'chair_ID';
+            $idColumn = 'admin_ID';
             $redirectUrl = 'adminUI/index.php';
             break;
         default:
@@ -163,7 +163,7 @@ $conn->close();
                 <p>ADMIN</p>
             </div>
             <div class="content"><img src="" alt=""></div>
-            <a href="admin.php"><button class="login">LOGIN</button></a>
+            <a href="admin_login.php"><button class="login">LOGIN</button></a>
         </div>
     </main>
     <footer>

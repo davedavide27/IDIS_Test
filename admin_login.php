@@ -28,7 +28,7 @@
 
             <form action="login.php" method="post">
                 <div class="input-field">
-                    <input type="number" name="id" id="student-id" required placeholder=" ">
+                    <input type="number" name="id" id="admin-id" required placeholder=" ">
                     <label for="student-id">ADMIN ID</label>
                 </div>
 
