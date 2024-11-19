@@ -725,7 +725,7 @@ $conn->close();
 
 
             <!-- Read-Only Vision, Mission Section -->
-            <h3>I. School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
+            <h3>School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
             <ul>
                 <li class="status-container"><b>Status: </b>
                     <span class="status-button-like <?php echo strtolower($status); ?>">
@@ -735,10 +735,10 @@ $conn->close();
             </ul>
 
 
-            <h4>Vision</h4>
+            <h4>I. Vision</h4>
             <p>Saint Michael College of Caraga envisions to a university by 2035 and upholds spiritual formation and excellence in teaching, service, and, research.</p>
 
-            <h4>Mission</h4>
+            <h4>II. Mission</h4>
             <p>As such, SMCC commits itself:</p>
             <ul>
                 <li>SMCC shall provide spiritual formation and learning culture that will ensure the students with an excellent and rewarding learning experience that transforms lives, abound spirituality, develop skills, and prepare future leaders.</li>
@@ -746,10 +746,10 @@ $conn->close();
                 <li>SMCC shall commit to serve the diverse and local communities by fostering innovations through service-learning that enhances reciprocal community partnerships for spiritual and social development.</li>
             </ul>
 
-            <h4>Goal</h4>
+            <h4>III. Goal</h4>
             <p>Uphold Culture of Excellence in the Areas of Spiritual Formation, Instruction, Research, and Extension, thus producing Graduates that are Globally Competent, Spiritually Embodied, and Socially Responsible.</p>
 
-            <h4>General Objectives</h4>
+            <h4>IV. General Objectives</h4>
             <ul>
                 <li>To integrate positive and evangelical values in all areas and design Christian formation programs that are effective and responsive to the psycho-spiritual needs of the learners, parents, and personnel.</li>
                 <li>To enhance consistently the curriculum and cultivate teachers’ effectiveness to promote quality instruction.</li>
@@ -757,7 +757,7 @@ $conn->close();
                 <li>To intensify the curriculum-based and institutional research that is dynamic, innovative, and interdisciplinary.</li>
             </ul>
 
-            <h4>Michaelinian Identity</h4>
+            <h4>V. Michaelinian Identity</h4>
             <p>Secured by Saint Michael the Archangel's Sword of Bravery and Victory, the Michaelinians of today and tomorrow are:</p>
             <ul>
                 <li><b>S</b> - ocially Responsible</li>
@@ -766,7 +766,7 @@ $conn->close();
                 <li><b>C</b> - ompetent in their Chosen Fields of Endeavor</li>
             </ul>
 
-            <h3>II. Graduate Intended Learning Outcomes (GILO)</h3>
+            <h3>Graduate Intended Learning Outcomes (GILO)</h3>
             <ul>
                 <li>Demonstrate social responsibilities.</li>
                 <li>Become missionaries of Christian values.</li>
@@ -774,7 +774,7 @@ $conn->close();
                 <li>Exude competence in one’s chosen fields of endeavor.</li>
             </ul>
 
-            <h4>PROGRAM MAPPING</h4>
+            <h4>VI. PROGRAM MAPPING</h4>
             <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
 
             <table id="piloGiloTable" class="pilo-gilo-table">
@@ -935,7 +935,7 @@ $conn->close();
 
 
             <!-- Course Information Section -->
-            <h4>Course Information</h4>
+            <h4>VII. Course Information</h4>
             <ul>
                 <li>Course Code: <input type="text" name="course_code" value="<?php echo htmlspecialchars($subject_code); ?>" readonly></li>
                 <li>Course Name: <input type="text" name="course" value="<?php echo htmlspecialchars($subject_name); ?>" readonly></li>
@@ -947,7 +947,7 @@ $conn->close();
 
             <!-- Course Intended Learning Outcomes Section -->
             <h3>Course Intended Learning Outcomes (CILO)</h3>
-            <h4>COURSE MAPPING</h4>
+            <h4>VIII. COURSE MAPPING</h4>
             <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
 
             <table id="ciloGiloTable" border="1">
@@ -1232,7 +1232,7 @@ $conn->close();
 
 
 
-            <h4>Context</h4>
+            <h4>IX. Context</h4>
             <table id="contextTable">
                 <thead>
                     <tr>
@@ -1400,12 +1400,12 @@ $conn->close();
                     }
                 }
             </script>
-            <h4>Performance Tasks</h4>
+            <h4>X. Performance Tasks</h4>
             <textarea name="performance_tasks" class="autoResizeTextarea" placeholder="Enter Performance Tasks"><?php echo htmlspecialchars($performance_tasks); ?></textarea>
 
 
 
-            <h4>XII. Grading System</h4>
+            <h4>XI. Grading System</h4>
             <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
                 <thead>
                     <tr>
