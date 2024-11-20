@@ -66,7 +66,7 @@
         function openModal() {
             var modal = document.getElementById("settingsModal");
             modal.style.display = "block";
-            setTimeout(function () {
+            setTimeout(function() {
                 modal.classList.add("open");
             }, 10);
         }
@@ -75,7 +75,7 @@
         function closeModal() {
             var modal = document.getElementById("settingsModal");
             modal.classList.remove("open");
-            setTimeout(function () {
+            setTimeout(function() {
                 modal.style.display = "none";
             }, 300);
         }
@@ -90,7 +90,7 @@
                 <ul>
                     <li><a href="index.php">Home</a></li>
                     <li><a href="user_tables/dean_table.php?user_type=student_table">User Management</a></li>
-                    <li><a href="#">Announcements</a></li>
+                    <li><a href="course.php">Courses</a></li>
                     <li><a href="#logs">Logs</a></li>
                 </ul>
             </nav>
@@ -110,7 +110,7 @@
                     <span class="close" onclick="closeModal()">&times;</span>
                     <h2>Update System Settings</h2>
 
-                    
+
 
                     <?php
                     // Database connection
@@ -134,24 +134,24 @@
                         function uploadImage($fieldName, $settingName)
                         {
                             global $conn;
-                        
+
                             // Relative path to the uploads directory
                             $uploadDir = 'uploads/';  // Adjusted for relative path
-                        
+
                             // Check if a new image is uploaded
                             if (isset($_FILES[$fieldName]) && $_FILES[$fieldName]['error'] === UPLOAD_ERR_OK) {
                                 // Fetch the previous image path from the database
                                 $result = $conn->query("SELECT setting_value FROM system_settings WHERE setting_name = '$settingName'");
                                 $previousImage = $result->fetch_assoc()['setting_value'];
-                        
+
                                 // If there's an old image, delete it from the server
                                 if ($previousImage && file_exists($previousImage)) {
                                     unlink($previousImage);  // Delete the old image
                                 }
-                        
+
                                 // Generate a unique image file name and construct the relative path
                                 $newImagePath = $uploadDir . uniqid() . '_' . basename($_FILES[$fieldName]['name']);
-                        
+
                                 // Move the uploaded file to the target directory
                                 if (move_uploaded_file($_FILES[$fieldName]['tmp_name'], $newImagePath)) {
                                     // Update the database with the new image path (relative)
@@ -161,7 +161,7 @@
                                 }
                             }
                         }
-                        
+
 
                         // Handle image uploads for header, accreditation, and footer logos
                         uploadImage('header_logo', 'header_logo_left');

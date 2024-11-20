@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+*{
+    margin: 0%;
+    font-family: 'Montserrat', sans-serif;
+    
+}/* General Styling */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+/* Container for All Content */
+.containerOfAll {
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.back-button {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    top: 10px;
+    left: 20px;
+    width: 80px;
+}
+
+.back-button:hover {
+    background-color: #d32f2f;
+}
+/* Header Styling */
+h3 {
+    text-align: center;
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Navigation Bar */
+.nav-container {
+    background-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.navigation-tabs ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+}
+
+.navigation-tabs ul li {
+    margin: 0 10px; /* Adds spacing between tabs */
+}
+
+.navigation-tabs ul li a {
+    display: block;
+    padding: 15px 20px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect */
+.navigation-tabs ul li a:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+}
+
+/* Active tab style */
+.navigation-tabs ul li a.active {
+    background-color: #0056b3; /* Highlight color */
+    color: #ffffff; /* Text color for active tab */
+    font-weight: bold; /* Make the text bold to distinguish it */
+}
+
+.create-btn button{
+    padding: 12px;
+    border-style: none;
+    background-color: #007bff;
+    margin-bottom: 10px;
+    color:#ffffff;
+
+}
+
+.filter-container select{
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    width: 250px;
+}
+
+/* Content Sections */
+.content-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.content-container section {
+    margin-bottom: 40px;
+}
+
+.content-container h2 {
+    color: #007bff;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+    width: 50px;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #ddd;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.action-buttons button {
+    background-color: #1da54a;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button.delete {
+    background-color: #f44336;
+}
+
+button.delete:hover {
+    background-color: #d32f2f;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .navigation-tabs ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navigation-tabs ul li a {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* Pagination Controls */
+#pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#pagination-controls button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+#pagination-controls button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#pagination-controls button:hover:not(:disabled) {
+    background-color: #0056b3;
+}

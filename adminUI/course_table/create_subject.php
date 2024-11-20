@@ -60,7 +60,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="select.css">
-    <link rel="stylesheet" href="insert_student.css">
+    <link rel="stylesheet" href="insert_subjects.css">
     <title>Create New Subject</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');

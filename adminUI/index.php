@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>System Admin</title>
     <link rel="stylesheet" href="admin_ui.css">
-    
+
 </head>
 
 <body>
@@ -19,7 +19,7 @@
                     <li><a href="index.php">Home</a></li>
                     <li><a href="user_tables/users.php?user_type=student_table">User Management</a></li>
                     <li><a href="system_settings.php">System Settings</a></li>
-                    <li><a href="#announcements">Announcements</a></li>
+                    <li><a href="course.php">Courses</a></li>
                     <li><a href="#logs">Logs</a></li>
                 </ul>
                 <ul>

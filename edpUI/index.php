@@ -162,7 +162,7 @@
                  <div class="subjectsContainer">
                      <h4 style="text-align: center;">Manual User Assigning</h4>
                      <div class="selectIns">
-                         <button onclick="window.location.href='create_subject.php'">Create New Subject</button>
+
                          <!-- Select teacher option redirects to select_teacher.php -->
                          <button onclick="window.location.href='assign_subjects.php'">Assign Instructor</button>
                          <!-- Select student option redirects to select_student.php -->
