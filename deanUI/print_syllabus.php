@@ -469,374 +469,390 @@ $conn->close();
                 <h3><span style="font-weight: normal;">Course Code: </span><span style="font-weight: bold;"><?php echo htmlspecialchars($subject_code); ?></span></h3>
             </div>
         </div>
+        <ol type="I">
+            <!-- Display Course Information -->
+            <ul>
+                <li class="status-container"><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
+                        <?php echo htmlspecialchars($status); ?>
+                    </button></li>
+            </ul>
 
-        <!-- Display Course Information -->
-        <ul>
-            <li class="status-container"><b>Status</b> <button class="status-button <?php echo strtolower($status); ?>">
-                    <?php echo htmlspecialchars($status); ?>
-                </button></li>
-        </ul>
+            <!-- Vision, Mission, Goal, Objectives, Michaelinian Identity -->
+            <h3>School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
 
-        <!-- Vision, Mission, Goal, Objectives, Michaelinian Identity -->
-        <h3>I. School's Vision, Mission, Goal, Objectives, Michaelinian Identity</h3>
+            <h4>Vision</h4>
+            <p>Saint Michael College of Caraga envisions to a university by 2035 and upholds spiritual formation and excellence in teaching, service, and, research.</p>
 
-        <h4>Vision</h4>
-        <p>Saint Michael College of Caraga envisions to a university by 2035 and upholds spiritual formation and excellence in teaching, service, and, research.</p>
+            <li>
+                <h4>Mission</h4>
+            </li>
+            <p>As such, SMCC commits itself:</p>
+            <ul>
+                <li>SMCC shall provide spiritual formation and learning culture that will ensure the students with an excellent and rewarding learning experience that transforms lives, abound spirituality, develop skills, and prepare future leaders.</li>
+                <li>SMCC shall engage in dynamic, innovative, and interdisciplinary research to advance and achieve institutional initiatives.</li>
+                <li>SMCC shall commit to serve the diverse and local communities by fostering innovations through service-learning that enhances reciprocal community partnerships for spiritual and social development.</li>
+            </ul>
 
-        <h4>Mission</h4>
-        <p>As such, SMCC commits itself:</p>
-        <ul>
-            <li>SMCC shall provide spiritual formation and learning culture that will ensure the students with an excellent and rewarding learning experience that transforms lives, abound spirituality, develop skills, and prepare future leaders.</li>
-            <li>SMCC shall engage in dynamic, innovative, and interdisciplinary research to advance and achieve institutional initiatives.</li>
-            <li>SMCC shall commit to serve the diverse and local communities by fostering innovations through service-learning that enhances reciprocal community partnerships for spiritual and social development.</li>
-        </ul>
+            <li>
+                <h4>Goal</h4>
+            </li>
+            <p>Uphold Culture of Excellence in the Areas of Spiritual Formation, Instruction, Research, and Extension, thus producing Graduates that are Globally Competent, Spiritually Embodied, and Socially Responsible.</p>
 
-        <h4>Goal</h4>
-        <p>Uphold Culture of Excellence in the Areas of Spiritual Formation, Instruction, Research, and Extension, thus producing Graduates that are Globally Competent, Spiritually Embodied, and Socially Responsible.</p>
+            <li>
+                <h4>General Objectives</h4>
+            </li>
+            <ul>
+                <li>To integrate positive and evangelical values in all areas and design Christian formation programs that are effective and responsive to the psycho-spiritual needs of the learners, parents, and personnel.</li>
+                <li>To enhance consistently the curriculum and cultivate teachers’ effectiveness to promote quality instruction.</li>
+                <li>To continue upgrading facilities and services for the satisfaction of the clientele.</li>
+                <li>To intensify the curriculum-based and institutional research that is dynamic, innovative, and interdisciplinary.</li>
+            </ul>
 
-        <h4>General Objectives</h4>
-        <ul>
-            <li>To integrate positive and evangelical values in all areas and design Christian formation programs that are effective and responsive to the psycho-spiritual needs of the learners, parents, and personnel.</li>
-            <li>To enhance consistently the curriculum and cultivate teachers’ effectiveness to promote quality instruction.</li>
-            <li>To continue upgrading facilities and services for the satisfaction of the clientele.</li>
-            <li>To intensify the curriculum-based and institutional research that is dynamic, innovative, and interdisciplinary.</li>
-        </ul>
+            <li>
+                <h4>Michaelinian Identity</h4>
+            </li>
+            <p>Secured by Saint Michael the Archangel's Sword of Bravery and Victory, the Michaelinians of today and tomorrow are:</p>
+            <ul>
+                <li><b>S</b> - ocially Responsible</li>
+                <li><b>M</b> - issionaries of Christian Values</li>
+                <li><b>C</b> - ommitted Individuals</li>
+                <li><b>C</b> - ompetent in their Chosen Fields of Endeavor</li>
+            </ul>
 
-        <h4>Michaelinian Identity</h4>
-        <p>Secured by Saint Michael the Archangel's Sword of Bravery and Victory, the Michaelinians of today and tomorrow are:</p>
-        <ul>
-            <li><b>S</b> - ocially Responsible</li>
-            <li><b>M</b> - issionaries of Christian Values</li>
-            <li><b>C</b> - ommitted Individuals</li>
-            <li><b>C</b> - ompetent in their Chosen Fields of Endeavor</li>
-        </ul>
+            <h3>Graduate Intended Learning Outcomes (GILO)</h3>
+            <ul>
+                <li>Demonstrate social responsibilities.</li>
+                <li>Become missionaries of Christian values.</li>
+                <li>Uphold unconditional commitment to life and to action.</li>
+                <li>Exude competence in one’s chosen fields of endeavor.</li>
+            </ul>
 
-        <h3>II. Graduate Intended Learning Outcomes (GILO)</h3>
-        <ul>
-            <li>Demonstrate social responsibilities.</li>
-            <li>Become missionaries of Christian values.</li>
-            <li>Uphold unconditional commitment to life and to action.</li>
-            <li>Exude competence in one’s chosen fields of endeavor.</li>
-        </ul>
+            <li>
+                <h4>Program Mapping</h4>
+            </li>
+            <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
 
-        <h4>Program Mapping</h4>
-        <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+            <!-- PILO-GILO Table -->
+            <table id="piloGiloTable">
+                <tr>
+                    <!-- Header for PILO section -->
+                    <th rowspan="2">Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
 
-        <!-- PILO-GILO Table -->
-        <table id="piloGiloTable">
-            <tr>
-                <!-- Header for PILO section -->
-                <th rowspan="2">Program Intended Learning Outcomes (PILOs) <br><br> After completion of the program, the student must be able to:</th>
+                    <!-- Header for GILO section -->
+                    <th colspan="4" style="text-align:center">Graduate Intended Learning Outcomes (GILOs)</th>
+                </tr>
+                <tr>
+                    <!-- Adding GILO labels for columns a to d -->
+                    <th>a</th>
+                    <th>b</th>
+                    <th>c</th>
+                    <th>d</th>
+                </tr>
+                <?php if (!empty($pilo_gilo)) {
+                    foreach ($pilo_gilo as $mapping) { ?>
+                        <tr>
+                            <!-- Display PILO description -->
+                            <td><?php echo htmlspecialchars($mapping['pilo']); ?></td>
+                            <!-- Display each GILO value (from a to d) -->
+                            <td><?php echo htmlspecialchars($mapping['a']); ?></td>
+                            <td><?php echo htmlspecialchars($mapping['b']); ?></td>
+                            <td><?php echo htmlspecialchars($mapping['c']); ?></td>
+                            <td><?php echo htmlspecialchars($mapping['d']); ?></td>
+                        </tr>
+                <?php }
+                } else {
+                    echo "<tr><td colspan='5'>No PILOs-GILOs data available.</td></tr>";
+                } ?>
+            </table>
 
-                <!-- Header for GILO section -->
-                <th colspan="4" style="text-align:center">Graduate Intended Learning Outcomes (GILOs)</th>
-            </tr>
-            <tr>
-                <!-- Adding GILO labels for columns a to d -->
+            <!-- Display Course Information -->
+            <h3>Course Information</h3>
+            <ul>
+                <li><b>Course Code:</b> <?php echo htmlspecialchars($subject_code); ?></li>
+                <li><b>Course Name:</b> <?php echo htmlspecialchars($subject_name); ?></li>
+                <li><b>Course Units:</b> <?php echo !empty($course_units) ? htmlspecialchars($course_units) : 'No data available'; ?></li>
+                <li><b>Course Description:</b> <?php echo !empty($course_description) ? htmlspecialchars($course_description) : 'No data available'; ?></li>
+                <li><b>Prerequisites:</b> <?php echo !empty($prerequisites_corequisites) ? htmlspecialchars($prerequisites_corequisites) : 'No data available'; ?></li>
+                <li><b>Contact Hours:</b> <?php echo !empty($contact_hours) ? htmlspecialchars($contact_hours) : 'No data available'; ?></li>
+            </ul>
+
+            <!-- Course Intended Learning Outcomes -->
+            <h3>Course Intended Learning Outcomes (CILO)</h3>
+            <li>
+                <h4>Course Mapping</h4>
+            </li>
+            <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
+
+            <!-- CILO-GILO Table -->
+            <table id="ciloGiloTable">
+                <tr>
+                    <th rowspan="2">Course Intended Learning Outcomes (CILOs)<br><br>
+                        After completion of the course, the student must be able to:
+                    </th>
+                    <th colspan="15" style="text-align: center">Program Intended Learning Outcome (PILO)</th>
+                </tr>
+                <!-- Adding columns for a to o -->
                 <th>a</th>
                 <th>b</th>
                 <th>c</th>
                 <th>d</th>
-            </tr>
-            <?php if (!empty($pilo_gilo)) {
-                foreach ($pilo_gilo as $mapping) { ?>
-                    <tr>
-                        <!-- Display PILO description -->
-                        <td><?php echo htmlspecialchars($mapping['pilo']); ?></td>
-                        <!-- Display each GILO value (from a to d) -->
-                        <td><?php echo htmlspecialchars($mapping['a']); ?></td>
-                        <td><?php echo htmlspecialchars($mapping['b']); ?></td>
-                        <td><?php echo htmlspecialchars($mapping['c']); ?></td>
-                        <td><?php echo htmlspecialchars($mapping['d']); ?></td>
-                    </tr>
-            <?php }
-            } else {
-                echo "<tr><td colspan='5'>No PILOs-GILOs data available.</td></tr>";
-            } ?>
-        </table>
-
-        <!-- Display Course Information -->
-        <h3>Course Information</h3>
-        <ul>
-            <li><b>Course Code:</b> <?php echo htmlspecialchars($subject_code); ?></li>
-            <li><b>Course Name:</b> <?php echo htmlspecialchars($subject_name); ?></li>
-            <li><b>Course Units:</b> <?php echo !empty($course_units) ? htmlspecialchars($course_units) : 'No data available'; ?></li>
-            <li><b>Course Description:</b> <?php echo !empty($course_description) ? htmlspecialchars($course_description) : 'No data available'; ?></li>
-            <li><b>Prerequisites:</b> <?php echo !empty($prerequisites_corequisites) ? htmlspecialchars($prerequisites_corequisites) : 'No data available'; ?></li>
-            <li><b>Contact Hours:</b> <?php echo !empty($contact_hours) ? htmlspecialchars($contact_hours) : 'No data available'; ?></li>
-        </ul>
-
-        <!-- Course Intended Learning Outcomes -->
-        <h3>Course Intended Learning Outcomes (CILO)</h3>
-        <h4>Course Mapping</h4>
-        <p><b>I</b> – Introduce <b>D</b> – Demonstrate skills with Supervision <b>P</b> – Practice skills without Supervision</p>
-
-        <!-- CILO-GILO Table -->
-        <table id="ciloGiloTable">
-            <tr>
-                <th rowspan="2">Course Intended Learning Outcomes (CILOs)<br><br>
-                    After completion of the course, the student must be able to:
-                </th>
-                <th colspan="15" style="text-align: center">Program Intended Learning Outcome (PILO)</th>
-            </tr>
-            <!-- Adding columns for a to o -->
-            <th>a</th>
-            <th>b</th>
-            <th>c</th>
-            <th>d</th>
-            <th>e</th>
-            <th>f</th>
-            <th>g</th>
-            <th>h</th>
-            <th>i</th>
-            <th>j</th>
-            <th>k</th>
-            <th>l</th>
-            <th>m</th>
-            <th>n</th>
-            <th>o</th>
-            </tr>
-            <?php if (!empty($cilos)) {
-                foreach ($cilos as $cilo) { ?>
-                    <tr>
-                        <!-- Display CILO description -->
-                        <td><?php echo htmlspecialchars($cilo['cilo_description']); ?></td>
-                        <!-- Display each GILO value (from a to o) -->
-                        <td><?php echo htmlspecialchars($cilo['a']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['b']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['c']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['d']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['e']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['f']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['g']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['h']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['i']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['j']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['k']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['l']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['m']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['n']); ?></td>
-                        <td><?php echo htmlspecialchars($cilo['o']); ?></td>
-                    </tr>
-            <?php }
-            } else {
-                echo "<tr><td colspan='16'>No CILOs-GILOs data available.</td></tr>";
-            } ?>
-        </table>
-
-
-        <h4>Context</h4>
-        <table id="contextTable" class="context-styled-table">
-            <thead>
-                <tr>
-                    <th>Hour(s)</th>
-                    <th>Intended Learning Outcomes (ILO) / Competency(ies)</th>
-                    <th>Topics</th>
-                    <th>Institutional Values</th>
-                    <th>Teaching and Learning Activities</th>
-                    <th>Resources/References</th>
-                    <th>Assessment Tasks</th>
-                    <th>Course Map</th>
+                <th>e</th>
+                <th>f</th>
+                <th>g</th>
+                <th>h</th>
+                <th>i</th>
+                <th>j</th>
+                <th>k</th>
+                <th>l</th>
+                <th>m</th>
+                <th>n</th>
+                <th>o</th>
                 </tr>
-            </thead>
-            <tbody>
-                <?php
-                if (!empty($context)) {
-                    $displayedSections = []; // Track displayed sections
-                    foreach ($context as $row) {
-                        // Display section header only once
-                        if (!in_array(strtoupper($row['section']), $displayedSections)) {
-                            $displayedSections[] = strtoupper($row['section']);
-                ?>
-                            <tr>
-                                <td><?php echo $row['hours']; ?></td>
-                                <td>
-                                    <strong><?php echo strtoupper($row['section']); ?></strong><br>
-                                    <?php echo nl2br($row['ilo']); ?>
-                                </td>
-                                <td><?php echo nl2br($row['topics']); ?></td>
-                                <td><?php echo $row['institutional_values']; ?></td>
-                                <td><?php echo nl2br($row['teaching_activities']); ?></td>
-                                <td><?php echo nl2br($row['resources']); ?></td>
-                                <td><?php echo nl2br($row['assessment']); ?></td>
-                                <td><?php echo $row['course_map']; ?></td>
-                            </tr>
-                        <?php
-                        } else {
-                        ?>
-                            <tr>
-                                <td><?php echo $row['hours']; ?></td>
-                                <td><?php echo nl2br($row['ilo']); ?></td>
-                                <td><?php echo nl2br($row['topics']); ?></td>
-                                <td><?php echo $row['institutional_values']; ?></td>
-                                <td><?php echo nl2br($row['teaching_activities']); ?></td>
-                                <td><?php echo nl2br($row['resources']); ?></td>
-                                <td><?php echo nl2br($row['assessment']); ?></td>
-                                <td><?php echo $row['course_map']; ?></td>
-                            </tr>
-                <?php
-                        }
-                    }
+                <?php if (!empty($cilos)) {
+                    foreach ($cilos as $cilo) { ?>
+                        <tr>
+                            <!-- Display CILO description -->
+                            <td><?php echo htmlspecialchars($cilo['cilo_description']); ?></td>
+                            <!-- Display each GILO value (from a to o) -->
+                            <td><?php echo htmlspecialchars($cilo['a']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['b']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['c']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['d']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['e']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['f']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['g']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['h']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['i']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['j']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['k']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['l']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['m']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['n']); ?></td>
+                            <td><?php echo htmlspecialchars($cilo['o']); ?></td>
+                        </tr>
+                <?php }
                 } else {
-                    echo "<tr><td colspan='8'>No context data available.</td></tr>";
-                }
-                ?>
-                <!-- Performance Tasks Section -->
-                <tr>
-                    <td colspan="8" class="performance-task">
-                        <strong>Performance Tasks:</strong><br>
-                        <br>
-                        <?php echo !empty($performance_tasks) ? nl2br(htmlspecialchars($performance_tasks)) : 'No performance tasks available'; ?>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table>
+                    echo "<tr><td colspan='16'>No CILOs-GILOs data available.</td></tr>";
+                } ?>
+            </table>
 
 
-        <h4>XII. Grading System</h4>
-        <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
-            <thead>
-                <tr>
-                    <th>Criteria</th>
-                    <th>Percentage</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Written Task Section -->
-                <tr>
-                    <td><span class="red-text">Written Task</span><br>
-                        <?php if (!empty($written_task_criteria)) : ?>
-                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                    <td><br>
-                        <?php if (!empty($written_task_criteria)) : ?>
-                            <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                </tr>
+            <li>
+                <h4>Context</h4>
+            </li>
+            <table id="contextTable" class="context-styled-table">
+                <thead>
+                    <tr>
+                        <th>Hour(s)</th>
+                        <th>Intended Learning Outcomes (ILO) / Competency(ies)</th>
+                        <th>Topics</th>
+                        <th>Institutional Values</th>
+                        <th>Teaching and Learning Activities</th>
+                        <th>Resources/References</th>
+                        <th>Assessment Tasks</th>
+                        <th>Course Map</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if (!empty($context)) {
+                        $displayedSections = []; // Track displayed sections
+                        foreach ($context as $row) {
+                            // Display section header only once
+                            if (!in_array(strtoupper($row['section']), $displayedSections)) {
+                                $displayedSections[] = strtoupper($row['section']);
+                    ?>
+                                <tr>
+                                    <td><?php echo $row['hours']; ?></td>
+                                    <td>
+                                        <strong><?php echo strtoupper($row['section']); ?></strong><br>
+                                        <?php echo nl2br($row['ilo']); ?>
+                                    </td>
+                                    <td><?php echo nl2br($row['topics']); ?></td>
+                                    <td><?php echo $row['institutional_values']; ?></td>
+                                    <td><?php echo nl2br($row['teaching_activities']); ?></td>
+                                    <td><?php echo nl2br($row['resources']); ?></td>
+                                    <td><?php echo nl2br($row['assessment']); ?></td>
+                                    <td><?php echo $row['course_map']; ?></td>
+                                </tr>
+                            <?php
+                            } else {
+                            ?>
+                                <tr>
+                                    <td><?php echo $row['hours']; ?></td>
+                                    <td><?php echo nl2br($row['ilo']); ?></td>
+                                    <td><?php echo nl2br($row['topics']); ?></td>
+                                    <td><?php echo $row['institutional_values']; ?></td>
+                                    <td><?php echo nl2br($row['teaching_activities']); ?></td>
+                                    <td><?php echo nl2br($row['resources']); ?></td>
+                                    <td><?php echo nl2br($row['assessment']); ?></td>
+                                    <td><?php echo $row['course_map']; ?></td>
+                                </tr>
+                    <?php
+                            }
+                        }
+                    } else {
+                        echo "<tr><td colspan='8'>No context data available.</td></tr>";
+                    }
+                    ?>
+                    <!-- Performance Tasks Section -->
+                    <tr>
+                        <td colspan="8" class="performance-task">
+                            <strong>Performance Tasks:</strong><br>
+                            <br>
+                            <?php echo !empty($performance_tasks) ? nl2br(htmlspecialchars($performance_tasks)) : 'No performance tasks available'; ?>
+                        </td>
+                    </tr>
 
-                <!-- Performance Tasks Section -->
-                <tr>
-                    <td><span class="red-text">Performance Tasks</span><br>
-                        <?php if (!empty($performance_task_criteria)) : ?>
-                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                    <td><br>
-                        <?php if (!empty($performance_task_criteria)) : ?>
-                            <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-
-                <!-- Quarterly Assessment Section -->
-                <tr>
-                    <td><span class="red-text">Quarterly Assesment</span><br>
-                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
-                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                    <td><br>
-                        <?php if (!empty($quarterly_assessment_criteria)) : ?>
-                            <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
-                                &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-
-                <!-- Total -->
-                <tr>
-                    <td><strong>TOTAL Grade Percentage</strong></td>
-                    <td><strong class="red-text">100%</strong></td>
-                </tr>
-            </tbody>
-        </table>
-
+                </tbody>
+            </table>
 
 
-<!-- Signature Section -->
-<table id="signatureTable" class="custom-table">
-    <tbody>
-        <tr>
-            <td rowspan="4" class="logo-cell">
-                <img src="../image.png" alt="Logo"><br>
-                <span class="red-text">Curriculum 2022</span>
-            </td>
-            <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td class="info-cell">
-                <span class="red-text">Prepared by:</span><br>
-                <strong><?= $prepared_by; ?></strong><br>
-                Subject Teacher
-            </td>
-            <td class="signature-cell">
-                <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
-                _____________<br>Date
-            </td>
-        </tr>
-        <tr>
-            <td class="info-cell">
-                <span class="red-text">Resources Checked & Verified by:</span><br>
-                <strong><?= $resource_checked_by; ?></strong><br>
-                College Librarian
-            </td>
-            <td class="signature-cell">
-                <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
-                _____________<br>Date
-            </td>
-        </tr>
-        <tr>
-            <td class="info-cell">
-                <span class="red-text">Reviewed by:</span><br>
-                <strong><?= $reviewed_by_program_chair; ?></strong><br>
-                BSIT Program Chair<br>
-                <br>
-                <br>
-                <strong><?= $reviewed_by_dean; ?></strong><br>
-                Dean
-            </td>
-            <td class="signature-cell">
-                <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
-                _____________<br>Date
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2" class="info-cell-approved">
-                <span class="red-text">Approved by:</span><br>
-                <strong><?= $approved_by; ?></strong><br>
-                Vice President for Academic Affairs and Research
-            </td>
-            <td class="signature-cell">
-                <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
-                _____________<br>Date
-            </td>
-        </tr>
-    </tbody>
-</table>
+            <li>
+                <h4>Grading System</h4>
+            </li>
+            <table id="gradingTable" class="custom-table" style="margin-bottom: 20px;">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                        <th>Percentage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Written Task Section -->
+                    <tr>
+                        <td><span class="red-text">Written Task</span><br>
+                            <?php if (!empty($written_task_criteria)) : ?>
+                                <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><br>
+                            <?php if (!empty($written_task_criteria)) : ?>
+                                <?php foreach ($written_task_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+
+                    <!-- Performance Tasks Section -->
+                    <tr>
+                        <td><span class="red-text">Performance Tasks</span><br>
+                            <?php if (!empty($performance_task_criteria)) : ?>
+                                <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><br>
+                            <?php if (!empty($performance_task_criteria)) : ?>
+                                <?php foreach ($performance_task_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+
+                    <!-- Quarterly Assessment Section -->
+                    <tr>
+                        <td><span class="red-text">Quarterly Assesment</span><br>
+                            <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                                <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;- <?= htmlspecialchars($criteria); ?><br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                        <td><br>
+                            <?php if (!empty($quarterly_assessment_criteria)) : ?>
+                                <?php foreach ($quarterly_assessment_criteria as $criteria => $percentage) : ?>
+                                    &nbsp;&nbsp;&nbsp;<?= (int)$percentage; ?>%<br>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+
+                    <!-- Total -->
+                    <tr>
+                        <td><strong>TOTAL Grade Percentage</strong></td>
+                        <td><strong class="red-text">100%</strong></td>
+                    </tr>
+                </tbody>
+            </table>
 
 
-        <br>
-        <!-- Print Button -->
-        <button class="print-button" onclick="printSyllabus()">Print</button>
-        <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
-        <div class="divFooter">
-            <img src="../footer.png" alt="Membership Logos" class="member-logos">
-        </div>
+
+            <!-- Signature Section -->
+            <table id="signatureTable" class="custom-table">
+                <tbody>
+                    <tr>
+                        <td rowspan="4" class="logo-cell">
+                            <img src="../image.png" alt="Logo"><br>
+                            <span class="red-text">Curriculum 2022</span>
+                        </td>
+                        <td class="title-cell red-text">COLLEGE OF COMPUTING AND INFORMATION SCIENCES</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Prepared by:</span><br>
+                            <strong><?= $prepared_by; ?></strong><br>
+                            Subject Teacher
+                        </td>
+                        <td class="signature-cell">
+                            <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
+                            _____________<br>Date
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Resources Checked & Verified by:</span><br>
+                            <strong><?= $resource_checked_by; ?></strong><br>
+                            College Librarian
+                        </td>
+                        <td class="signature-cell">
+                            <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
+                            _____________<br>Date
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="info-cell">
+                            <span class="red-text">Reviewed by:</span><br>
+                            <strong><?= $reviewed_by_program_chair; ?></strong><br>
+                            BSIT Program Chair<br>
+                            <br>
+                            <br>
+                            <strong><?= $reviewed_by_dean; ?></strong><br>
+                            Dean
+                        </td>
+                        <td class="signature-cell">
+                            <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
+                            _____________<br>Date
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" class="info-cell-approved">
+                            <span class="red-text">Approved by:</span><br>
+                            <strong><?= $approved_by; ?></strong><br>
+                            Vice President for Academic Affairs and Research
+                        </td>
+                        <td class="signature-cell">
+                            <?= date("M. d Y", strtotime($approved_by_date)); ?><br>
+                            _____________<br>Date
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <br>
+            <!-- Print Button -->
+            <button class="print-button" onclick="printSyllabus()">Print</button>
+            <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
+            <div class="divFooter">
+                <img src="../footer.png" alt="Membership Logos" class="member-logos">
+            </div>
     </div>
 
     <script>
@@ -844,6 +860,7 @@ $conn->close();
             window.print();
         }
     </script>
+    </ol>
 </body>
 
 </html>
