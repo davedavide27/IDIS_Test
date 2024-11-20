@@ -17,7 +17,7 @@
             <nav class="navigation-tabs">
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="user_tables/dean_table.php?user_type=student_table">User Management</a></li>
+                    <li><a href="user_tables/users.php?user_type=student_table">User Management</a></li>
                     <li><a href="system_settings.php">System Settings</a></li>
                     <li><a href="#announcements">Announcements</a></li>
                     <li><a href="#logs">Logs</a></li>
