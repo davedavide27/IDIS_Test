@@ -438,42 +438,66 @@ $conn->close();
                 unset($_SESSION['error_message']); ?></p>
         </div>
     <?php endif; ?>
-    <!-- Main Content Section -->
-    <div class="container">
 
+<!-- Main Content Section -->
+<div class="container">
+    <!-- Header Section -->
+    <div class="divHeader">
+        <div class="header-container">
+            <!-- Left Section (Logo) -->
+            <div class="headContents header-left">
+                <?php
+                // Dynamically construct the left logo path
+                $logo_left_path = "../smcclogo.jfif"; // Default path for the SMCC logo
+                if (isset($header_logo_left)) {
+                    $logo_left_path = '../adminUI/' . $header_logo_left;
+                }
 
-        <!-- Header Section -->
-        <div class="divHeader">
-            <div class="header-container">
-                <!-- Left Section (Logo) -->
-                <div class="headContents header-left">
-                    <!-- Display the header logo on the left side -->
-                    <img src="<?php echo '../' . $header_logo_left; ?>" alt="SMCC Logo" class="logo">
-                </div>
-                <!-- Center Section (Text) -->
-                <div class="headContents header-center">
-                    <!-- Display the college name -->
-                    <div class="college-name"><?php echo $college_name; ?></div>
-                    <div class="college-details">
-                        <!-- Display the college details -->
-                        <div><?php echo $college_details; ?></div>
-                        <!-- Display the contact details -->
-                        <div><?php echo $contact_details; ?></div>
-                        <!-- Display the website link -->
-                        <div>
-                            <!-- The header link should open directly when clicked -->
-                            <a href="<?php echo $header_link; ?>"><?php echo $header_text; ?></a>
-                        </div>
+                // Display the left logo if available
+                if (!empty($logo_left_path)) {
+                    echo "<img src='$logo_left_path' alt='SMCC Logo' class='logo' style='max-width: 150px; height: auto;'>";
+                } else {
+                    echo ""; // If no logo is set, display nothing
+                }
+                ?>
+            </div>
+
+            <!-- Center Section (Text) -->
+            <div class="headContents header-center">
+                <!-- Display the college name -->
+                <div class="college-name"><?php echo $college_name; ?></div>
+                <div class="college-details">
+                    <!-- Display the college details -->
+                    <div><?php echo $college_details; ?></div>
+                    <!-- Display the contact details -->
+                    <div><?php echo $contact_details; ?></div>
+                    <!-- Display the website link -->
+                    <div>
+                        <!-- The header link should open directly when clicked -->
+                        <a href="<?php echo $header_link; ?>"><?php echo $header_text; ?></a>
                     </div>
                 </div>
-                <!-- Right Section (Accreditation Logos) -->
-                <div class="headContents header-right">
-                    <!-- Display the accreditation logos on the right side -->
-                    <img src="<?php echo $header_logo_right; ?>" alt="Accreditation Logos" class="logo">
-                </div>
+            </div>
+
+            <!-- Right Section (Accreditation Logos) -->
+            <div class="headContents header-right">
+                <?php
+                // Dynamically construct the right logo path
+                $logo_right_path = "ISO&PAB.png"; // Default path for the accreditation logos
+                if (isset($header_logo_right)) {
+                    $logo_right_path = '../adminUI/' . $header_logo_right;
+                }
+
+                // Display the right logo if available
+                if (!empty($logo_right_path)) {
+                    echo "<img src='$logo_right_path' alt='Accreditation Logos' class='logo' style='max-width: 150px; height: auto;'>";
+                } else {
+                    echo ""; // If no logo is set, display nothing
+                }
+                ?>
             </div>
         </div>
-
+    </div>
 
         <br>
         <div style="display: flex; justify-content: center; align-items: center;">
@@ -865,11 +889,25 @@ $conn->close();
             <!-- Print Button -->
             <button class="print-button" onclick="printSyllabus()">Print</button>
             <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
-            <!-- Download Word Button -->
+
             <!-- Footer Section -->
             <div class="divFooter">
-                <img src="<?php echo $footer_logo; ?>" alt="Membership Logos" class="member-logos">
+                <?php
+                // Dynamically construct the footer logo path
+                $footer_logo_path = ""; // Initialize an empty path for the footer logo
+                if (isset($footer_logo)) {
+                    $footer_logo_path = '../adminUI/' . $footer_logo;
+                }
+
+                // Display the footer logo if available
+                if (!empty($footer_logo_path)) {
+                    echo "<img src='$footer_logo_path' alt='Membership Logos' class='member-logos'>";
+                } else {
+                    echo ""; // If no logo is set, display nothing
+                }
+                ?>
             </div>
+
 
             <script>
                 function printSyllabus() {

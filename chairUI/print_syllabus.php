@@ -247,6 +247,7 @@ if (isset($_POST['deny'])) {
 
 $conn->close();
 ?>
+<?php include '../get_system_settings.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -629,23 +630,59 @@ $conn->close();
             <div class="header-container">
                 <!-- Left Section (Logo) -->
                 <div class="headContents header-left">
-                    <img src="../smcclogo.jfif" alt="SMCC Logo" class="logo">
+                    <?php
+                    // Dynamically construct the left logo path
+                    $logo_left_path = "../smcclogo.jfif"; // Default path for the SMCC logo
+                    if (isset($header_logo_left)) {
+                        $logo_left_path = '../adminUI/' . $header_logo_left;
+                    }
+
+                    // Display the left logo if available
+                    if (!empty($logo_left_path)) {
+                        echo "<img src='$logo_left_path' alt='SMCC Logo' class='logo' style='max-width: 150px; height: auto;'>";
+                    } else {
+                        echo ""; // If no logo is set, display nothing
+                    }
+                    ?>
                 </div>
+
                 <!-- Center Section (Text) -->
                 <div class="headContents header-center">
-                    <div class="college-name">Saint Michael College of Caraga</div>
+                    <!-- Display the college name -->
+                    <div class="college-name"><?php echo $college_name; ?></div>
                     <div class="college-details">
-                        <div>Brgy. 4, Nasipit, Agusan del Norte, Philippines</div>
-                        <div>Tel. Nos. +63 085 343-3251 / +63 085 283-3113 Fax No. +63 085 808-0892</div>
-                        <div><a href="https://www.smccnasipit.edu.ph/">www.smccnasipit.edu.ph</a></div>
+                        <!-- Display the college details -->
+                        <div><?php echo $college_details; ?></div>
+                        <!-- Display the contact details -->
+                        <div><?php echo $contact_details; ?></div>
+                        <!-- Display the website link -->
+                        <div>
+                            <!-- The header link should open directly when clicked -->
+                            <a href="<?php echo $header_link; ?>"><?php echo $header_text; ?></a>
+                        </div>
                     </div>
                 </div>
+
                 <!-- Right Section (Accreditation Logos) -->
                 <div class="headContents header-right">
-                    <img src="../ISO&PAB.png" alt="Accreditation Logos" class="logo">
+                    <?php
+                    // Dynamically construct the right logo path
+                    $logo_right_path = "ISO&PAB.png"; // Default path for the accreditation logos
+                    if (isset($header_logo_right)) {
+                        $logo_right_path = '../adminUI/' . $header_logo_right;
+                    }
+
+                    // Display the right logo if available
+                    if (!empty($logo_right_path)) {
+                        echo "<img src='$logo_right_path' alt='Accreditation Logos' class='logo' style='max-width: 150px; height: auto;'>";
+                    } else {
+                        echo ""; // If no logo is set, display nothing
+                    }
+                    ?>
                 </div>
             </div>
         </div>
+
         <br>
         <div style="display: flex; justify-content: center; align-items: center;">
             <div style="width: 30%; background-color: yellow; padding: 1px 20px; border-radius: 2px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
@@ -1068,9 +1105,22 @@ $conn->close();
                 <button class="back-button" type="button" onclick="window.location.href='index.php';">Back</button>
             </div>
 
-            <!-- Footer -->
+            <!-- Footer Section -->
             <div class="divFooter">
-                <img src="../footer.png" alt="Membership Logos" class="member-logos">
+                <?php
+                // Dynamically construct the footer logo path
+                $footer_logo_path = ""; // Initialize an empty path for the footer logo
+                if (isset($footer_logo)) {
+                    $footer_logo_path = '../adminUI/' . $footer_logo;
+                }
+
+                // Display the footer logo if available
+                if (!empty($footer_logo_path)) {
+                    echo "<img src='$footer_logo_path' alt='Membership Logos' class='member-logos'>";
+                } else {
+                    echo ""; // If no logo is set, display nothing
+                }
+                ?>
             </div>
 
 

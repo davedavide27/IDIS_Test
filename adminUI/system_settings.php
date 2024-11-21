@@ -248,8 +248,12 @@
                                 <label for="college_details">College Details:</label>
                                 <textarea name="college_details" rows="5" required><?= $college_details ?></textarea>
                             </div>
+                            <div class="footer-text">
+                                <label for="footer">College Details 2:</label>
+                                <input type="text" name="footer" value="<?= $footer_text ?>" required>
+                            </div>
                         </div>
-
+                        <br>
                         <!-- Footer Section -->
                         <div class="footer-section">
                             <h2>Footer Section</h2>
@@ -260,10 +264,7 @@
                                     <?php if ($footer_logo) echo '<img src="' . $footer_logo . '" alt="Footer Logo">'; ?>
                                 </div>
                             </div>
-                            <div class="footer-text">
-                                <label for="footer">Footer Text:</label>
-                                <input type="text" name="footer" value="<?= $footer_text ?>" required>
-                            </div>
+
                         </div>
 
                         <button type="submit">Submit Settings</button>
