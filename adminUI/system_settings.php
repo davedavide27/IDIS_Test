@@ -91,7 +91,7 @@
                     <li><a href="index.php">Home</a></li>
                     <li><a href="user_tables/dean_table.php?user_type=student_table">User Management</a></li>
                     <li><a href="course.php">Courses</a></li>
-                    <li><a href="#logs">Logs</a></li>
+
                 </ul>
             </nav>
         </div>
@@ -237,6 +237,7 @@
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- College Info Section -->
                         <div class="college-section">
