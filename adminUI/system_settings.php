@@ -266,7 +266,7 @@
                             </div>
 
                         </div>
-
+                    <br>
                         <button type="submit">Submit Settings</button>
                     </form>
                 </div>
