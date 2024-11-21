@@ -10,7 +10,7 @@
 
 <body>
     <div class=" containerOfAll">
-        <a href="../index.php">
+        <a href="../adminUI/index.php">
             <button class="back-button">Back</button></a>
         <h3>Course Management</h3>
 
@@ -25,7 +25,7 @@
         </div>
 
         <div class="create-btn">
-            <button><a href="../adminUI/course_table/create_subject.php">Create New Subject</a></button>
+            <a href="../adminUI/course_table/create_subject.php"><button>Create New Subject</button></a>
         </div>
 
         <!-- Content Sections -->

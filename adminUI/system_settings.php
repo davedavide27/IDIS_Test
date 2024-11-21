@@ -89,9 +89,10 @@
             <nav class="navigation-tabs">
                 <ul>
                     <li><a href="index.php">Home</a></li>
-                    <li><a href="user_tables/dean_table.php?user_type=student_table">User Management</a></li>
+                    <li><a href="user_tables/users.php?user_type=student_table">User Management</a></li>
+                    <li><a href="system_settings.php">System Settings</a></li>
                     <li><a href="course.php">Courses</a></li>
-
+                    <li><a href="#logs">Logs</a></li>
                 </ul>
             </nav>
         </div>
@@ -207,21 +208,25 @@
                     <!-- Form for Settings -->
                     <form method="POST" enctype="multipart/form-data">
                         <!-- Header Section -->
+
                         <div class="header-section">
                             <h2>Header Section</h2>
                             <div class="logo-container">
-                                <div class="logo-left">
-                                    <label for="header_logo">Upload Header Left Logo:</label>
-                                    <input type="file" name="header_logo" id="header_logo">
+                                <div class="logo-box">
+
+                                    <label>Upload Header Left Logo:</label>
                                     <div class="image-preview">
+                                        <label for="header_logo">Upload file</label>
+                                        <input type="file" name="header_logo" id="header_logo">
                                         <?php if ($header_logo_left) echo '<img src="' . $header_logo_left . '" alt="Header Left Logo">'; ?>
                                     </div>
                                 </div>
 
-                                <div class="logo-right">
-                                    <label for="accreditation_logo">Upload Accreditation Logo:</label>
-                                    <input type="file" name="accreditation_logo" id="accreditation_logo">
+                                <div class="logo-box">
+                                    <label>Upload Accreditation Logo:</label>
                                     <div class="image-preview">
+                                        <label for="accreditation_logo">Upload file</label>
+                                        <input type="file" name="accreditation_logo" id="accreditation_logo">
                                         <?php if ($header_logo_right) echo '<img src="' . $header_logo_right . '" alt="Accreditation Logo">'; ?>
                                     </div>
                                 </div>
@@ -237,8 +242,9 @@
                                 </div>
                             </div>
                         </div>
+                    </form>
 
-
+                    <form method="POST" enctype="multipart/form-data">
                         <!-- College Info Section -->
                         <div class="college-section">
                             <h2>College Info Section</h2>
@@ -259,15 +265,16 @@
                         <div class="footer-section">
                             <h2>Footer Section</h2>
                             <div class="footer-logo">
-                                <label for="footer_logo">Upload Footer Logo:</label>
+                                <label>Upload Footer Logo:</label>
                                 <input type="file" name="footer_logo" id="footer_logo">
                                 <div class="image-preview">
+                                    <label for="footer_logo">Upload file</label>
                                     <?php if ($footer_logo) echo '<img src="' . $footer_logo . '" alt="Footer Logo">'; ?>
                                 </div>
                             </div>
 
                         </div>
-                    <br>
+                        <br>
                         <button type="submit">Submit Settings</button>
                     </form>
                 </div>

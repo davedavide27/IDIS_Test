@@ -33,6 +33,7 @@ section {
     background-color: #e3f2fd;
     padding: 15px;
     border-radius: 8px;
+    height: auto;
 }
 
 /* College info section styling */
@@ -47,6 +48,7 @@ section {
     background-color: #c8e6c9;
     padding: 15px;
     border-radius: 8px;
+    height: auto;
 }
 
 /* Textarea styling */
@@ -91,8 +93,8 @@ button[type="submit"]:hover {
     flex-direction: column;
     align-items: center;
     margin-top: 10px;
-    border-top: 1px solid #ccc;
     padding-top: 10px;
+    
 }
 
 /* Image preview styling */
@@ -120,12 +122,20 @@ form>button {
 }
 
 /* Input text styling */
-input[type="text"] {
+ input[type="text"] {
     width: 100%;  /* Full width */
     padding: 10px;
     box-sizing: border-box; /* Ensures padding doesn't overflow the input */
 }
 
+form .logo-box input[type="file"]{
+    display: none;
+}
+form .logo-box .image-preview label {
+    display: inline-block;
+    padding: 20px;
+    border-style: dashed;
+}
 /* Optional: Adjust the width for text areas */
 textarea {
     width: 100%;  /* Ensure the text area takes up full width */
@@ -142,9 +152,13 @@ section h2 {
 
 /* Logo container within the header section */
 .logo-container {
-    display: flex;
-    justify-content: space-between;
+    display: inline-block;
     margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+}
+.logo-box{
+    margin: auto;
 }
 
 .logo-left, .logo-right {
@@ -165,4 +179,14 @@ textarea {
 /* Adjusting the width of the button */
 button[type="submit"] {
     width: 100%;
+}
+
+
+form .footer-section input[type="file"]{
+    display: none;
+}
+form .footer-section .image-preview label {
+    display: inline-block;
+    padding: 20px;
+    border-style: dashed;
 }
